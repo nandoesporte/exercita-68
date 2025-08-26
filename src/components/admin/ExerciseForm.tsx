@@ -90,10 +90,18 @@ const ExerciseForm = ({
     
     if (!file) return;
     
-    // Validate file type
-    if (!file.type.includes('gif') && !file.type.includes('image')) {
-      setUploadError("Por favor, faça upload de um arquivo GIF ou imagem");
-      toast.error("Por favor, faça upload de um arquivo GIF ou imagem");
+    // Validate file type - accept GIF and common image formats
+    const allowedTypes = ['image/gif', 'image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      setUploadError(`Tipo de arquivo não suportado: ${file.type}. Formatos aceitos: GIF, PNG, JPG, JPEG, WebP`);
+      toast.error(`Tipo de arquivo não suportado: ${file.type}`);
+      return;
+    }
+    
+    // Check file size (max 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      setUploadError("O arquivo deve ter no máximo 10MB");
+      toast.error("O arquivo deve ter no máximo 10MB");
       return;
     }
     
