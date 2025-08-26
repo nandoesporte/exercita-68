@@ -34,29 +34,17 @@ export default function AdminManagement() {
       
       if (error) throw new Error(error.message);
       
-      // Buscar perfis dos usuários para completar os dados
-      const userProfiles = await Promise.all(
-        (data as any[])?.map(async (user: any) => {
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('first_name, last_name, is_admin')
-            .eq('id', user.id)
-            .single();
-          
-          return {
-            id: user.id,
-            email: user.email,
-            first_name: user.raw_user_meta_data?.first_name || profile?.first_name || '',
-            last_name: user.raw_user_meta_data?.last_name || profile?.last_name || '',
-            is_admin: profile?.is_admin || false,
-            created_at: user.created_at,
-            last_sign_in_at: user.last_sign_in_at,
-            banned_until: user.banned_until
-          };
-        })
-      );
-      
-      return userProfiles;
+      // A função agora retorna os dados completos incluindo is_admin
+      return (data as any[])?.map((user: any) => ({
+        id: user.id,
+        email: user.email,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        is_admin: user.is_admin,
+        created_at: user.created_at,
+        last_sign_in_at: user.last_sign_in_at,
+        banned_until: user.banned_until
+      })) || [];
     },
   });
 
@@ -77,7 +65,11 @@ export default function AdminManagement() {
       return data;
     },
     onSuccess: (data) => {
+      // Invalidar múltiplas queries para garantir sincronização
       queryClient.invalidateQueries({ queryKey: ['all-users'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-role'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-permissions'] });
+      queryClient.invalidateQueries({ queryKey: ['users-by-admin'] });
       toast.success((data as any)?.message);
     },
     onError: (error: Error) => {
