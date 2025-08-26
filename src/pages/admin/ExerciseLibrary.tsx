@@ -85,8 +85,8 @@ export default function ExerciseLibrary() {
     }
   };
 
-  // Use the actual categories from database query
-  const exerciseCategories = categories;
+  // Use the actual categories from database query with null check
+  const exerciseCategories = categories || [];
 
   if (error) {
     return (
@@ -97,7 +97,7 @@ export default function ExerciseLibrary() {
   }
 
   // Show a helpful message if no categories exist
-  if (categories.length === 0 && !isLoading) {
+  if (exerciseCategories.length === 0 && !isLoading) {
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
@@ -149,7 +149,7 @@ export default function ExerciseLibrary() {
       <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="mb-4 flex flex-wrap">
           <TabsTrigger value="all">Todos</TabsTrigger>
-          {exerciseCategories.map((category) => (
+          {exerciseCategories?.filter(category => category && category.name).map((category) => (
             <TabsTrigger key={category.id} value={category.id}>
               {category.name}
             </TabsTrigger>
@@ -223,7 +223,7 @@ export default function ExerciseLibrary() {
           <ScrollArea className="max-h-[70vh] pr-4">
             <ExerciseBatchUpload 
               onSubmit={handleBatchSubmit} 
-              categories={categories}
+              categories={exerciseCategories}
             />
           </ScrollArea>
         </DialogContent>
