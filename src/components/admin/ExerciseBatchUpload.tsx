@@ -258,15 +258,21 @@ export function ExerciseBatchUpload({ onSubmit, categories }: ExerciseBatchUploa
           const fileName = `${uuidv4()}.${fileExt}`;
           const filePath = `exercises/${fileName}`;
           
+          console.log(`Uploading file ${i + 1}/${fileList.length}: ${fileData.name}`);
+          
           // Upload file to Supabase Storage
-          const { error: uploadError } = await supabase.storage
+          const { error: uploadError, data: uploadData } = await supabase.storage
             .from('exercises')
             .upload(filePath, fileData.file);
             
           if (uploadError) {
+            console.error(`Upload error for ${fileData.name}:`, uploadError);
             updateFileStatus(i, { status: 'error', error: uploadError.message });
+            toast.error(`Erro ao fazer upload de ${fileData.name}: ${uploadError.message}`);
             continue;
           }
+
+          console.log(`Upload successful for ${fileData.name}:`, uploadData);
 
           // Get public URL
           const { data: { publicUrl } } = supabase.storage
@@ -276,17 +282,31 @@ export function ExerciseBatchUpload({ onSubmit, categories }: ExerciseBatchUploa
           updateFileStatus(i, { status: 'success', uploadedUrl: publicUrl, uploadProgress: 100 });
           
           // Make sure we're using a valid UUID for category_id
-          results.push({
+          const exerciseData = {
             name: fileData.name,
             description: null,
             category_id: values.category_id, // This is validated as a UUID by our form schema
             image_url: publicUrl,
             video_url: null,
-          });
+          };
+          
+          console.log(`Adding exercise data for ${fileData.name}:`, exerciseData);
+          results.push(exerciseData);
+          
         } catch (error: any) {
+          console.error(`Error processing ${fileData.name}:`, error);
           updateFileStatus(i, { status: 'error', error: error.message });
+          toast.error(`Erro ao processar ${fileData.name}: ${error.message}`);
         }
       }
+
+      // Check if we have any successful uploads
+      if (results.length === 0) {
+        toast.error("Nenhum arquivo foi carregado com sucesso. Verifique os erros e tente novamente.");
+        return;
+      }
+
+      console.log(`Successfully processed ${results.length} files out of ${fileList.length} total files`);
 
       console.log("Submitting batch with data:", results);
       await onSubmit(results);
