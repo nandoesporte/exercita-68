@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Exercita - Seu Companheiro de Fitness</title>
+    <meta name="description" content="Seu companheiro personalizado de fitness com treinos, acompanhamento de exercícios e monitoramento de saúde em um único aplicativo." />
+    <meta name="author" content="Exercita" />
+
+    <!-- PWA meta tags -->
+    <meta name="theme-color" content="#0c1421" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Exercita" />
+
+    <!-- PWA manifest -->
+    <link rel="manifest" href="/manifest.json" />
+    
+    <!-- Apple touch icons -->
+    <link rel="apple-touch-icon" href="/lovable-uploads/261bfa34-e60d-4bd5-aeff-5868a556342b.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="/lovable-uploads/261bfa34-e60d-4bd5-aeff-5868a556342b.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/lovable-uploads/261bfa34-e60d-4bd5-aeff-5868a556342b.png" />
+    <link rel="apple-touch-icon" sizes="167x167" href="/lovable-uploads/261bfa34-e60d-4bd5-aeff-5868a556342b.png" />
+
+    <!-- Open Graph tags -->
+    <meta property="og:title" content="Exercita - Seu Companheiro de Fitness" />
+    <meta property="og:description" content="Seu companheiro personalizado de fitness com treinos, acompanhamento de exercícios e monitoramento de saúde em um único aplicativo." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/lovable-uploads/261bfa34-e60d-4bd5-aeff-5868a556342b.png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@exercita" />
+    <meta name="twitter:image" content="/lovable-uploads/261bfa34-e60d-4bd5-aeff-5868a556342b.png" />
+    
+    <link rel="icon" href="/lovable-uploads/261bfa34-e60d-4bd5-aeff-5868a556342b.png" />
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+    <script type="module" src="/src/main.tsx"></script>
+    <!-- PWA registration script -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/serviceWorker.js')
+            .then(function(registration) {
+              console.log('ServiceWorker registrado com sucesso:', registration.scope);
+            })
+            .catch(function(error) {
+              console.log('Falha ao registrar o ServiceWorker:', error);
+            });
+        });
+      }
+    </script>
+  </body>
+</html>

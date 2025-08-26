@@ -1,0 +1,334 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 210 20% 98%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 18 85% 60%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: 210 40% 96%;
+    --accent-foreground: 222 47% 11%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --success: 142 76% 36%;
+    --success-foreground: 210 40% 98%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 18 85% 60%;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5% 26%;
+    --sidebar-primary: 18 85% 60%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 5% 96%;
+    --sidebar-accent-foreground: 240 6% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 18 85% 60%;
+  }
+
+  .dark {
+    --background: 222 20% 15%;
+    --foreground: 210 40% 98%;
+
+    --card: 222 20% 15%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 20% 15%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 18 85% 60%;
+    --primary-foreground: 222 47% 11%;
+
+    --secondary: 217 33% 18%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217 33% 18%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 217 33% 18%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+
+    --success: 142 76% 46%;
+    --success-foreground: 210 40% 98%;
+
+    --border: 217 33% 25%;
+    --input: 217 33% 25%;
+    --ring: 18 85% 60%;
+
+    --sidebar-background: 222 20% 15%;
+    --sidebar-foreground: 240 5% 96%;
+    --sidebar-primary: 18 85% 60%;
+    --sidebar-primary-foreground: 222 47% 11%;
+    --sidebar-accent: 240 4% 16%;
+    --sidebar-accent-foreground: 240 5% 96%;
+    --sidebar-border: 240 4% 16%;
+    --sidebar-ring: 18 85% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-fitness-dark text-foreground;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Enhanced Typography for Better Readability */
+  h1 {
+    @apply text-3xl md:text-5xl font-bold tracking-tight;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+  
+  h2 {
+    @apply text-2xl md:text-4xl font-semibold tracking-tight;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+  
+  h3 {
+    @apply text-xl md:text-3xl font-medium;
+    line-height: 1.4;
+  }
+  
+  h4 {
+    @apply text-lg md:text-xl font-medium;
+    line-height: 1.4;
+  }
+  
+  p, li {
+    @apply text-base md:text-lg leading-relaxed;
+  }
+  
+  label, input, select, button {
+    @apply text-base md:text-lg;
+    min-height: 44px; /* Better touch targets */
+  }
+  
+  .text-sm {
+    @apply text-base md:text-lg leading-relaxed;
+  }
+  
+  .text-xs {
+    @apply text-sm md:text-base leading-relaxed;
+  }
+  
+  /* Enhanced button text */
+  .btn-text {
+    @apply text-base md:text-lg font-medium;
+  }
+}
+
+@layer utilities {
+  /* Enhanced Cards with Better Spacing */
+  .fitness-card {
+    @apply rounded-xl overflow-hidden bg-card border border-border shadow-sm hover:shadow-lg transition-all duration-300;
+    padding: 1.5rem;
+  }
+  
+  /* Enhanced Buttons for Better Usability */
+  .fitness-btn {
+    @apply rounded-lg font-medium transition-all duration-200 active:scale-[0.98];
+    min-height: 48px;
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+    line-height: 1.2;
+  }
+  
+  .fitness-btn-primary {
+    @apply bg-fitness-green text-white hover:bg-fitness-green/90 hover:shadow-md fitness-btn;
+  }
+  
+  .fitness-btn-secondary {
+    @apply bg-fitness-lightGray text-fitness-dark hover:bg-gray-200 hover:shadow-sm fitness-btn;
+  }
+  
+  /* Enhanced List Items */
+  .workout-list-item {
+    @apply flex items-center gap-6 p-6 rounded-lg hover:bg-secondary/50 transition-colors;
+    min-height: 64px;
+  }
+  
+  /* Better Mobile Sections */
+  .mobile-section {
+    @apply px-6 py-8 md:p-8;
+  }
+  
+  /* Mobile responsive styles for profile page */
+  @media (max-width: 768px) {
+    .mobile-section {
+      @apply px-4 py-6 w-full;
+    }
+    
+    .mobile-section .grid.grid-cols-2 {
+      @apply w-full gap-2;
+    }
+    
+    .mobile-section .fitness-card {
+      @apply w-full;
+    }
+    
+    .mobile-section .bg-fitness-darkGray {
+      @apply w-full;
+    }
+  }
+  
+  /* Admin Panel Specific Improvements */
+  .admin-btn {
+    @apply inline-flex items-center justify-center gap-3 rounded-lg font-medium transition-all duration-200;
+    min-height: 52px;
+    padding: 0.875rem 2rem;
+    font-size: 1.1rem;
+    line-height: 1.2;
+    touch-action: manipulation;
+  }
+  
+  .admin-btn:active {
+    transform: scale(0.98);
+  }
+  
+  .admin-card {
+    @apply bg-card border border-border rounded-xl shadow-sm hover:shadow-md transition-all duration-300;
+    padding: 2rem;
+  }
+  
+  .admin-section {
+    @apply space-y-8 p-6 md:p-8;
+  }
+
+  /* Native app animations */
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.4s ease-out;
+  }
+  
+  .press-animation {
+    @apply active:scale-95 transition-transform;
+  }
+
+  /* Formulário e inputs */
+  .form-input {
+    @apply bg-fitness-darkGray border-fitness-darkGray/50 text-white rounded-lg;
+  }
+  
+  /* Enhanced Form Elements */
+  .form-label {
+    @apply text-lg font-medium mb-3;
+  }
+  
+  .form-input {
+    @apply min-h-[52px] px-4 py-3 text-base rounded-lg;
+  }
+  
+  .text-info {
+    @apply text-base text-muted-foreground leading-relaxed;
+  }
+  
+  .text-meta {
+    @apply text-sm text-muted-foreground/80 leading-relaxed;
+  }
+  
+  /* Enhanced Touch Targets */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+  
+  .touch-target-large {
+    @apply min-h-[52px] min-w-[52px];
+  }
+  
+  /* Corrigir margens no admin layout */
+  .admin-layout {
+    @apply min-h-screen flex flex-col;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .admin-content {
+    @apply flex-1 overflow-y-auto;
+    padding-bottom: 0;
+  }
+
+  /* Improved text visibility for exercise details */
+  .exercise-detail-label {
+    @apply font-medium text-white/80;
+  }
+  
+  .exercise-detail-value {
+    @apply font-semibold text-white;
+  }
+  
+  .exercise-weight-badge {
+    @apply bg-fitness-darkGray/30 px-2 py-1 rounded-full text-sm font-medium text-white flex items-center gap-1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Line clamp utilities */
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
+}

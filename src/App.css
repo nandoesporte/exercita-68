@@ -1,0 +1,8 @@
+
+/* Arquivo limpo para remover margens e padding desnecessários */
+#root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  text-align: initial;
+}
