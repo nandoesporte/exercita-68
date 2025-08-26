@@ -64,7 +64,7 @@ export default function AdminManagement() {
   const toggleUserAdminMutation = useMutation({
     mutationFn: async ({ userId, makeAdmin }: { userId: string, makeAdmin: boolean }) => {
       const { data, error } = await supabase.rpc('toggle_user_admin_status', {
-        user_id: userId,
+        target_user_id: userId,
         make_admin: makeAdmin,
       });
 

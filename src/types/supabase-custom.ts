@@ -15,7 +15,7 @@ export type ExtendedDatabase = Database & {
       }
       toggle_user_admin_status: {
         Args: {
-          user_id: string
+          target_user_id: string
           make_admin: boolean
         }
         Returns: { success: boolean; message: string }
