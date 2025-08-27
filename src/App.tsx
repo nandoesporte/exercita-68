@@ -57,6 +57,7 @@ import SuperAdminDashboard from "@/pages/admin/SuperAdminDashboard";
 import RLSChecker from "@/pages/admin/RLSChecker";
 import AdminManagement from "@/pages/admin/AdminManagement";
 import AdminPermissions from "@/pages/admin/AdminPermissions";
+import Health from "@/pages/Health";
 import SubscriptionManagement from "@/pages/admin/SubscriptionManagement";
 
 const App = () => {
@@ -85,7 +86,7 @@ const App = () => {
               <Route path="/gym-photos" element={<GymPhotos />} />
               <Route path="/appointments" element={<Appointments />} />
               
-              {/* Profile related pages */}
+              <Route path="/health" element={<Health />} />
               <Route path="/account" element={<AccountInfo />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/workout-history" element={<WorkoutHistory />} />

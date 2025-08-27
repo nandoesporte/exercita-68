@@ -330,6 +330,39 @@ export type Database = {
           },
         ]
       }
+      health_data: {
+        Row: {
+          calories: number | null
+          created_at: string
+          date: string
+          heart_rate: number | null
+          id: string
+          sleep_hours: number | null
+          steps: number | null
+          user_id: string
+        }
+        Insert: {
+          calories?: number | null
+          created_at?: string
+          date: string
+          heart_rate?: number | null
+          id?: string
+          sleep_hours?: number | null
+          steps?: number | null
+          user_id: string
+        }
+        Update: {
+          calories?: number | null
+          created_at?: string
+          date?: string
+          heart_rate?: number | null
+          id?: string
+          sleep_hours?: number | null
+          steps?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       kiwify_webhook_logs: {
         Row: {
           admin_subscription_id: string | null
