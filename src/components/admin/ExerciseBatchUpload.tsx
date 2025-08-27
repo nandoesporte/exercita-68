@@ -260,10 +260,13 @@ export function ExerciseBatchUpload({ onSubmit, categories }: ExerciseBatchUploa
           
           console.log(`Uploading file ${i + 1}/${fileList.length}: ${fileData.name}`);
           
-          // Upload file to Supabase Storage
+          // Upload file to Supabase Storage with explicit content type
           const { error: uploadError, data: uploadData } = await supabase.storage
             .from('exercises')
-            .upload(filePath, fileData.file);
+            .upload(filePath, fileData.file, {
+              contentType: fileData.file.type,
+              upsert: false
+            });
             
           if (uploadError) {
             console.error(`Upload error for ${fileData.name}:`, uploadError);
