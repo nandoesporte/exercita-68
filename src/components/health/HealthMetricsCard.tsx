@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Activity, Heart, Moon, Zap } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface HealthMetricsCardProps {
   title: string;
@@ -10,6 +11,7 @@ interface HealthMetricsCardProps {
   trend?: 'up' | 'down' | 'stable';
   trendValue?: string;
   color?: string;
+  className?: string;
 }
 
 const iconMap = {
@@ -20,10 +22,10 @@ const iconMap = {
 };
 
 const colorMap = {
-  steps: 'text-blue-600',
-  heart: 'text-red-600',
-  sleep: 'text-purple-600',
-  calories: 'text-orange-600'
+  steps: 'text-orange-600',
+  heart: 'text-orange-600',
+  sleep: 'text-gray-700',
+  calories: 'text-gray-700'
 };
 
 export function HealthMetricsCard({ 
@@ -33,7 +35,8 @@ export function HealthMetricsCard({
   icon, 
   trend, 
   trendValue,
-  color 
+  color,
+  className 
 }: HealthMetricsCardProps) {
   const Icon = iconMap[icon];
   const iconColor = color || colorMap[icon];
@@ -46,20 +49,20 @@ export function HealthMetricsCard({
   };
 
   return (
-    <Card className="relative overflow-hidden">
+    <Card className={cn("relative overflow-hidden rounded-xl shadow-sm", className)}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground">
+        <CardTitle className="text-sm font-medium text-gray-800">
           {title}
         </CardTitle>
-        <Icon className={`h-4 w-4 ${iconColor}`} />
+        <Icon className={`h-5 w-5 ${iconColor}`} />
       </CardHeader>
       <CardContent>
         <div className="flex items-baseline space-x-1">
-          <div className="text-2xl font-bold">
+          <div className={`text-2xl font-bold ${icon === 'steps' || icon === 'sleep' ? 'text-orange-600' : 'text-gray-700'}`}>
             {formatValue(value)}
           </div>
           {unit && (
-            <div className="text-sm text-muted-foreground">
+            <div className="text-sm text-gray-600">
               {unit}
             </div>
           )}
@@ -68,12 +71,17 @@ export function HealthMetricsCard({
           <div className="flex items-center mt-2">
             <Badge 
               variant={trend === 'up' ? 'default' : trend === 'down' ? 'destructive' : 'secondary'}
-              className="text-xs"
+              className={cn(
+                "text-xs",
+                trend === 'up' && "bg-green-100 text-green-700 hover:bg-green-100",
+                trend === 'down' && "bg-red-100 text-red-700 hover:bg-red-100",
+                trend === 'stable' && "bg-gray-100 text-gray-700 hover:bg-gray-100"
+              )}
             >
               {trend === 'up' ? '↗' : trend === 'down' ? '↘' : '→'} {trendValue}
             </Badge>
-            <span className="text-xs text-muted-foreground ml-2">
-              vs. semana anterior
+            <span className="text-xs text-gray-500 ml-2">
+              vs. período anterior
             </span>
           </div>
         )}

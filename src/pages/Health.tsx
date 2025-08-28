@@ -126,24 +126,24 @@ export default function Health() {
     <div className="min-h-screen bg-background p-4 overflow-y-auto">
       <div className="max-w-6xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex items-start sm:items-center justify-between gap-3">
+        <div className="flex items-start sm:items-center justify-between gap-3 mb-6">
           <div className="flex items-center gap-3 flex-1 min-w-0">
             <Button variant="ghost" onClick={() => navigate(-1)} className="shrink-0">
               <ArrowLeft className="h-4 w-4" />
             </Button>
             <div className="min-w-0">
-              <h1 className="text-lg sm:text-xl font-bold truncate">Estatísticas de Saúde</h1>
-              <p className="text-sm sm:text-base text-muted-foreground">Acompanhe seus dados de saúde e bem-estar</p>
+              <h1 className="text-lg sm:text-xl font-bold text-gray-800">Estatísticas de Saúde</h1>
+              <p className="text-sm sm:text-base text-orange-600">Acompanhe seus dados de saúde e bem-estar</p>
             </div>
           </div>
           
           <div className="flex items-center gap-2">
-            <Calendar className="h-4 w-4 shrink-0" />
+            <Calendar className="h-4 w-4 shrink-0 text-orange-500" />
             <Tabs value={dateRange} onValueChange={(value) => setDateRange(value as any)}>
-              <TabsList className="w-full overflow-x-auto sm:overflow-visible max-w-[220px] sm:max-w-none">
-                <TabsTrigger value="week" className="whitespace-nowrap">Semana</TabsTrigger>
-                <TabsTrigger value="month" className="whitespace-nowrap">Mês</TabsTrigger>
-                <TabsTrigger value="all" className="whitespace-nowrap">Todos</TabsTrigger>
+              <TabsList className="w-full overflow-x-auto sm:overflow-visible max-w-[220px] sm:max-w-none bg-gray-50 rounded-lg">
+                <TabsTrigger value="week" className="whitespace-nowrap text-gray-700 data-[state=active]:bg-orange-500 data-[state=active]:text-white">Semana</TabsTrigger>
+                <TabsTrigger value="month" className="whitespace-nowrap text-gray-700 data-[state=active]:bg-orange-500 data-[state=active]:text-white">Mês</TabsTrigger>
+                <TabsTrigger value="all" className="whitespace-nowrap text-gray-700 data-[state=active]:bg-orange-500 data-[state=active]:text-white">Todos</TabsTrigger>
               </TabsList>
             </Tabs>
           </div>
@@ -156,7 +156,7 @@ export default function Health() {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {loading ? (
             Array.from({ length: 4 }).map((_, i) => (
-              <Card key={i}>
+              <Card key={i} className="rounded-xl border border-gray-200 shadow-sm">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <Skeleton className="h-4 w-24" />
                   <Skeleton className="h-4 w-4" />
@@ -175,6 +175,7 @@ export default function Health() {
                 icon="steps"
                 trend={metrics.trends.steps.trend}
                 trendValue={`${metrics.trends.steps.value}%`}
+                className="bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200"
               />
               <HealthMetricsCard
                 title="Frequência Cardíaca"  
@@ -183,6 +184,7 @@ export default function Health() {
                 icon="heart"
                 trend={metrics.trends.heartRate.trend}
                 trendValue={`${metrics.trends.heartRate.value}%`}
+                className="bg-gradient-to-br from-gray-50 to-gray-100 border-gray-200"
               />
               <HealthMetricsCard
                 title="Sono"
@@ -191,6 +193,7 @@ export default function Health() {
                 icon="sleep"
                 trend={metrics.trends.sleep.trend}
                 trendValue={`${metrics.trends.sleep.value}%`}
+                className="bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200"
               />
               <HealthMetricsCard
                 title="Calorias"
@@ -199,6 +202,7 @@ export default function Health() {
                 icon="calories"
                 trend={metrics.trends.calories.trend}
                 trendValue={`${metrics.trends.calories.value}%`}
+                className="bg-gradient-to-br from-gray-50 to-gray-100 border-gray-200"
               />
             </>
           )}
@@ -208,7 +212,7 @@ export default function Health() {
         {loading ? (
           <div className="grid gap-6 md:grid-cols-2">
             {Array.from({ length: 4 }).map((_, i) => (
-              <Card key={i}>
+              <Card key={i} className="rounded-xl border border-gray-200 shadow-sm">
                 <CardHeader>
                   <Skeleton className="h-6 w-32" />
                 </CardHeader>
@@ -220,11 +224,11 @@ export default function Health() {
           </div>
         ) : (
           <Tabs defaultValue="steps" className="space-y-4">
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="steps">Passos</TabsTrigger>
-              <TabsTrigger value="heart">Batimentos</TabsTrigger>
-              <TabsTrigger value="sleep">Sono</TabsTrigger>
-              <TabsTrigger value="calories">Calorias</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-4 bg-gray-100 rounded-lg p-1">
+              <TabsTrigger value="steps" className="text-gray-700 data-[state=active]:bg-orange-500 data-[state=active]:text-white rounded-md">Passos</TabsTrigger>
+              <TabsTrigger value="heart" className="text-gray-700 data-[state=active]:bg-orange-500 data-[state=active]:text-white rounded-md">Batimentos</TabsTrigger>
+              <TabsTrigger value="sleep" className="text-gray-700 data-[state=active]:bg-orange-500 data-[state=active]:text-white rounded-md">Sono</TabsTrigger>
+              <TabsTrigger value="calories" className="text-gray-700 data-[state=active]:bg-orange-500 data-[state=active]:text-white rounded-md">Calorias</TabsTrigger>
             </TabsList>
             
             <TabsContent value="steps" className="space-y-4">
@@ -275,30 +279,30 @@ export default function Health() {
 
         {/* Summary */}
         {!loading && data.length > 0 && (
-          <Card>
+          <Card className="rounded-xl border border-gray-200 shadow-sm">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <TrendingUp className="h-5 w-5" />
+              <CardTitle className="flex items-center gap-2 text-gray-800">
+                <TrendingUp className="h-5 w-5 text-orange-500" />
                 Resumo do Período
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-blue-600">{metrics.totalSteps.toLocaleString()}</p>
-                  <p className="text-sm text-muted-foreground">Total de Passos</p>
+                <div className="text-center p-4 bg-orange-50 rounded-lg">
+                  <p className="text-2xl font-bold text-orange-600">{metrics.totalSteps.toLocaleString()}</p>
+                  <p className="text-sm text-gray-600">Total de Passos</p>
                 </div>
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-red-600">{metrics.avgHeartRate}</p>
-                  <p className="text-sm text-muted-foreground">BPM Médio</p>
+                <div className="text-center p-4 bg-gray-50 rounded-lg">
+                  <p className="text-2xl font-bold text-gray-700">{metrics.avgHeartRate}</p>
+                  <p className="text-sm text-gray-600">BPM Médio</p>
                 </div>
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-purple-600">{metrics.avgSleep}h</p>
-                  <p className="text-sm text-muted-foreground">Sono Médio</p>
+                <div className="text-center p-4 bg-orange-50 rounded-lg">
+                  <p className="text-2xl font-bold text-orange-600">{metrics.avgSleep}h</p>
+                  <p className="text-sm text-gray-600">Sono Médio</p>
                 </div>
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-orange-600">{Math.round(metrics.totalCalories).toLocaleString()}</p>
-                  <p className="text-sm text-muted-foreground">Total de Calorias</p>
+                <div className="text-center p-4 bg-gray-50 rounded-lg">
+                  <p className="text-2xl font-bold text-gray-700">{Math.round(metrics.totalCalories).toLocaleString()}</p>
+                  <p className="text-sm text-gray-600">Total de Calorias</p>
                 </div>
               </div>
             </CardContent>
