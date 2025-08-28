@@ -59,6 +59,7 @@ import AdminManagement from "@/pages/admin/AdminManagement";
 import AdminPermissions from "@/pages/admin/AdminPermissions";
 import Health from "@/pages/Health";
 import SubscriptionManagement from "@/pages/admin/SubscriptionManagement";
+import HealthIntegrationManagement from "@/pages/admin/HealthIntegrationManagement";
 
 const App = () => {
   return (
@@ -134,6 +135,8 @@ const App = () => {
               <Route path="permissions" element={<AdminPermissions />} />
               {/* Subscription Management */}
               <Route path="subscriptions" element={<SubscriptionManagement />} />
+              {/* Health Integration Management - Super Admin only */}
+              <Route path="health-integrations" element={<HealthIntegrationManagement />} />
             </Route>
             
             {/* 404 */}
