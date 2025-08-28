@@ -123,27 +123,27 @@ export default function Health() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-4">
+    <div className="min-h-screen bg-background p-4 overflow-y-auto">
       <div className="max-w-6xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" onClick={() => navigate(-1)}>
+        <div className="flex items-start sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3 flex-1 min-w-0">
+            <Button variant="ghost" onClick={() => navigate(-1)} className="shrink-0">
               <ArrowLeft className="h-4 w-4" />
             </Button>
-            <div>
-              <h1 className="text-2xl font-bold">Estatísticas de Saúde</h1>
-              <p className="text-muted-foreforge">Acompanhe seus dados de saúde e bem-estar</p>
+            <div className="min-w-0">
+              <h1 className="text-lg sm:text-xl font-bold truncate">Estatísticas de Saúde</h1>
+              <p className="text-sm sm:text-base text-muted-foreground">Acompanhe seus dados de saúde e bem-estar</p>
             </div>
           </div>
           
           <div className="flex items-center gap-2">
-            <Calendar className="h-4 w-4" />
+            <Calendar className="h-4 w-4 shrink-0" />
             <Tabs value={dateRange} onValueChange={(value) => setDateRange(value as any)}>
-              <TabsList>
-                <TabsTrigger value="week">Semana</TabsTrigger>
-                <TabsTrigger value="month">Mês</TabsTrigger>
-                <TabsTrigger value="all">Todos</TabsTrigger>
+              <TabsList className="w-full overflow-x-auto sm:overflow-visible max-w-[220px] sm:max-w-none">
+                <TabsTrigger value="week" className="whitespace-nowrap">Semana</TabsTrigger>
+                <TabsTrigger value="month" className="whitespace-nowrap">Mês</TabsTrigger>
+                <TabsTrigger value="all" className="whitespace-nowrap">Todos</TabsTrigger>
               </TabsList>
             </Tabs>
           </div>
