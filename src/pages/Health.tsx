@@ -130,28 +130,45 @@ export default function Health() {
     <div className="min-h-screen bg-fitness-dark p-4 overflow-y-auto">
       <div className="max-w-6xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex items-start sm:items-center justify-between gap-3 mb-6">
-          <div className="flex items-center gap-3 flex-1 min-w-0">
+        <div className="mb-6">
+          {/* Back button and title section */}
+          <div className="flex items-center gap-3 mb-4">
             <Button 
               variant="ghost" 
               onClick={() => navigate(-1)} 
-              className="shrink-0 text-white hover:bg-fitness-darkGray"
+              className="shrink-0 text-white hover:bg-fitness-darkGray p-2 h-10 w-10"
             >
-              <ArrowLeft className="h-4 w-4" />
+              <ArrowLeft className="h-5 w-5" />
             </Button>
-            <div className="min-w-0">
-              <h1 className="text-lg sm:text-xl font-bold text-white">Estatísticas de Saúde</h1>
-              <p className="text-sm sm:text-base text-fitness-orange">Acompanhe seus dados de saúde e bem-estar</p>
+            <div className="flex-1 min-w-0">
+              <h1 className="text-xl sm:text-2xl font-bold text-white leading-tight">Estatísticas de Saúde</h1>
+              <p className="text-sm sm:text-base text-fitness-orange mt-1">Acompanhe seus dados de saúde e bem-estar</p>
             </div>
           </div>
           
-          <div className="flex items-center gap-2">
-            <Calendar className="h-4 w-4 shrink-0 text-fitness-orange" />
-            <Tabs value={dateRange} onValueChange={(value) => setDateRange(value as any)}>
-              <TabsList className="w-full overflow-x-auto sm:overflow-visible max-w-[220px] sm:max-w-none bg-fitness-darkGray rounded-lg">
-                <TabsTrigger value="week" className="whitespace-nowrap text-gray-300 data-[state=active]:bg-fitness-orange data-[state=active]:text-white">Semana</TabsTrigger>
-                <TabsTrigger value="month" className="whitespace-nowrap text-gray-300 data-[state=active]:bg-fitness-orange data-[state=active]:text-white">Mês</TabsTrigger>
-                <TabsTrigger value="all" className="whitespace-nowrap text-gray-300 data-[state=active]:bg-fitness-orange data-[state=active]:text-white">Todos</TabsTrigger>
+          {/* Filters section */}
+          <div className="flex items-center justify-center sm:justify-start gap-2">
+            <Calendar className="h-4 w-4 text-fitness-orange shrink-0" />
+            <Tabs value={dateRange} onValueChange={(value) => setDateRange(value as any)} className="w-full max-w-sm">
+              <TabsList className="grid w-full grid-cols-3 bg-fitness-darkGray rounded-lg p-1 h-10">
+                <TabsTrigger 
+                  value="week" 
+                  className="text-xs sm:text-sm font-medium text-gray-300 data-[state=active]:bg-fitness-orange data-[state=active]:text-white rounded-md transition-all"
+                >
+                  Semana
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="month" 
+                  className="text-xs sm:text-sm font-medium text-gray-300 data-[state=active]:bg-fitness-orange data-[state=active]:text-white rounded-md transition-all"
+                >
+                  Mês
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="all" 
+                  className="text-xs sm:text-sm font-medium text-gray-300 data-[state=active]:bg-fitness-orange data-[state=active]:text-white rounded-md transition-all"
+                >
+                  Todos
+                </TabsTrigger>
               </TabsList>
             </Tabs>
           </div>
