@@ -330,6 +330,54 @@ export type Database = {
           },
         ]
       }
+      health_connections: {
+        Row: {
+          access_token: string | null
+          created_at: string
+          error_message: string | null
+          id: string
+          is_active: boolean | null
+          last_sync_at: string | null
+          provider: string
+          refresh_token: string | null
+          status: string
+          sync_frequency_minutes: number | null
+          token_expires_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          access_token?: string | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          is_active?: boolean | null
+          last_sync_at?: string | null
+          provider: string
+          refresh_token?: string | null
+          status?: string
+          sync_frequency_minutes?: number | null
+          token_expires_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          access_token?: string | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          is_active?: boolean | null
+          last_sync_at?: string | null
+          provider?: string
+          refresh_token?: string | null
+          status?: string
+          sync_frequency_minutes?: number | null
+          token_expires_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       health_data: {
         Row: {
           calories: number | null
@@ -362,6 +410,101 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      health_provider_settings: {
+        Row: {
+          additional_config: Json | null
+          api_key: string | null
+          client_id: string | null
+          client_secret: string | null
+          created_at: string
+          id: string
+          is_enabled: boolean | null
+          provider: string
+          redirect_uri: string | null
+          scopes: Json | null
+          updated_at: string
+        }
+        Insert: {
+          additional_config?: Json | null
+          api_key?: string | null
+          client_id?: string | null
+          client_secret?: string | null
+          created_at?: string
+          id?: string
+          is_enabled?: boolean | null
+          provider: string
+          redirect_uri?: string | null
+          scopes?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          additional_config?: Json | null
+          api_key?: string | null
+          client_id?: string | null
+          client_secret?: string | null
+          created_at?: string
+          id?: string
+          is_enabled?: boolean | null
+          provider?: string
+          redirect_uri?: string | null
+          scopes?: Json | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      health_sync_logs: {
+        Row: {
+          connection_id: string
+          data_range_end: string | null
+          data_range_start: string | null
+          error_message: string | null
+          id: string
+          provider: string
+          records_synced: number | null
+          status: string
+          sync_completed_at: string | null
+          sync_started_at: string
+          sync_type: string
+          user_id: string
+        }
+        Insert: {
+          connection_id: string
+          data_range_end?: string | null
+          data_range_start?: string | null
+          error_message?: string | null
+          id?: string
+          provider: string
+          records_synced?: number | null
+          status: string
+          sync_completed_at?: string | null
+          sync_started_at?: string
+          sync_type?: string
+          user_id: string
+        }
+        Update: {
+          connection_id?: string
+          data_range_end?: string | null
+          data_range_start?: string | null
+          error_message?: string | null
+          id?: string
+          provider?: string
+          records_synced?: number | null
+          status?: string
+          sync_completed_at?: string | null
+          sync_started_at?: string
+          sync_type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "health_sync_logs_connection_id_fkey"
+            columns: ["connection_id"]
+            isOneToOne: false
+            referencedRelation: "health_connections"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       kiwify_webhook_logs: {
         Row: {
