@@ -41,11 +41,25 @@ Deno.serve(async (req) => {
       )
     }
 
-    // Set auth token
-    supabaseClient.auth.setAuth(authHeader.replace('Bearer ', ''))
+    // Create authenticated client
+    const supabaseAuth = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+      {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false
+        },
+        global: {
+          headers: {
+            Authorization: authHeader
+          }
+        }
+      }
+    )
 
     // Get user from auth token
-    const { data: { user }, error: authError } = await supabaseClient.auth.getUser()
+    const { data: { user }, error: authError } = await supabaseAuth.auth.getUser()
     if (authError || !user) {
       console.error('Auth error:', authError)
       return new Response(
@@ -71,7 +85,7 @@ Deno.serve(async (req) => {
         }
 
         // Insert or update health data
-        const { data: existingData, error: selectError } = await supabaseClient
+        const { data: existingData, error: selectError } = await supabaseAuth
           .from('health_data')
           .select('id')
           .eq('user_id', user.id)
@@ -87,7 +101,7 @@ Deno.serve(async (req) => {
         let result
         if (existingData) {
           // Update existing record
-          const { data: updatedData, error: updateError } = await supabaseClient
+          const { data: updatedData, error: updateError } = await supabaseAuth
             .from('health_data')
             .update({
               steps: data.steps,
@@ -107,7 +121,7 @@ Deno.serve(async (req) => {
           }
         } else {
           // Insert new record
-          const { data: insertedData, error: insertError } = await supabaseClient
+          const { data: insertedData, error: insertError } = await supabaseAuth
             .from('health_data')
             .insert({
               user_id: user.id,
@@ -150,7 +164,7 @@ Deno.serve(async (req) => {
       const endDate = url.searchParams.get('end_date')
       const limit = parseInt(url.searchParams.get('limit') || '30')
 
-      let query = supabaseClient
+      let query = supabaseAuth
         .from('health_data')
         .select('*')
         .eq('user_id', user.id)
