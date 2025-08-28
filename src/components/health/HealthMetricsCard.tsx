@@ -39,7 +39,6 @@ export function HealthMetricsCard({
   className 
 }: HealthMetricsCardProps) {
   const Icon = iconMap[icon];
-  const iconColor = color || colorMap[icon];
 
   const formatValue = (val: string | number) => {
     if (typeof val === 'number') {
@@ -51,18 +50,18 @@ export function HealthMetricsCard({
   return (
     <Card className={cn("relative overflow-hidden rounded-xl shadow-sm", className)}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium text-gray-800">
+        <CardTitle className="text-sm font-medium text-gray-300">
           {title}
         </CardTitle>
-        <Icon className={`h-5 w-5 ${iconColor}`} />
+        <Icon className="h-5 w-5 text-fitness-orange" />
       </CardHeader>
       <CardContent>
         <div className="flex items-baseline space-x-1">
-          <div className={`text-2xl font-bold ${icon === 'steps' || icon === 'sleep' ? 'text-orange-600' : 'text-gray-700'}`}>
+          <div className="text-2xl font-bold text-white">
             {formatValue(value)}
           </div>
           {unit && (
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-gray-300">
               {unit}
             </div>
           )}
@@ -73,14 +72,14 @@ export function HealthMetricsCard({
               variant={trend === 'up' ? 'default' : trend === 'down' ? 'destructive' : 'secondary'}
               className={cn(
                 "text-xs",
-                trend === 'up' && "bg-green-100 text-green-700 hover:bg-green-100",
-                trend === 'down' && "bg-red-100 text-red-700 hover:bg-red-100",
-                trend === 'stable' && "bg-gray-100 text-gray-700 hover:bg-gray-100"
+                trend === 'up' && "bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/20",
+                trend === 'down' && "bg-red-500/20 text-red-400 hover:bg-red-500/20",
+                trend === 'stable' && "bg-gray-500/20 text-gray-400 hover:bg-gray-500/20"
               )}
             >
               {trend === 'up' ? '↗' : trend === 'down' ? '↘' : '→'} {trendValue}
             </Badge>
-            <span className="text-xs text-gray-500 ml-2">
+            <span className="text-xs text-gray-400 ml-2">
               vs. período anterior
             </span>
           </div>

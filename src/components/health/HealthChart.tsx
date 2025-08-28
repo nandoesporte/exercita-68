@@ -54,21 +54,21 @@ export function HealthChart({
 
   if (processedData.length === 0) {
     return (
-      <Card>
+      <Card className="bg-fitness-darkGray border-none">
         <CardHeader>
-          <CardTitle>{title}</CardTitle>
+          <CardTitle className="text-white">{title}</CardTitle>
         </CardHeader>
         <CardContent className="flex items-center justify-center h-64">
-          <p className="text-muted-foreground">Nenhum dado disponível</p>
+          <p className="text-gray-300">Nenhum dado disponível</p>
         </CardContent>
       </Card>
     );
   }
 
   return (
-    <Card>
+    <Card className="bg-fitness-darkGray border-none">
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
+        <CardTitle className="text-white">{title}</CardTitle>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="h-64 w-full">
@@ -79,12 +79,12 @@ export function HealthChart({
                   dataKey="date" 
                   axisLine={false}
                   tickLine={false}
-                  className="text-xs"
+                  className="text-xs text-gray-300"
                 />
                 <YAxis 
                   axisLine={false}
                   tickLine={false}
-                  className="text-xs"
+                  className="text-xs text-gray-300"
                 />
                 <ChartTooltip 
                   content={<ChartTooltipContent />}
@@ -98,10 +98,10 @@ export function HealthChart({
                 <Line 
                   type="monotone" 
                   dataKey="value" 
-                  stroke={chartColor}
+                  stroke="#FF6B35"
                   strokeWidth={2}
-                  dot={{ fill: chartColor, strokeWidth: 2, r: 4 }}
-                  activeDot={{ r: 6, stroke: chartColor }}
+                  dot={{ fill: "#FF6B35", strokeWidth: 2, r: 4 }}
+                  activeDot={{ r: 6, stroke: "#FF6B35" }}
                 />
               </LineChart>
             ) : (
@@ -110,12 +110,12 @@ export function HealthChart({
                   dataKey="date" 
                   axisLine={false}
                   tickLine={false}
-                  className="text-xs"
+                  className="text-xs text-gray-300"
                 />
                 <YAxis 
                   axisLine={false}
                   tickLine={false}
-                  className="text-xs"
+                  className="text-xs text-gray-300"
                 />
                 <ChartTooltip 
                   content={<ChartTooltipContent />}
@@ -128,7 +128,7 @@ export function HealthChart({
                 />
                 <Bar 
                   dataKey="value" 
-                  fill={chartColor}
+                  fill="#FF6B35"
                   radius={[4, 4, 0, 0]}
                 />
               </BarChart>
