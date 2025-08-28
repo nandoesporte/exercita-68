@@ -81,11 +81,7 @@ export default function HealthIntegrationManagement() {
       if (error) throw error;
       setProviders(data || []);
     } catch (error: any) {
-      toast({
-        title: "Erro ao carregar provedores",
-        description: error.message,
-        variant: "destructive"
-      });
+      toast.error("Erro ao carregar provedores: " + error.message);
     }
   };
 
@@ -102,11 +98,7 @@ export default function HealthIntegrationManagement() {
       if (error) throw error;
       setConnections(data || []);
     } catch (error: any) {
-      toast({
-        title: "Erro ao carregar conexões",
-        description: error.message,
-        variant: "destructive"
-      });
+      toast.error("Erro ao carregar conexões: " + error.message);
     }
   };
 
@@ -124,11 +116,7 @@ export default function HealthIntegrationManagement() {
       if (error) throw error;
       setSyncLogs(data || []);
     } catch (error: any) {
-      toast({
-        title: "Erro ao carregar logs",
-        description: error.message,
-        variant: "destructive"
-      });
+      toast.error("Erro ao carregar logs: " + error.message);
     }
   };
 
@@ -146,18 +134,11 @@ export default function HealthIntegrationManagement() {
 
       if (error) throw error;
 
-      toast({
-        title: "Configurações salvas",
-        description: `Configurações do ${providerNames[provider.provider]} foram salvas com sucesso.`
-      });
+      toast.success(`Configurações do ${providerNames[provider.provider]} foram salvas com sucesso.`);
 
       await fetchProviders();
     } catch (error: any) {
-      toast({
-        title: "Erro ao salvar",
-        description: error.message,
-        variant: "destructive"
-      });
+      toast.error("Erro ao salvar: " + error.message);
     } finally {
       setLoading(false);
     }

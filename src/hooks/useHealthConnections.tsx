@@ -104,11 +104,7 @@ export function useHealthConnections() {
       }
     } catch (err: any) {
       setError(err.message);
-      toast({
-        title: "Erro na conexão",
-        description: err.message,
-        variant: "destructive"
-      });
+      toast.error(`Erro na conexão: ${err.message}`);
     } finally {
       setLoading(false);
     }
@@ -123,16 +119,9 @@ export function useHealthConnections() {
       }).eq('provider', provider);
 
       await fetchConnections();
-      toast({
-        title: "Desconectado",
-        description: `${provider} desconectado com sucesso.`
-      });
+      toast.success(`${provider} desconectado com sucesso.`);
     } catch (err: any) {
-      toast({
-        title: "Erro ao desconectar",
-        description: err.message,
-        variant: "destructive"
-      });
+      toast.error(`Erro ao desconectar: ${err.message}`);
     } finally {
       setLoading(false);
     }
