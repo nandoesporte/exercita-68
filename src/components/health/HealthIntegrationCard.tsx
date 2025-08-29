@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { HealthOnboarding } from './HealthOnboarding';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -7,6 +8,7 @@ import { useHealthConnections } from '@/hooks/useHealthConnections';
 import { Loader2, Smartphone, RefreshCw } from 'lucide-react';
 
 export function HealthIntegrationCard() {
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const {
     loading,
     connectProvider,
@@ -108,13 +110,37 @@ export function HealthIntegrationCard() {
     );
   };
 
+  // Check if user needs onboarding
+  const hasAnyConnection = appleStatus.isConnected || healthConnectStatus.isConnected || samsungStatus.isConnected;
+
+  if (showOnboarding || !hasAnyConnection) {
+    return (
+      <HealthOnboarding 
+        onComplete={() => setShowOnboarding(false)}
+        className="mb-6"
+      />
+    );
+  }
+
   return (
     <Card className="bg-fitness-darkGray border-gray-700">
       <CardHeader>
-        <CardTitle className="text-white">Conectar Dispositivos</CardTitle>
-        <CardDescription className="text-gray-400">
-          Conecte seus dispositivos de saúde para sincronizar dados automaticamente
-        </CardDescription>
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle className="text-white">Dispositivos Conectados</CardTitle>
+            <CardDescription className="text-gray-400">
+              Gerencie suas integrações com dispositivos de saúde
+            </CardDescription>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowOnboarding(true)}
+            className="border-gray-600 text-gray-300 hover:bg-gray-700"
+          >
+            Configurar
+          </Button>
+        </div>
       </CardHeader>
       <CardContent className="space-y-4">
         <ProviderCard

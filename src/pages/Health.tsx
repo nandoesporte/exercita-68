@@ -7,6 +7,7 @@ import { HealthChart } from "@/components/health/HealthChart";
 import { HealthIntegrationCard } from "@/components/health/HealthIntegrationCard";
 import { useHealthData } from "@/hooks/useHealthData";
 import { useHealthSync } from "@/hooks/useHealthSync";
+import { CompanionAppButton } from "@/components/health/CompanionAppButton";
 import { ArrowLeft, Calendar, TrendingUp, RefreshCw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -198,6 +199,9 @@ export default function Health() {
           </div>
         </div>
 
+        {/* Companion App Button */}
+        <CompanionAppButton />
+        
         {/* Integration Card */}
         <HealthIntegrationCard />
 
