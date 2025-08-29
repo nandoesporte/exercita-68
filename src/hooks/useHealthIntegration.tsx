@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { toast } from '@/hooks/use-toast';
+import HealthConnect from '@/plugins/HealthConnect';
 
 declare global {
   interface Window {
@@ -19,38 +20,33 @@ export interface AppleHealthKitPermissions {
 }
 
 export function useHealthIntegration() {
-  const [isGoogleFitConnected, setIsGoogleFitConnected] = useState(false);
+  const [isHealthConnectConnected, setIsHealthConnectConnected] = useState(false);
   const [isAppleHealthKitConnected, setIsAppleHealthKitConnected] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // Google Fit Integration
-  const connectGoogleFit = async () => {
+  // Health Connect Integration (Android)
+  const connectHealthConnect = async () => {
     try {
       setLoading(true);
 
-      if (!window.gapi) {
-        // Load Google API
-        await loadGoogleAPI();
+      // Check if Health Connect is available
+      const availability = await HealthConnect.isAvailable();
+      if (!availability.available) {
+        toast("Health Connect não está disponível neste dispositivo");
+        return;
       }
 
-      await window.gapi.load('auth2', async () => {
-        const authInstance = window.gapi.auth2.getAuthInstance();
-        if (!authInstance) {
-          await window.gapi.auth2.init({
-            client_id: 'YOUR_GOOGLE_CLIENT_ID', // User needs to configure this
-            scope: 'https://www.googleapis.com/auth/fitness.activity.read https://www.googleapis.com/auth/fitness.heart_rate.read https://www.googleapis.com/auth/fitness.sleep.read'
-          });
-        }
-
-        const user = await window.gapi.auth2.getAuthInstance().signIn();
-        if (user.isSignedIn()) {
-          setIsGoogleFitConnected(true);
-          toast("Google Fit conectado - Agora você pode sincronizar seus dados de saúde.");
-        }
-      });
+      // Request permissions
+      const permissions = await HealthConnect.requestPermissions();
+      if (permissions.granted) {
+        setIsHealthConnectConnected(true);
+        toast("Health Connect conectado - Agora você pode sincronizar seus dados de saúde.");
+      } else {
+        toast("Permissões necessárias não foram concedidas");
+      }
     } catch (error) {
-      console.error('Google Fit connection error:', error);
-      toast("Erro na conexão - Não foi possível conectar com o Google Fit.");
+      console.error('Health Connect connection error:', error);
+      toast("Erro na conexão - Não foi possível conectar com o Health Connect.");
     } finally {
       setLoading(false);
     }
@@ -66,40 +62,25 @@ export function useHealthIntegration() {
     });
   };
 
-  const fetchGoogleFitData = async (startDate: Date, endDate: Date) => {
-    if (!isGoogleFitConnected || !window.gapi) {
-      throw new Error('Google Fit not connected');
+  const fetchHealthConnectData = async (startDate: Date, endDate: Date) => {
+    if (!isHealthConnectConnected) {
+      throw new Error('Health Connect not connected');
     }
 
     try {
       setLoading(true);
 
-      await window.gapi.client.load('fitness', 'v1');
+      const startDateStr = startDate.toISOString().split('T')[0];
+      const endDateStr = endDate.toISOString().split('T')[0];
 
-      const startTimeMillis = startDate.getTime();
-      const endTimeMillis = endDate.getTime();
-
-      // Fetch steps data
-      const stepsResponse = await window.gapi.client.fitness.users.dataSources.dataPointChanges.list({
-        userId: 'me',
-        dataSourceId: 'derived:com.google.step_count.delta:com.google.android.gms:estimated_steps',
-        startTime: new Date(startTimeMillis).toISOString(),
-        endTime: new Date(endTimeMillis).toISOString()
+      const healthData = await HealthConnect.getHealthData({
+        startDate: startDateStr,
+        endDate: endDateStr
       });
 
-      // Fetch heart rate data
-      const heartRateResponse = await window.gapi.client.fitness.users.dataSources.dataPointChanges.list({
-        userId: 'me',
-        dataSourceId: 'derived:com.google.heart_rate.bpm:com.google.android.gms:merge_heart_rate_bpm',
-        startTime: new Date(startTimeMillis).toISOString(),
-        endTime: new Date(endTimeMillis).toISOString()
-      });
-
-      // Process and return data
-      const healthData = processGoogleFitData(stepsResponse.result, heartRateResponse.result);
       return healthData;
     } catch (error) {
-      console.error('Error fetching Google Fit data:', error);
+      console.error('Error fetching Health Connect data:', error);
       throw error;
     } finally {
       setLoading(false);
@@ -213,24 +194,40 @@ export function useHealthIntegration() {
   };
 
   const disconnect = () => {
-    setIsGoogleFitConnected(false);
+    setIsHealthConnectConnected(false);
     setIsAppleHealthKitConnected(false);
-    
-    if (window.gapi?.auth2) {
-      window.gapi.auth2.getAuthInstance().signOut();
-    }
     
     toast("Desconectado - Integração com serviços de saúde desconectada.");
   };
 
+  const syncHealthData = async () => {
+    try {
+      setLoading(true);
+      const result = await HealthConnect.syncHealthData();
+      if (result.success) {
+        toast("Dados de saúde sincronizados com sucesso!");
+      } else {
+        toast("Erro ao sincronizar dados de saúde");
+      }
+      return result;
+    } catch (error) {
+      console.error('Error syncing health data:', error);
+      toast("Erro ao sincronizar dados de saúde");
+      return { success: false };
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
-    isGoogleFitConnected,
+    isHealthConnectConnected,
     isAppleHealthKitConnected,
     loading,
-    connectGoogleFit,
+    connectHealthConnect,
     connectAppleHealthKit,
-    fetchGoogleFitData,
+    fetchHealthConnectData,
     fetchAppleHealthKitData,
+    syncHealthData,
     disconnect
   };
 }

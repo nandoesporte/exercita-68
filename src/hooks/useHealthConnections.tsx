@@ -73,6 +73,37 @@ export function useHealthConnections() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Usuário não autenticado');
 
+      // Special handling for Health Connect (native Android)
+      if (provider === 'health_connect') {
+        // Import and use the Health Connect plugin
+        const HealthConnect = (await import('@/plugins/HealthConnect')).default;
+        
+        const availability = await HealthConnect.isAvailable();
+        if (!availability.available) {
+          throw new Error('Health Connect não está disponível neste dispositivo');
+        }
+
+        const permissions = await HealthConnect.requestPermissions();
+        if (!permissions.granted) {
+          throw new Error('Permissões necessárias não foram concedidas');
+        }
+
+        // Update connection status in database
+        await supabase.from('health_connections').upsert({
+          user_id: user.id,
+          provider: 'health_connect',
+          status: 'connected',
+          sync_frequency_minutes: 60,
+          is_active: true,
+          last_sync_at: new Date().toISOString()
+        }, { onConflict: 'user_id,provider' });
+        
+        await fetchConnections();
+        toast.success('Health Connect conectado com sucesso!');
+        return;
+      }
+
+      // For other providers, use OAuth flow
       const providerSetting = providerSettings.find(p => p.provider === provider);
       if (!providerSetting?.is_enabled) {
         throw new Error('Este provedor não está habilitado.');

@@ -15,7 +15,7 @@ export function HealthIntegrationCard() {
   } = useHealthConnections();
 
   const appleStatus = getConnectionStatus('apple_health');
-  const googleStatus = getConnectionStatus('google_fit'); 
+  const healthConnectStatus = getConnectionStatus('health_connect'); 
   const samsungStatus = getConnectionStatus('samsung_health');
 
   const handleConnect = async (provider: string) => {
@@ -39,7 +39,7 @@ export function HealthIntegrationCard() {
     name: string;
     status: ReturnType<typeof getConnectionStatus>;
   }) => {
-    const showMobileOnly = provider === 'apple_health';
+    const showMobileOnly = provider === 'apple_health' || provider === 'health_connect';
     
     return (
       <div className="flex items-center justify-between p-4 bg-fitness-dark rounded-lg">
@@ -124,10 +124,10 @@ export function HealthIntegrationCard() {
           status={appleStatus}
         />
         <ProviderCard
-          provider="google_fit"
-          icon="📊"
-          name="Google Fit"
-          status={googleStatus}
+          provider="health_connect"
+          icon="🏥"
+          name="Health Connect (Android)"
+          status={healthConnectStatus}
         />
         <ProviderCard
           provider="samsung_health"

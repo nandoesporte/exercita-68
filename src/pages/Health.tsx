@@ -6,15 +6,18 @@ import { HealthMetricsCard } from "@/components/health/HealthMetricsCard";
 import { HealthChart } from "@/components/health/HealthChart";
 import { HealthIntegrationCard } from "@/components/health/HealthIntegrationCard";
 import { useHealthData } from "@/hooks/useHealthData";
-import { ArrowLeft, Calendar, TrendingUp } from "lucide-react";
+import { useHealthSync } from "@/hooks/useHealthSync";
+import { ArrowLeft, Calendar, TrendingUp, RefreshCw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format, subDays, startOfWeek, endOfWeek, startOfMonth, endOfMonth } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { cn } from "@/lib/utils";
 
 export default function Health() {
   const navigate = useNavigate();
   const [dateRange, setDateRange] = useState<'week' | 'month' | 'all'>('month');
+  const { syncing, lastSyncDate, syncHealthData } = useHealthSync();
   
   // Calculate date range
   const today = new Date();
@@ -141,8 +144,29 @@ export default function Health() {
               <ArrowLeft className="h-5 w-5" />
             </Button>
             <div className="flex-1 min-w-0">
-              <h1 className="text-xl sm:text-2xl font-bold text-white leading-tight">Estatísticas de Saúde</h1>
-              <p className="text-sm sm:text-base text-fitness-orange mt-1">Acompanhe seus dados de saúde e bem-estar</p>
+              <div className="flex items-center justify-between">
+                <div>
+                  <h1 className="text-xl sm:text-2xl font-bold text-white leading-tight">Estatísticas de Saúde</h1>
+                  <p className="text-sm sm:text-base text-fitness-orange mt-1">Acompanhe seus dados de saúde e bem-estar</p>
+                </div>
+                
+                <div className="flex items-center gap-3">
+                  {lastSyncDate && (
+                    <p className="text-xs text-gray-400 hidden sm:block">
+                      Última sync: {lastSyncDate.toLocaleString('pt-BR')}
+                    </p>
+                  )}
+                  <Button
+                    onClick={syncHealthData}
+                    disabled={syncing}
+                    size="sm"
+                    className="bg-fitness-orange hover:bg-fitness-orange/90 text-white"
+                  >
+                    <RefreshCw className={cn("h-4 w-4 mr-2", syncing && "animate-spin")} />
+                    {syncing ? 'Sync...' : 'Sincronizar'}
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
           
