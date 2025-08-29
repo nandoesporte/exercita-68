@@ -196,6 +196,48 @@ export type Database = {
           },
         ]
       }
+      device_keys: {
+        Row: {
+          app_version: string | null
+          created_at: string
+          device_id: string
+          device_name: string | null
+          hmac_secret: string
+          id: string
+          is_active: boolean
+          last_used_at: string | null
+          platform: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          app_version?: string | null
+          created_at?: string
+          device_id: string
+          device_name?: string | null
+          hmac_secret: string
+          id?: string
+          is_active?: boolean
+          last_used_at?: string | null
+          platform: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          app_version?: string | null
+          created_at?: string
+          device_id?: string
+          device_name?: string | null
+          hmac_secret?: string
+          id?: string
+          is_active?: boolean
+          last_used_at?: string | null
+          platform?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       equipment_based_workouts: {
         Row: {
           admin_id: string | null
@@ -378,6 +420,45 @@ export type Database = {
         }
         Relationships: []
       }
+      health_consents: {
+        Row: {
+          consent_type: string
+          created_at: string
+          device_id: string
+          granted: boolean
+          granted_at: string | null
+          id: string
+          platform: string
+          revoked_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          consent_type: string
+          created_at?: string
+          device_id: string
+          granted?: boolean
+          granted_at?: string | null
+          id?: string
+          platform: string
+          revoked_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          consent_type?: string
+          created_at?: string
+          device_id?: string
+          granted?: boolean
+          granted_at?: string | null
+          id?: string
+          platform?: string
+          revoked_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       health_data: {
         Row: {
           calories: number | null
@@ -455,11 +536,16 @@ export type Database = {
       }
       health_sync_logs: {
         Row: {
+          app_version: string | null
           connection_id: string
           data_range_end: string | null
           data_range_start: string | null
+          device_id: string | null
           error_message: string | null
+          hmac_valid: boolean | null
           id: string
+          idempotency_key: string | null
+          platform: string | null
           provider: string
           records_synced: number | null
           status: string
@@ -469,11 +555,16 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          app_version?: string | null
           connection_id: string
           data_range_end?: string | null
           data_range_start?: string | null
+          device_id?: string | null
           error_message?: string | null
+          hmac_valid?: boolean | null
           id?: string
+          idempotency_key?: string | null
+          platform?: string | null
           provider: string
           records_synced?: number | null
           status: string
@@ -483,11 +574,16 @@ export type Database = {
           user_id: string
         }
         Update: {
+          app_version?: string | null
           connection_id?: string
           data_range_end?: string | null
           data_range_start?: string | null
+          device_id?: string | null
           error_message?: string | null
+          hmac_valid?: boolean | null
           id?: string
+          idempotency_key?: string | null
+          platform?: string | null
           provider?: string
           records_synced?: number | null
           status?: string

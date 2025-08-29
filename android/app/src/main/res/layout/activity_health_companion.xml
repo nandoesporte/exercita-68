@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="#1a1a1a">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="32dp">
+        
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_health"
+            android:tint="#FF6B35"
+            android:layout_marginEnd="16dp" />
+        
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Exercita Health"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+            
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sincronização de Dados de Saúde"
+                android:textColor="#CCCCCC"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Status Card -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        app:cardBackgroundColor="#2A2A2A"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Status da Conexão"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/status_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Verificando status..."
+                android:textColor="#CCCCCC"
+                android:textSize="14sp"
+                android:layout_marginBottom="12dp" />
+
+            <TextView
+                android:id="@+id/last_sync_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Última sincronização: Nunca"
+                android:textColor="#888888"
+                android:textSize="12sp"
+                android:visibility="gone" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Instructions Card -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        app:cardBackgroundColor="#2A2A2A"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Como usar"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1. Conecte com o Health Connect para permitir acesso aos dados de saúde\n\n2. Registre este dispositivo com sua conta Exercita\n\n3. Os dados serão sincronizados automaticamente uma vez por dia"
+                android:textColor="#CCCCCC"
+                android:textSize="14sp"
+                android:lineSpacingExtra="4dp" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Action Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="24dp">
+
+        <Button
+            android:id="@+id/connect_button"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="Conectar Health Connect"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:background="@drawable/button_primary"
+            android:layout_marginBottom="12dp"
+            android:elevation="2dp" />
+
+        <Button
+            android:id="@+id/sync_button"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="Sincronizar Agora"
+            android:textColor="#FF6B35"
+            android:textSize="16sp"
+            android:background="@drawable/button_secondary"
+            android:layout_marginBottom="12dp"
+            android:enabled="false" />
+
+        <Button
+            android:id="@+id/settings_button"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Configurações"
+            android:textColor="#CCCCCC"
+            android:textSize="14sp"
+            android:background="@drawable/button_tertiary" />
+    </LinearLayout>
+
+    <!-- Footer -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="bottom|center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dados criptografados e protegidos"
+            android:textColor="#666666"
+            android:textSize="12sp"
+            android:drawableStart="@drawable/ic_security"
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical" />
+    </LinearLayout>
+
+</LinearLayout>

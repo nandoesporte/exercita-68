@@ -2,7 +2,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-signature, x-idempotency-key',
 }
 
 interface HealthDataInput {
@@ -11,6 +11,49 @@ interface HealthDataInput {
   heart_rate?: number;
   sleep_hours?: number;
   calories?: number;
+}
+
+interface CompanionAppSyncData {
+  deviceId: string;
+  platform: 'android' | 'ios';
+  window: {
+    from: string;
+    to: string;
+  };
+  data: HealthDataInput[];
+}
+
+// Verify HMAC signature
+async function verifyHmacSignature(
+  body: string,
+  signature: string,
+  secret: string
+): Promise<boolean> {
+  try {
+    const expectedSignature = signature.replace('sha256=', '')
+    
+    const encoder = new TextEncoder()
+    const keyData = encoder.encode(secret)
+    const messageData = encoder.encode(body)
+    
+    const cryptoKey = await crypto.subtle.importKey(
+      'raw',
+      keyData,
+      { name: 'HMAC', hash: 'SHA-256' },
+      false,
+      ['sign']
+    )
+    
+    const signature_buffer = await crypto.subtle.sign('HMAC', cryptoKey, messageData)
+    const actualSignature = Array.from(new Uint8Array(signature_buffer))
+      .map(b => b.toString(16).padStart(2, '0'))
+      .join('')
+    
+    return actualSignature === expectedSignature
+  } catch (error) {
+    console.error('HMAC verification error:', error)
+    return false
+  }
 }
 
 Deno.serve(async (req) => {
@@ -69,11 +112,138 @@ Deno.serve(async (req) => {
     }
 
     if (req.method === 'POST') {
-      // Sync health data
-      const body = await req.json()
-      const healthData: HealthDataInput[] = Array.isArray(body) ? body : [body]
+      // Get request body as text first for HMAC verification
+      const bodyText = await req.text()
+      let body: HealthDataInput[] | CompanionAppSyncData
+      
+      try {
+        body = JSON.parse(bodyText)
+      } catch {
+        return new Response(
+          JSON.stringify({ error: 'Invalid JSON body' }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
+      }
 
-      console.log(`Syncing ${healthData.length} health data entries for user ${user.id}`)
+      // Check if this is a companion app sync (has deviceId and platform)
+      const isCompanionSync = 'deviceId' in body && 'platform' in body
+      let deviceId: string | null = null
+      let platform: string | null = null
+      let idempotencyKey: string | null = null
+      let hmacValid = false
+
+      if (isCompanionSync) {
+        const syncData = body as CompanionAppSyncData
+        deviceId = syncData.deviceId
+        platform = syncData.platform
+        idempotencyKey = req.headers.get('X-Idempotency-Key')
+        
+        // Verify HMAC signature for companion app sync
+        const signature = req.headers.get('X-Signature')
+        if (!signature) {
+          return new Response(
+            JSON.stringify({ error: 'Missing X-Signature header for companion app sync' }),
+            { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          )
+        }
+
+        if (!idempotencyKey) {
+          return new Response(
+            JSON.stringify({ error: 'Missing X-Idempotency-Key header for companion app sync' }),
+            { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          )
+        }
+
+        // Get device HMAC secret
+        const { data: deviceData, error: deviceError } = await supabaseAuth
+          .from('device_keys')
+          .select('hmac_secret, is_active')
+          .eq('user_id', user.id)
+          .eq('device_id', deviceId)
+          .eq('platform', platform)
+          .single()
+
+        if (deviceError || !deviceData) {
+          console.error('Device not found or error:', deviceError)
+          return new Response(
+            JSON.stringify({ error: 'Device not registered or inactive' }),
+            { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          )
+        }
+
+        if (!deviceData.is_active) {
+          return new Response(
+            JSON.stringify({ error: 'Device is inactive' }),
+            { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          )
+        }
+
+        // Verify HMAC
+        hmacValid = await verifyHmacSignature(bodyText, signature, deviceData.hmac_secret)
+        if (!hmacValid) {
+          console.error('HMAC verification failed')
+          return new Response(
+            JSON.stringify({ error: 'Invalid signature' }),
+            { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          )
+        }
+
+        // Check for duplicate idempotency key
+        const { data: existingSync, error: idempotencyError } = await supabaseAuth
+          .from('health_sync_logs')
+          .select('id')
+          .eq('user_id', user.id)
+          .eq('idempotency_key', idempotencyKey)
+          .single()
+
+        if (existingSync) {
+          return new Response(
+            JSON.stringify({ 
+              message: 'Request already processed',
+              syncLogId: existingSync.id
+            }),
+            { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          )
+        }
+
+        // Update device last used timestamp
+        await supabaseAuth
+          .from('device_keys')
+          .update({ last_used_at: new Date().toISOString() })
+          .eq('user_id', user.id)
+          .eq('device_id', deviceId)
+          .eq('platform', platform)
+      }
+
+      const healthData: HealthDataInput[] = isCompanionSync 
+        ? (body as CompanionAppSyncData).data 
+        : (Array.isArray(body) ? body : [body])
+
+      console.log(`Syncing ${healthData.length} health data entries for user ${user.id}${isCompanionSync ? ` from ${platform} device ${deviceId}` : ''}`)
+
+      // Create sync log entry
+      const syncLogData = {
+        user_id: user.id,
+        provider: isCompanionSync ? platform : 'web',
+        sync_type: isCompanionSync ? 'companion_app' : 'manual',
+        sync_started_at: new Date().toISOString(),
+        device_id: deviceId,
+        platform: platform,
+        hmac_valid: hmacValid,
+        idempotency_key: idempotencyKey,
+        data_range_start: healthData.length > 0 ? healthData[0].date : null,
+        data_range_end: healthData.length > 0 ? healthData[healthData.length - 1].date : null
+      }
+
+      const { data: syncLog, error: syncLogError } = await supabaseAuth
+        .from('health_sync_logs')
+        .insert(syncLogData)
+        .select()
+        .single()
+
+      if (syncLogError) {
+        console.error('Error creating sync log:', syncLogError)
+      }
 
       const results = []
       
@@ -143,9 +313,25 @@ Deno.serve(async (req) => {
         }
       }
 
+      // Update sync log with results
+      if (syncLog) {
+        await supabaseAuth
+          .from('health_sync_logs')
+          .update({
+            sync_completed_at: new Date().toISOString(),
+            status: results.filter(r => r.error).length > 0 ? 'partial_success' : 'success',
+            records_synced: results.filter(r => r.success).length,
+            error_message: results.filter(r => r.error).length > 0 
+              ? `${results.filter(r => r.error).length} records failed` 
+              : null
+          })
+          .eq('id', syncLog.id)
+      }
+
       return new Response(
         JSON.stringify({ 
           message: 'Health data sync completed',
+          syncLogId: syncLog?.id,
           results,
           summary: {
             total: results.length,
