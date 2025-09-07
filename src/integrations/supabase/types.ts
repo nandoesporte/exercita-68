@@ -375,6 +375,7 @@ export type Database = {
       health_connections: {
         Row: {
           access_token: string | null
+          access_token_vault_id: string | null
           created_at: string
           error_message: string | null
           id: string
@@ -382,14 +383,18 @@ export type Database = {
           last_sync_at: string | null
           provider: string
           refresh_token: string | null
+          refresh_token_vault_id: string | null
           status: string
           sync_frequency_minutes: number | null
+          token_access_count: number | null
           token_expires_at: string | null
+          token_last_rotated_at: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
           access_token?: string | null
+          access_token_vault_id?: string | null
           created_at?: string
           error_message?: string | null
           id?: string
@@ -397,14 +402,18 @@ export type Database = {
           last_sync_at?: string | null
           provider: string
           refresh_token?: string | null
+          refresh_token_vault_id?: string | null
           status?: string
           sync_frequency_minutes?: number | null
+          token_access_count?: number | null
           token_expires_at?: string | null
+          token_last_rotated_at?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
           access_token?: string | null
+          access_token_vault_id?: string | null
           created_at?: string
           error_message?: string | null
           id?: string
@@ -412,9 +421,12 @@ export type Database = {
           last_sync_at?: string | null
           provider?: string
           refresh_token?: string | null
+          refresh_token_vault_id?: string | null
           status?: string
           sync_frequency_minutes?: number | null
+          token_access_count?: number | null
           token_expires_at?: string | null
+          token_last_rotated_at?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -601,6 +613,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      health_token_audit_log: {
+        Row: {
+          action: string
+          connection_id: string
+          created_at: string
+          id: string
+          ip_address: unknown | null
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          action: string
+          connection_id: string
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          action?: string
+          connection_id?: string
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
       }
       kiwify_webhook_logs: {
         Row: {
@@ -1547,6 +1589,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: Json
       }
+      get_encrypted_health_token: {
+        Args: { p_connection_id: string; p_token_type: string }
+        Returns: string
+      }
       get_tables_without_rls: {
         Args: Record<PropertyKey, never>
         Returns: Json
@@ -1558,6 +1604,18 @@ export type Database = {
       is_super_admin: {
         Args: Record<PropertyKey, never>
         Returns: boolean
+      }
+      revoke_health_tokens: {
+        Args: { p_connection_id: string }
+        Returns: boolean
+      }
+      store_encrypted_health_token: {
+        Args: {
+          p_connection_id: string
+          p_token_type: string
+          p_token_value: string
+        }
+        Returns: string
       }
       toggle_user_active_status: {
         Args: { user_id: string }
