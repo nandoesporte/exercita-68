@@ -20,6 +20,7 @@ import { useStore } from '@/hooks/useStore';
 import { useWorkoutHistory } from '@/hooks/useWorkoutHistory';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { HealthLoading } from '@/components/ui/health-loading';
 
 const Index = () => {
   const { user, isAdmin } = useAuth();
@@ -74,6 +75,11 @@ const Index = () => {
     
     return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase() || 'U';
   };
+
+  // Show loading state while data is being fetched
+  if (isLoading || isLoadingFeaturedProducts || !displayProfile) {
+    return <HealthLoading message="Sincronizando seus dados de saúde..." />;
+  }
   
   return (
     <div className="home-page">
