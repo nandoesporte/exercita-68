@@ -67,17 +67,11 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				fitness: {
-					green: '#FF6B35',
-					darkGreen: '#E55A2B',
-					blue: '#0055A2',
-					dark: '#1A1F2C',
-					darkGray: '#2A2F3C',
-					gray: '#8E9196',
-					lightGray: '#F2F2F2',
-					orange: '#FF6B35',
-					lightOrange: '#FFB8A3',
-				}
+				'chart-1': 'hsl(18 85% 60%)',
+				'chart-2': 'hsl(142 76% 46%)',
+				'chart-3': 'hsl(210 80% 60%)',
+				'chart-4': 'hsl(280 60% 60%)',
+				'chart-5': 'hsl(340 75% 55%)'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

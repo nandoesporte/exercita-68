@@ -44,29 +44,29 @@ export function HealthIntegrationCard() {
     const showMobileOnly = provider === 'apple_health' || provider === 'health_connect';
     
     return (
-      <div className="flex items-center justify-between p-4 bg-fitness-dark rounded-lg">
+      <div className="flex items-center justify-between p-4 bg-secondary rounded-lg">
         <div className="flex items-center gap-3">
           <div className="text-2xl">{icon}</div>
           <div>
-            <h4 className="text-white font-medium">{name}</h4>
+            <h4 className="font-medium">{name}</h4>
             <div className="flex items-center gap-2">
-              <p className="text-gray-400 text-sm">
+              <p className="text-muted-foreground text-sm">
                 {status.isConnected ? 'Conectado' : 
                  status.isPending ? 'Conectando...' :
                  status.hasError ? 'Erro na conexão' :
                  showMobileOnly ? 'Requer app móvel' : 'Disponível'}
               </p>
               {showMobileOnly && (
-                <Smartphone className="h-3 w-3 text-gray-500" />
+                <Smartphone className="h-3 w-3 text-muted-foreground" />
               )}
             </div>
             {status.lastSync && (
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-muted-foreground/80">
                 Última sync: {new Date(status.lastSync).toLocaleString('pt-BR')}
               </p>
             )}
             {status.errorMessage && (
-              <p className="text-xs text-red-400">
+              <p className="text-xs text-destructive">
                 {status.errorMessage}
               </p>
             )}
@@ -74,12 +74,12 @@ export function HealthIntegrationCard() {
         </div>
         <div className="flex items-center gap-2">
           {status.isConnected && (
-            <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
+            <Badge className="bg-success/20 text-success border-success/30">
               Conectado
             </Badge>
           )}
           {!status.isEnabled && (
-            <Badge className="bg-gray-500/20 text-gray-400 border-gray-500/30">
+            <Badge className="bg-muted/50 text-muted-foreground border-muted">
               Desabilitado
             </Badge>
           )}
@@ -89,8 +89,8 @@ export function HealthIntegrationCard() {
             onClick={() => handleConnect(provider)}
             disabled={loading || !status.isEnabled}
             className={cn(
-              "border-gray-600 text-gray-300 hover:bg-fitness-orange hover:text-white hover:border-fitness-orange",
-              status.isConnected && "bg-fitness-orange/10 border-fitness-orange text-fitness-orange",
+              "hover:bg-primary hover:text-primary-foreground hover:border-primary",
+              status.isConnected && "bg-primary/10 border-primary text-primary",
               !status.isEnabled && "opacity-50 cursor-not-allowed"
             )}
           >
@@ -123,12 +123,12 @@ export function HealthIntegrationCard() {
   }
 
   return (
-    <Card className="bg-fitness-darkGray border-gray-700">
+    <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="text-white">Dispositivos Conectados</CardTitle>
-            <CardDescription className="text-gray-400">
+            <CardTitle>Dispositivos Conectados</CardTitle>
+            <CardDescription>
               Gerencie suas integrações com dispositivos de saúde
             </CardDescription>
           </div>
@@ -136,7 +136,6 @@ export function HealthIntegrationCard() {
             variant="outline"
             size="sm"
             onClick={() => setShowOnboarding(true)}
-            className="border-gray-600 text-gray-300 hover:bg-gray-700"
           >
             Configurar
           </Button>

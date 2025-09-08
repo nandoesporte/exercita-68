@@ -105,23 +105,23 @@ export default function Health() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-fitness-dark p-4">
+      <div className="min-h-screen bg-background p-4">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center gap-4 mb-6">
             <Button 
               variant="ghost" 
               onClick={() => navigate(-1)}
-              className="text-white hover:bg-fitness-darkGray"
+              className="text-foreground hover:bg-secondary"
             >
               <ArrowLeft className="h-4 w-4" />
             </Button>
-            <h1 className="text-2xl font-bold text-white">Saúde</h1>
+            <h1 className="text-2xl font-bold">Saúde</h1>
           </div>
-          <Card className="bg-fitness-darkGray border-none">
+          <Card>
             <CardContent className="flex items-center justify-center h-64">
               <div className="text-center">
-                <p className="text-red-400 mb-2">Erro ao carregar dados</p>
-                <p className="text-sm text-gray-300">{error}</p>
+                <p className="text-destructive mb-2">Erro ao carregar dados</p>
+                <p className="text-sm text-muted-foreground">{error}</p>
               </div>
             </CardContent>
           </Card>
@@ -131,7 +131,7 @@ export default function Health() {
   }
 
   return (
-    <div className="min-h-screen bg-fitness-dark p-4 overflow-y-auto">
+    <div className="min-h-screen bg-background p-4 overflow-y-auto">
       <div className="max-w-6xl mx-auto space-y-6">
         {/* Header */}
         <div className="mb-6">
@@ -140,20 +140,20 @@ export default function Health() {
             <Button 
               variant="ghost" 
               onClick={() => navigate(-1)} 
-              className="shrink-0 text-white hover:bg-fitness-darkGray p-2 h-10 w-10"
+              className="shrink-0 hover:bg-secondary p-2 h-10 w-10"
             >
               <ArrowLeft className="h-5 w-5" />
             </Button>
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between">
                 <div>
-                  <h1 className="text-xl sm:text-2xl font-bold text-white leading-tight">Estatísticas de Saúde</h1>
-                  <p className="text-sm sm:text-base text-fitness-orange mt-1">Acompanhe seus dados de saúde e bem-estar</p>
+                  <h1 className="text-xl sm:text-2xl font-bold leading-tight">Estatísticas de Saúde</h1>
+                  <p className="text-sm sm:text-base text-primary mt-1">Acompanhe seus dados de saúde e bem-estar</p>
                 </div>
                 
                 <div className="flex items-center gap-3">
                   {lastSyncDate && (
-                    <p className="text-xs text-gray-400 hidden sm:block">
+                    <p className="text-xs text-muted-foreground hidden sm:block">
                       Última sync: {lastSyncDate.toLocaleString('pt-BR')}
                     </p>
                   )}
@@ -161,7 +161,7 @@ export default function Health() {
                     onClick={syncHealthData}
                     disabled={syncing}
                     size="sm"
-                    className="bg-fitness-orange hover:bg-fitness-orange/90 text-white"
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground"
                   >
                     <RefreshCw className={cn("h-4 w-4 mr-2", syncing && "animate-spin")} />
                     {syncing ? 'Sync...' : 'Sincronizar'}
@@ -173,24 +173,24 @@ export default function Health() {
           
           {/* Filters section */}
           <div className="flex items-center justify-center sm:justify-start gap-2">
-            <Calendar className="h-4 w-4 text-fitness-orange shrink-0" />
+            <Calendar className="h-4 w-4 text-primary shrink-0" />
             <Tabs value={dateRange} onValueChange={(value) => setDateRange(value as any)} className="w-full max-w-sm">
-              <TabsList className="grid w-full grid-cols-3 bg-fitness-darkGray rounded-lg p-1 h-10">
+              <TabsList className="grid w-full grid-cols-3 bg-secondary rounded-lg p-1 h-10">
                 <TabsTrigger 
                   value="week" 
-                  className="text-xs sm:text-sm font-medium text-gray-300 data-[state=active]:bg-fitness-orange data-[state=active]:text-white rounded-md transition-all"
+                  className="text-xs sm:text-sm font-medium text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-md transition-all"
                 >
                   Semana
                 </TabsTrigger>
                 <TabsTrigger 
                   value="month" 
-                  className="text-xs sm:text-sm font-medium text-gray-300 data-[state=active]:bg-fitness-orange data-[state=active]:text-white rounded-md transition-all"
+                  className="text-xs sm:text-sm font-medium text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-md transition-all"
                 >
                   Mês
                 </TabsTrigger>
                 <TabsTrigger 
                   value="all" 
-                  className="text-xs sm:text-sm font-medium text-gray-300 data-[state=active]:bg-fitness-orange data-[state=active]:text-white rounded-md transition-all"
+                  className="text-xs sm:text-sm font-medium text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-md transition-all"
                 >
                   Todos
                 </TabsTrigger>
@@ -209,14 +209,14 @@ export default function Health() {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {loading ? (
             Array.from({ length: 4 }).map((_, i) => (
-              <Card key={i} className="rounded-xl bg-fitness-darkGray border-none shadow-sm">
+              <Card key={i} className="rounded-xl shadow-sm">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <Skeleton className="h-4 w-24 bg-fitness-dark" />
-                  <Skeleton className="h-4 w-4 bg-fitness-dark" />
+                  <Skeleton className="h-4 w-24 bg-muted" />
+                  <Skeleton className="h-4 w-4 bg-muted" />
                 </CardHeader>
                 <CardContent>
-                  <Skeleton className="h-8 w-16 mb-2 bg-fitness-dark" />
-                  <Skeleton className="h-4 w-20 bg-fitness-dark" />
+                  <Skeleton className="h-8 w-16 mb-2 bg-muted" />
+                  <Skeleton className="h-4 w-20 bg-muted" />
                 </CardContent>
               </Card>
             ))
@@ -228,7 +228,7 @@ export default function Health() {
                 icon="steps"
                 trend={metrics.trends.steps.trend}
                 trendValue={`${metrics.trends.steps.value}%`}
-                className="bg-fitness-darkGray border-none text-white"
+                className="rounded-xl"
               />
               <HealthMetricsCard
                 title="Frequência Cardíaca"  
@@ -237,7 +237,7 @@ export default function Health() {
                 icon="heart"
                 trend={metrics.trends.heartRate.trend}
                 trendValue={`${metrics.trends.heartRate.value}%`}
-                className="bg-fitness-darkGray border-none text-white"
+                className="rounded-xl"
               />
               <HealthMetricsCard
                 title="Sono"
@@ -246,7 +246,7 @@ export default function Health() {
                 icon="sleep"
                 trend={metrics.trends.sleep.trend}
                 trendValue={`${metrics.trends.sleep.value}%`}
-                className="bg-fitness-darkGray border-none text-white"
+                className="rounded-xl"
               />
               <HealthMetricsCard
                 title="Calorias"
@@ -255,7 +255,7 @@ export default function Health() {
                 icon="calories"
                 trend={metrics.trends.calories.trend}
                 trendValue={`${metrics.trends.calories.value}%`}
-                className="bg-fitness-darkGray border-none text-white"
+                className="rounded-xl"
               />
             </>
           )}
@@ -265,23 +265,23 @@ export default function Health() {
         {loading ? (
           <div className="grid gap-6 md:grid-cols-2">
             {Array.from({ length: 4 }).map((_, i) => (
-              <Card key={i} className="rounded-xl bg-fitness-darkGray border-none shadow-sm">
+              <Card key={i} className="rounded-xl shadow-sm">
                 <CardHeader>
-                  <Skeleton className="h-6 w-32 bg-fitness-dark" />
+                  <Skeleton className="h-6 w-32 bg-muted" />
                 </CardHeader>
                 <CardContent>
-                  <Skeleton className="h-64 w-full bg-fitness-dark" />
+                  <Skeleton className="h-64 w-full bg-muted" />
                 </CardContent>
               </Card>
             ))}
           </div>
         ) : (
           <Tabs defaultValue="steps" className="space-y-4">
-            <TabsList className="grid w-full grid-cols-4 bg-fitness-darkGray rounded-lg p-1">
-              <TabsTrigger value="steps" className="text-gray-300 data-[state=active]:bg-fitness-orange data-[state=active]:text-white rounded-md">Passos</TabsTrigger>
-              <TabsTrigger value="heart" className="text-gray-300 data-[state=active]:bg-fitness-orange data-[state=active]:text-white rounded-md">Batimentos</TabsTrigger>
-              <TabsTrigger value="sleep" className="text-gray-300 data-[state=active]:bg-fitness-orange data-[state=active]:text-white rounded-md">Sono</TabsTrigger>
-              <TabsTrigger value="calories" className="text-gray-300 data-[state=active]:bg-fitness-orange data-[state=active]:text-white rounded-md">Calorias</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-4 bg-secondary rounded-lg p-1">
+              <TabsTrigger value="steps" className="text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-md">Passos</TabsTrigger>
+              <TabsTrigger value="heart" className="text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-md">Batimentos</TabsTrigger>
+              <TabsTrigger value="sleep" className="text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-md">Sono</TabsTrigger>
+              <TabsTrigger value="calories" className="text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-md">Calorias</TabsTrigger>
             </TabsList>
             
             <TabsContent value="steps" className="space-y-4">
@@ -332,30 +332,30 @@ export default function Health() {
 
         {/* Summary */}
         {!loading && data.length > 0 && (
-          <Card className="rounded-xl bg-fitness-darkGray border-none shadow-sm">
+          <Card className="rounded-xl shadow-sm">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-white">
-                <TrendingUp className="h-5 w-5 text-fitness-orange" />
+              <CardTitle className="flex items-center gap-2">
+                <TrendingUp className="h-5 w-5 text-primary" />
                 Resumo do Período
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <div className="text-center p-4 bg-fitness-dark rounded-lg">
-                  <p className="text-2xl font-bold text-fitness-orange">{metrics.totalSteps.toLocaleString()}</p>
-                  <p className="text-sm text-gray-300">Total de Passos</p>
+                <div className="text-center p-4 bg-secondary rounded-lg">
+                  <p className="text-2xl font-bold text-primary">{metrics.totalSteps.toLocaleString()}</p>
+                  <p className="text-sm text-muted-foreground">Total de Passos</p>
                 </div>
-                <div className="text-center p-4 bg-fitness-dark rounded-lg">
-                  <p className="text-2xl font-bold text-white">{metrics.avgHeartRate}</p>
-                  <p className="text-sm text-gray-300">BPM Médio</p>
+                <div className="text-center p-4 bg-secondary rounded-lg">
+                  <p className="text-2xl font-bold">{metrics.avgHeartRate}</p>
+                  <p className="text-sm text-muted-foreground">BPM Médio</p>
                 </div>
-                <div className="text-center p-4 bg-fitness-dark rounded-lg">
-                  <p className="text-2xl font-bold text-fitness-orange">{metrics.avgSleep}h</p>
-                  <p className="text-sm text-gray-300">Sono Médio</p>
+                <div className="text-center p-4 bg-secondary rounded-lg">
+                  <p className="text-2xl font-bold text-primary">{metrics.avgSleep}h</p>
+                  <p className="text-sm text-muted-foreground">Sono Médio</p>
                 </div>
-                <div className="text-center p-4 bg-fitness-dark rounded-lg">
-                  <p className="text-2xl font-bold text-white">{Math.round(metrics.totalCalories).toLocaleString()}</p>
-                  <p className="text-sm text-gray-300">Total de Calorias</p>
+                <div className="text-center p-4 bg-secondary rounded-lg">
+                  <p className="text-2xl font-bold">{Math.round(metrics.totalCalories).toLocaleString()}</p>
+                  <p className="text-sm text-muted-foreground">Total de Calorias</p>
                 </div>
               </div>
             </CardContent>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { toast } from '@/hooks/use-toast';
+import { toast } from '@/lib/toast';
 
 export interface HealthConnection {
   id: string;
@@ -75,32 +75,48 @@ export function useHealthConnections() {
 
       // Special handling for Health Connect (native Android)
       if (provider === 'health_connect') {
-        // Import and use the Health Connect plugin
-        const HealthConnect = (await import('@/plugins/HealthConnect')).default;
-        
-        const availability = await HealthConnect.isAvailable();
-        if (!availability.available) {
-          throw new Error('Health Connect não está disponível neste dispositivo');
-        }
+        try {
+          // Import and use the Health Connect plugin
+          const HealthConnect = (await import('@/plugins/HealthConnect')).default;
+          
+          const availability = await HealthConnect.isAvailable();
+          if (!availability.available) {
+            throw new Error('Health Connect não está disponível neste dispositivo. Certifique-se de estar usando Android 14+ ou ter o app Health Connect instalado.');
+          }
 
-        const permissions = await HealthConnect.requestPermissions();
-        if (!permissions.granted) {
-          throw new Error('Permissões necessárias não foram concedidas');
-        }
+          const permissions = await HealthConnect.requestPermissions();
+          if (!permissions.granted) {
+            throw new Error('Permissões necessárias não foram concedidas. Vá para configurações e permita acesso aos dados de saúde.');
+          }
 
-        // Update connection status in database
-        await supabase.from('health_connections').upsert({
-          user_id: user.id,
-          provider: 'health_connect',
-          status: 'connected',
-          sync_frequency_minutes: 60,
-          is_active: true,
-          last_sync_at: new Date().toISOString()
-        }, { onConflict: 'user_id,provider' });
-        
-        await fetchConnections();
-        toast.success('Health Connect conectado com sucesso!');
-        return;
+          // Update connection status in database
+          await supabase.from('health_connections').upsert({
+            user_id: user.id,
+            provider: 'health_connect',
+            status: 'connected',
+            sync_frequency_minutes: 60,
+            is_active: true,
+            last_sync_at: new Date().toISOString()
+          }, { onConflict: 'user_id,provider' });
+          
+          await fetchConnections();
+          toast.success('Health Connect conectado e pronto para sincronização.');
+          return;
+        } catch (error: any) {
+          console.error('Health Connect error:', error);
+          
+          // Update connection with error status
+          await supabase.from('health_connections').upsert({
+            user_id: user.id,
+            provider: 'health_connect', 
+            status: 'error',
+            error_message: error.message,
+            is_active: false
+          }, { onConflict: 'user_id,provider' });
+          
+          await fetchConnections();
+          throw error;
+        }
       }
 
       // For other providers, use OAuth flow
@@ -135,6 +151,7 @@ export function useHealthConnections() {
       }
     } catch (err: any) {
       setError(err.message);
+      console.error('Connection error:', err);
       toast.error(`Erro na conexão: ${err.message}`);
     } finally {
       setLoading(false);
@@ -150,8 +167,9 @@ export function useHealthConnections() {
       }).eq('provider', provider);
 
       await fetchConnections();
-      toast.success(`${provider} desconectado com sucesso.`);
+      toast.success(`Health Connect desconectado com sucesso.`);
     } catch (err: any) {
+      console.error('Disconnect error:', err);
       toast.error(`Erro ao desconectar: ${err.message}`);
     } finally {
       setLoading(false);
