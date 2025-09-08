@@ -168,11 +168,11 @@
   }
   
   .fitness-btn-primary {
-    @apply bg-fitness-green text-white hover:bg-fitness-green/90 hover:shadow-md fitness-btn;
+    @apply bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-md fitness-btn;
   }
   
   .fitness-btn-secondary {
-    @apply bg-fitness-lightGray text-fitness-dark hover:bg-gray-200 hover:shadow-sm fitness-btn;
+    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80 hover:shadow-sm fitness-btn;
   }
   
   /* Enhanced List Items */
@@ -201,7 +201,7 @@
     }
     
     .mobile-section .bg-fitness-darkGray {
-      @apply w-full;
+      @apply w-full bg-secondary;
     }
   }
   
@@ -243,7 +243,7 @@
 
   /* Formulário e inputs */
   .form-input {
-    @apply bg-fitness-darkGray border-fitness-darkGray/50 text-white rounded-lg;
+    @apply bg-secondary border-border text-foreground rounded-lg;
   }
   
   /* Enhanced Form Elements */
@@ -286,15 +286,15 @@
 
   /* Improved text visibility for exercise details */
   .exercise-detail-label {
-    @apply font-medium text-white/80;
+    @apply font-medium text-muted-foreground;
   }
   
   .exercise-detail-value {
-    @apply font-semibold text-white;
+    @apply font-semibold;
   }
   
   .exercise-weight-badge {
-    @apply bg-fitness-darkGray/30 px-2 py-1 rounded-full text-sm font-medium text-white flex items-center gap-1;
+    @apply bg-secondary/30 px-2 py-1 rounded-full text-sm font-medium flex items-center gap-1;
   }
 }
 
