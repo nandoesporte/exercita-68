@@ -86,7 +86,7 @@ const Index = () => {
       {/* Profile Avatar Section */}
       <section className="flex justify-center mb-4 pt-6">
         <Link to="/profile">
-          <Avatar className="h-24 w-24 border-4 border-fitness-green cursor-pointer hover:border-fitness-orange transition-all duration-300">
+          <Avatar className="h-24 w-24 border-4 border-primary cursor-pointer hover:border-accent transition-all duration-300">
             <AvatarImage 
               src={displayProfile?.avatar_url ? `${displayProfile.avatar_url}?t=${avatarTimestamp}` : undefined} 
               alt={`${displayProfile?.first_name || 'Usuário'}'s profile`} 
@@ -96,7 +96,7 @@ const Index = () => {
                 (e.target as HTMLImageElement).style.display = 'none';
               }}
             />
-            <AvatarFallback className="bg-fitness-dark text-white text-3xl">
+            <AvatarFallback className="bg-secondary text-secondary-foreground text-3xl">
               {getInitials()}
             </AvatarFallback>
           </Avatar>
@@ -105,10 +105,10 @@ const Index = () => {
       
       {/* Seção de Boas-vindas */}
       <section className="text-center mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-fitness-orange mb-2">
+        <h1 className="text-3xl md:text-4xl font-bold text-primary mb-2">
           {greeting}, {displayProfile?.first_name || 'Atleta'}!
         </h1>
-        <p className="text-xl text-gray-200">
+        <p className="text-xl text-muted-foreground">
           {hasAssignedWorkout 
             ? 'Seus planos personalizados estão prontos' 
             : 'Agende uma consultoria para começar'}
@@ -119,7 +119,7 @@ const Index = () => {
           <div className="mt-4 md:hidden">
             <Button 
               variant="outline" 
-              className="bg-fitness-dark border-fitness-orange text-fitness-orange hover:bg-fitness-darkGray"
+              className="bg-secondary border-primary text-primary hover:bg-secondary/80"
               asChild
             >
               <Link to="/admin">
@@ -138,7 +138,7 @@ const Index = () => {
           <div>
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold">Seu Treino</h2>
-              <span className="bg-fitness-orange text-white px-3 py-1 rounded-full text-xs font-semibold flex items-center">
+              <span className="bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-semibold flex items-center">
                 <Activity size={14} className="mr-1" /> ATIVO
               </span>
             </div>
@@ -155,7 +155,7 @@ const Index = () => {
             
             {/* Botão Iniciar Treino */}
             <Button 
-              className="w-full mt-4 bg-fitness-orange hover:bg-fitness-orange/90 text-white text-lg font-semibold h-12 rounded-xl"
+              className="w-full mt-4 bg-primary hover:bg-primary/90 text-primary-foreground text-lg font-semibold h-12 rounded-xl"
               asChild
               disabled={isLoading || !recommendedWorkout}
             >
@@ -172,21 +172,21 @@ const Index = () => {
           </div>
         ) : (
           // Card para agendar consultoria - exibido quando não há treinos atribuídos
-           <Card className="bg-fitness-darkGray border-none text-white">
+           <Card className="bg-secondary border-none">
             <CardContent className="p-4 sm:p-6 space-y-4 sm:space-y-6">
-              <div className="bg-fitness-dark p-4 sm:p-6 rounded-md text-center">
+              <div className="bg-card p-4 sm:p-6 rounded-md text-center">
                 <div className="mb-4 sm:mb-6">
-                  <div className="mx-auto bg-fitness-darkGray/50 w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mb-3 sm:mb-4">
-                    <Calendar size={28} className="text-fitness-orange sm:w-9 sm:h-9" />
+                  <div className="mx-auto bg-secondary/50 w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mb-3 sm:mb-4">
+                    <Calendar size={28} className="text-primary sm:w-9 sm:h-9" />
                   </div>
                   <h3 className="text-lg sm:text-xl font-bold mb-2">Você ainda não tem um treino personalizado</h3>
-                  <p className="text-gray-300 text-sm sm:text-base">
+                  <p className="text-muted-foreground text-sm sm:text-base">
                     Agende uma consultoria com nossos especialistas e receba um plano de treino personalizado para suas necessidades.
                   </p>
                 </div>
                 
                 <Button 
-                  className="w-full mt-3 sm:mt-4 bg-fitness-orange hover:bg-fitness-orange/90 text-white text-sm sm:text-lg font-semibold h-12 sm:h-14 rounded-xl"
+                  className="w-full mt-3 sm:mt-4 bg-primary hover:bg-primary/90 text-primary-foreground text-sm sm:text-lg font-semibold h-12 sm:h-14 rounded-xl"
                   asChild
                 >
                   <Link to="/schedule">
@@ -204,46 +204,46 @@ const Index = () => {
       <section className="mb-8">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">Consultoria Online</h2>
-          <Link to="/schedule" className="text-fitness-orange text-sm">Ver detalhes</Link>
+          <Link to="/schedule" className="text-primary text-sm">Ver detalhes</Link>
         </div>
         
-        <Card className="bg-gradient-to-r from-fitness-dark to-fitness-darkGray border-none text-white overflow-hidden">
+        <Card className="bg-gradient-to-r from-secondary to-card border-none overflow-hidden">
           <CardContent className="p-0">
             <div className="grid grid-cols-1 md:grid-cols-2">
               <div className="p-6 flex flex-col justify-center space-y-4">
                 <div className="flex items-center gap-2 mb-1">
-                  <MessageCircle className="h-5 w-5 text-fitness-green" />
+                  <MessageCircle className="h-5 w-5 text-primary" />
                   <h3 className="text-xl font-bold">Agende uma Consultoria Online</h3>
                 </div>
                 
-                <p className="text-gray-300">
+                <p className="text-muted-foreground">
                   Receba orientação personalizada para seus treinos e objetivos fitness diretamente de um personal trainer especializado.
                 </p>
                 
                 <ul className="space-y-2">
                   <li className="flex items-start gap-2">
-                    <div className="mt-1 bg-fitness-orange/20 p-1 rounded-full">
-                      <Activity className="h-4 w-4 text-fitness-orange" />
+                    <div className="mt-1 bg-primary/20 p-1 rounded-full">
+                      <Activity className="h-4 w-4 text-primary" />
                     </div>
-                    <span className="text-sm text-gray-300">Avaliação detalhada do seu perfil e objetivos</span>
+                    <span className="text-sm text-muted-foreground">Avaliação detalhada do seu perfil e objetivos</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <div className="mt-1 bg-fitness-orange/20 p-1 rounded-full">
-                      <Calendar className="h-4 w-4 text-fitness-orange" />
+                    <div className="mt-1 bg-primary/20 p-1 rounded-full">
+                      <Calendar className="h-4 w-4 text-primary" />
                     </div>
-                    <span className="text-sm text-gray-300">Escolha o dia e horário que melhor se adapta à sua agenda</span>
+                    <span className="text-sm text-muted-foreground">Escolha o dia e horário que melhor se adapta à sua agenda</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <div className="mt-1 bg-fitness-orange/20 p-1 rounded-full">
-                      <Dumbbell className="h-4 w-4 text-fitness-orange" />
+                    <div className="mt-1 bg-primary/20 p-1 rounded-full">
+                      <Dumbbell className="h-4 w-4 text-primary" />
                     </div>
-                    <span className="text-sm text-gray-300">Receba um plano de treino personalizado</span>
+                    <span className="text-sm text-muted-foreground">Receba um plano de treino personalizado</span>
                   </li>
                 </ul>
                 
                 <Button 
                   asChild 
-                  className="mt-4 bg-fitness-orange hover:bg-fitness-orange/90 text-white font-medium"
+                  className="mt-4 bg-primary hover:bg-primary/90 text-primary-foreground font-medium"
                 >
                   <Link to="/schedule" className="flex items-center gap-2">
                     <Calendar className="h-5 w-5" />
@@ -252,14 +252,14 @@ const Index = () => {
                 </Button>
               </div>
               
-              <div className="bg-fitness-darkGray/50 hidden md:block">
+              <div className="bg-secondary/50 hidden md:block">
                 <div className="h-full w-full relative">
                   <img 
                     src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?q=80&w=800&auto=format&fit=crop" 
                     alt="Consultoria online" 
                     className="w-full h-full object-cover opacity-70"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-r from-fitness-dark/80 to-transparent"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-secondary/80 to-transparent"></div>
                 </div>
               </div>
             </div>
@@ -271,22 +271,22 @@ const Index = () => {
       <section className="mb-8">
         <h2 className="text-xl font-bold mb-4">Minha Academia</h2>
         
-        <Card className="bg-fitness-darkGray border-none text-white">
+        <Card className="bg-secondary border-none">
           <CardContent className="p-4">
             <Link 
               to="/gym-photos" 
-              className="flex items-center justify-between p-3 hover:bg-fitness-dark rounded-lg transition-colors"
+              className="flex items-center justify-between p-3 hover:bg-card rounded-lg transition-colors"
             >
               <div className="flex items-center gap-4">
-                <div className="bg-fitness-orange h-10 w-10 rounded-full flex items-center justify-center">
-                  <Camera className="text-white" size={20} />
+                <div className="bg-primary h-10 w-10 rounded-full flex items-center justify-center">
+                  <Camera className="text-primary-foreground" size={20} />
                 </div>
                 <div>
                   <h3 className="font-bold">Envie fotos da sua academia</h3>
-                  <p className="text-sm text-gray-300">Ajude o personal trainer a analisar seu ambiente</p>
+                  <p className="text-sm text-muted-foreground">Ajude o personal trainer a analisar seu ambiente</p>
                 </div>
               </div>
-              <ChevronRight size={20} className="text-gray-300" />
+              <ChevronRight size={20} className="text-muted-foreground" />
             </Link>
           </CardContent>
         </Card>
@@ -296,7 +296,7 @@ const Index = () => {
       <section>
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">Produtos em Destaque</h2>
-          <Link to="/store" className="text-fitness-orange text-sm flex items-center gap-1">
+          <Link to="/store" className="text-primary text-sm flex items-center gap-1">
             <span>Visitar loja</span>
             <ChevronRight size={16} />
           </Link>
@@ -313,9 +313,9 @@ const Index = () => {
             {isLoadingFeaturedProducts ? (
               // Placeholders de carregamento - dois por linha no mobile
               [...Array(4)].map((_, index) => (
-                <CarouselItem key={`loading-${index}`} className="basis-1/2 md:basis-1/2 lg:basis-1/3">
-                  <div className="h-[240px] md:h-[280px] rounded-xl bg-fitness-darkGray/40 animate-pulse"></div>
-                </CarouselItem>
+                 <CarouselItem key={`loading-${index}`} className="basis-1/2 md:basis-1/2 lg:basis-1/3">
+                   <div className="h-[240px] md:h-[280px] rounded-xl bg-secondary/40 animate-pulse"></div>
+                 </CarouselItem>
               ))
             ) : featuredProducts && featuredProducts.length > 0 ? (
               featuredProducts.map((product) => (
@@ -331,31 +331,31 @@ const Index = () => {
                         />
                       </div>
                       
-                      {/* Informações do produto */}
-                      <div className="p-2 md:p-4 relative">
-                        <h3 className="font-bold text-sm md:text-lg text-white truncate">{product.name}</h3>
-                        <p className="text-gray-300 text-xs md:text-sm line-clamp-1 md:line-clamp-2 h-[20px] md:h-[40px]">{product.description}</p>
-                        
-                        <div className="flex items-center justify-between mt-1 md:mt-2">
-                          <span className="text-fitness-green font-bold text-sm md:text-base">
-                            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(product.price)}
-                          </span>
-                          <span className="bg-fitness-darkGray/30 p-1 md:p-1.5 rounded-full">
-                            <ShoppingBag size={16} className="text-fitness-orange" />
-                          </span>
-                        </div>
-                      </div>
+                       {/* Informações do produto */}
+                       <div className="p-2 md:p-4 relative">
+                         <h3 className="font-bold text-sm md:text-lg truncate">{product.name}</h3>
+                         <p className="text-muted-foreground text-xs md:text-sm line-clamp-1 md:line-clamp-2 h-[20px] md:h-[40px]">{product.description}</p>
+                         
+                         <div className="flex items-center justify-between mt-1 md:mt-2">
+                           <span className="text-primary font-bold text-sm md:text-base">
+                             {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(product.price)}
+                           </span>
+                           <span className="bg-secondary/30 p-1 md:p-1.5 rounded-full">
+                             <ShoppingBag size={16} className="text-primary" />
+                           </span>
+                         </div>
+                       </div>
                     </div>
                   </Link>
                 </CarouselItem>
               ))
             ) : (
               // Sem produtos
-              <CarouselItem className="basis-full">
-                <div className="bg-fitness-darkGray/30 rounded-xl p-8 text-center">
-                  <p className="text-gray-300">Nenhum produto disponível no momento</p>
-                </div>
-              </CarouselItem>
+               <CarouselItem className="basis-full">
+                 <div className="bg-secondary/30 rounded-xl p-8 text-center">
+                   <p className="text-muted-foreground">Nenhum produto disponível no momento</p>
+                 </div>
+               </CarouselItem>
             )}
           </CarouselContent>
           <CarouselPrevious className="hidden md:flex" />
