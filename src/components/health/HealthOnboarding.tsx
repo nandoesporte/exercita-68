@@ -29,7 +29,7 @@ export function HealthOnboarding({ onComplete, className }: HealthOnboardingProp
       id: 'welcome',
       title: 'Bem-vindo ao Exercita Health',
       description: 'Sincronize seus dados de saúde e acompanhe seu progresso automaticamente',
-      icon: <Heart className="h-6 w-6 text-fitness-orange" />,
+      icon: <Heart className="h-6 w-6 text-primary" />,
       completed: false
     },
     {
@@ -38,21 +38,21 @@ export function HealthOnboarding({ onComplete, className }: HealthOnboardingProp
       description: isNative 
         ? 'Use o app companion para registrar dispositivos e configurar sincronização em segundo plano'
         : 'Para acessar dados de saúde, instale o app móvel do Exercita',
-      icon: <Smartphone className="h-6 w-6 text-fitness-orange" />,
+      icon: <Smartphone className="h-6 w-6 text-primary" />,
       completed: false
     },
     {
       id: 'permissions',
       title: `Conectar ${platform === 'ios' ? 'HealthKit' : 'Health Connect'}`,
       description: `Conceda permissões para acessar dados de passos, frequência cardíaca, sono e calorias no ${platform === 'ios' ? 'HealthKit' : 'Health Connect'}`,
-      icon: <Activity className="h-6 w-6 text-fitness-orange" />,
+      icon: <Activity className="h-6 w-6 text-primary" />,
       completed: false
     },
     {
       id: 'sync',
       title: 'Primeira Sincronização',
       description: 'Sincronize seus dados pela primeira vez e configure a sincronização automática',
-      icon: <Zap className="h-6 w-6 text-fitness-orange" />,
+      icon: <Zap className="h-6 w-6 text-primary" />,
       completed: false
     }
   ];
@@ -74,16 +74,16 @@ export function HealthOnboarding({ onComplete, className }: HealthOnboardingProp
   const currentStepData = steps[currentStep];
 
   return (
-    <Card className={`bg-fitness-darkGray border-gray-700 ${className}`}>
+    <Card className={`bg-secondary border-border ${className}`}>
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="text-white">Configuração de Saúde</CardTitle>
-            <CardDescription className="text-gray-400">
+            <CardTitle className="text-foreground">Configuração de Saúde</CardTitle>
+            <CardDescription className="text-muted-foreground">
               Configure sua integração com dados de saúde em poucos passos
             </CardDescription>
           </div>
-          <Badge variant="outline" className="border-fitness-orange text-fitness-orange">
+          <Badge variant="outline" className="border-primary text-primary">
             {currentStep + 1} de {steps.length}
           </Badge>
         </div>
@@ -96,8 +96,8 @@ export function HealthOnboarding({ onComplete, className }: HealthOnboardingProp
               <div className={`
                 w-8 h-8 rounded-full border-2 flex items-center justify-center
                 ${index <= currentStep 
-                  ? 'bg-fitness-orange border-fitness-orange text-white' 
-                  : 'border-gray-600 text-gray-400'
+                  ? 'bg-primary border-primary text-primary-foreground' 
+                  : 'border-muted text-muted-foreground'
                 }
               `}>
                 {index < currentStep ? (
@@ -109,7 +109,7 @@ export function HealthOnboarding({ onComplete, className }: HealthOnboardingProp
               {index < steps.length - 1 && (
                 <div className={`
                   w-12 h-0.5 mx-2
-                  ${index < currentStep ? 'bg-fitness-orange' : 'bg-gray-600'}
+                  ${index < currentStep ? 'bg-primary' : 'bg-muted'}
                 `} />
               )}
             </div>
@@ -117,15 +117,15 @@ export function HealthOnboarding({ onComplete, className }: HealthOnboardingProp
         </div>
 
         {/* Current step content */}
-        <div className="bg-fitness-dark rounded-lg p-6 text-center space-y-4">
-          <div className="mx-auto w-16 h-16 bg-fitness-darkGray rounded-full flex items-center justify-center">
+        <div className="bg-secondary rounded-lg p-6 text-center space-y-4">
+          <div className="mx-auto w-16 h-16 bg-secondary rounded-full flex items-center justify-center">
             {currentStepData.icon}
           </div>
           <div>
-            <h3 className="text-xl font-semibold text-white mb-2">
+            <h3 className="text-xl font-semibold text-foreground mb-2">
               {currentStepData.title}
             </h3>
-            <p className="text-gray-300 leading-relaxed">
+            <p className="text-muted-foreground leading-relaxed">
               {currentStepData.description}
             </p>
           </div>
@@ -133,21 +133,21 @@ export function HealthOnboarding({ onComplete, className }: HealthOnboardingProp
           {/* Step-specific content */}
           {currentStep === 0 && (
             <div className="grid grid-cols-2 gap-4 mt-6">
-              <div className="bg-fitness-darkGray p-4 rounded-lg">
-                <Activity className="h-8 w-8 text-fitness-orange mb-2 mx-auto" />
-                <p className="text-sm text-gray-300">Passos Diários</p>
+              <div className="bg-secondary p-4 rounded-lg">
+                <Activity className="h-8 w-8 text-primary mb-2 mx-auto" />
+                <p className="text-sm text-muted-foreground">Passos Diários</p>
               </div>
-              <div className="bg-fitness-darkGray p-4 rounded-lg">
+              <div className="bg-secondary p-4 rounded-lg">
                 <Heart className="h-8 w-8 text-red-400 mb-2 mx-auto" />
-                <p className="text-sm text-gray-300">Frequência Cardíaca</p>
+                <p className="text-sm text-muted-foreground">Frequência Cardíaca</p>
               </div>
-              <div className="bg-fitness-darkGray p-4 rounded-lg">
+              <div className="bg-secondary p-4 rounded-lg">
                 <Moon className="h-8 w-8 text-blue-400 mb-2 mx-auto" />
-                <p className="text-sm text-gray-300">Qualidade do Sono</p>
+                <p className="text-sm text-muted-foreground">Qualidade do Sono</p>
               </div>
-              <div className="bg-fitness-darkGray p-4 rounded-lg">
+              <div className="bg-secondary p-4 rounded-lg">
                 <Zap className="h-8 w-8 text-yellow-400 mb-2 mx-auto" />
-                <p className="text-sm text-gray-300">Calorias Queimadas</p>
+                <p className="text-sm text-muted-foreground">Calorias Queimadas</p>
               </div>
             </div>
           )}
@@ -167,13 +167,13 @@ export function HealthOnboarding({ onComplete, className }: HealthOnboardingProp
             variant="outline"
             onClick={prevStep}
             disabled={currentStep === 0}
-            className="border-gray-600 text-gray-300 hover:bg-gray-700"
+            className="border-muted text-muted-foreground hover:bg-secondary"
           >
             Anterior
           </Button>
           <Button
             onClick={nextStep}
-            className="bg-fitness-orange hover:bg-fitness-orange/90 text-white"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground"
           >
             {currentStep === steps.length - 1 ? 'Finalizar' : 'Próximo'}
           </Button>
