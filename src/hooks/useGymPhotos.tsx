@@ -65,7 +65,7 @@ export function useGymPhotos() {
         
         // Upload to storage
         const { error: uploadError } = await supabase.storage
-          .from('gym_photos')
+          .from('gym-photos')
           .upload(fileName, file);
           
         if (uploadError) {
@@ -74,7 +74,7 @@ export function useGymPhotos() {
         
         // Get the public URL
         const { data: publicURL } = supabase.storage
-          .from('gym_photos')
+          .from('gym-photos')
           .getPublicUrl(fileName);
           
         // Insert record in database with user_id (admin_id will be set by trigger)
@@ -126,12 +126,12 @@ export function useGymPhotos() {
       
       // Extract the path from the URL
       const urlParts = photo.photo_url.split('/');
-      const filePathParts = urlParts.slice(urlParts.indexOf('gym_photos'));
+      const filePathParts = urlParts.slice(urlParts.indexOf('gym-photos'));
       const filePath = filePathParts.join('/');
       
       // Delete from storage
       await supabase.storage
-        .from('gym_photos')
+        .from('gym-photos')
         .remove([filePath]);
         
       // Delete from database
