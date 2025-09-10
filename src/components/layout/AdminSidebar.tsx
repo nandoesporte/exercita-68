@@ -163,15 +163,15 @@ const AdminSidebar = ({ onNavItemClick }: AdminSidebarProps = {}) => {
 
   return (
     <div
-      className={`flex flex-col h-full bg-gray-50 border-r border-r-gray-200 dark:bg-gray-900 dark:border-r-gray-700 ${
+      className={`flex flex-col h-full bg-sidebar border-r border-sidebar-border ${
         isExpanded ? "w-64" : "w-20"
       } transition-width duration-300 ease-in-out`}
     >
       <div className="flex items-center justify-center py-6">
         <div className="flex items-center gap-3">
-          {isSuperAdmin && <Crown className="h-6 w-6 text-yellow-500" />}
+          {isSuperAdmin && <Crown className="h-6 w-6 text-amber-500" />}
           <span
-            className={`text-xl font-bold transition-opacity duration-300 ${
+            className={`text-xl font-bold text-sidebar-foreground transition-opacity duration-300 ${
               isExpanded ? "opacity-100" : "opacity-0"
             }`}
           >
@@ -184,7 +184,7 @@ const AdminSidebar = ({ onNavItemClick }: AdminSidebarProps = {}) => {
           {permissionsLoading ? (
             <div className="flex flex-col items-center justify-center p-4">
               <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary mb-2"></div>
-              <span className="text-xs text-muted-foreground">Carregando permissões...</span>
+              <span className="text-xs text-sidebar-foreground/70">Carregando permissões...</span>
             </div>
           ) : (
             items.map((item) => {
@@ -207,7 +207,7 @@ const AdminSidebar = ({ onNavItemClick }: AdminSidebarProps = {}) => {
                 <Button
                   key={item.title}
                   variant="ghost"
-                  className={`flex items-center w-full justify-start py-3 px-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-sm font-medium transition-all duration-200 active:scale-[0.98] ${
+                  className={`flex items-center w-full justify-start py-3 px-3 rounded-lg hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sidebar-foreground text-sm font-medium transition-all duration-200 active:scale-[0.98] ${
                     isExpanded ? "h-auto min-h-[44px]" : "justify-center h-12 w-12 mx-auto"
                   }`}
                   onClick={() => handleNavigation(item.to)}
@@ -231,7 +231,7 @@ const AdminSidebar = ({ onNavItemClick }: AdminSidebarProps = {}) => {
       <div className="p-3 sm:p-5">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="flex items-center space-x-3 w-full justify-start py-4 px-4 min-h-[60px] rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
+            <Button variant="ghost" className="flex items-center space-x-3 w-full justify-start py-4 px-4 min-h-[60px] rounded-lg hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sidebar-foreground">
               <Avatar className="h-10 w-10 flex-shrink-0">
                 <AvatarImage src={user?.user_metadata?.avatar_url} />
                 <AvatarFallback className="text-base font-medium">
@@ -240,7 +240,7 @@ const AdminSidebar = ({ onNavItemClick }: AdminSidebarProps = {}) => {
               </Avatar>
               <div className="flex flex-col items-start">
                 <span
-                  className={`font-semibold transition-opacity duration-300 truncate text-base ${
+                  className={`font-semibold text-sidebar-foreground transition-opacity duration-300 truncate text-base ${
                     isExpanded ? "opacity-100" : "opacity-0"
                   }`}
                 >
