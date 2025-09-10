@@ -58,6 +58,7 @@ import RLSChecker from "@/pages/admin/RLSChecker";
 import AdminManagement from "@/pages/admin/AdminManagement";
 import AdminPermissions from "@/pages/admin/AdminPermissions";
 import Health from "@/pages/Health";
+import RunningPlans from "@/pages/RunningPlans";
 import SubscriptionManagement from "@/pages/admin/SubscriptionManagement";
 import HealthIntegrationManagement from "@/pages/admin/HealthIntegrationManagement";
 
@@ -88,6 +89,7 @@ const App = () => {
               <Route path="/appointments" element={<Appointments />} />
               
               <Route path="/health" element={<Health />} />
+              <Route path="/running-plans" element={<RunningPlans />} />
               <Route path="/account" element={<AccountInfo />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/workout-history" element={<WorkoutHistory />} />

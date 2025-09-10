@@ -1051,6 +1051,48 @@ export type Database = {
           },
         ]
       }
+      running_plans: {
+        Row: {
+          age: number
+          available_time: string
+          created_at: string
+          fitness_level: string
+          goal: string
+          id: string
+          plan: Json
+          title: string
+          updated_at: string
+          user_id: string
+          weight: number
+        }
+        Insert: {
+          age: number
+          available_time: string
+          created_at?: string
+          fitness_level: string
+          goal: string
+          id?: string
+          plan: Json
+          title: string
+          updated_at?: string
+          user_id: string
+          weight: number
+        }
+        Update: {
+          age?: number
+          available_time?: string
+          created_at?: string
+          fitness_level?: string
+          goal?: string
+          id?: string
+          plan?: Json
+          title?: string
+          updated_at?: string
+          user_id?: string
+          weight?: number
+        }
+        Relationships: []
+      }
       subscription_plans: {
         Row: {
           checkout_url: string | null

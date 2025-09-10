@@ -1,1 +1,29 @@
 project_id = "wehexulgoxwswkaoygnx"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_connections = 100
+
+[db]
+port = 54322
+
+[studio]
+enabled = true
+port = 54323
+
+[inbucket]
+enabled = true
+port = 54324
+
+[storage]
+enabled = true
+port = 54325
+
+[functions.generate-running-plan]
+verify_jwt = true
+
+[functions.save-running-plan]
+verify_jwt = true
