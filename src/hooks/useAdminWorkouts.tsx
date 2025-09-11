@@ -213,6 +213,8 @@ export function useAdminWorkouts() {
     mutationFn: async (data: UpdateWorkoutData) => {
       const { id, days_of_week, ...workoutData } = data;
       
+      console.log('Updating workout with data:', data);
+      
       // First, update the workout
       const { error: workoutError } = await supabase
         .from('workouts')
@@ -223,6 +225,7 @@ export function useAdminWorkouts() {
           level: workoutData.level,
           category_id: workoutData.category_id || null,
           calories: workoutData.calories || null,
+          updated_at: new Date().toISOString(),
         })
         .eq('id', id);
       

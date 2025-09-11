@@ -1,18 +1,22 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { AdminPermissionsCard } from '@/components/admin/AdminPermissionsCard';
 import { UsersByAdminCard } from '@/components/admin/UsersByAdminCard';
 import { useAdminPermissions } from '@/hooks/useAdminPermissions';
 import { useUsersByAdmin } from '@/hooks/useUsersByAdmin';
 import { useAdminRole } from '@/hooks/useAdminRole';
-import { Shield, Users, Settings, AlertTriangle } from 'lucide-react';
+import { Shield, Users, Settings, AlertTriangle, ChevronDown, ChevronRight } from 'lucide-react';
 import { Navigate } from 'react-router-dom';
+import { useState } from 'react';
 
 export default function AdminPermissions() {
   const { isSuperAdmin, isLoading: isLoadingRole } = useAdminRole();
   const { adminsWithPermissions, isLoading: isLoadingPermissions, togglePermission, isUpdating } = useAdminPermissions();
   const { adminUsers, getUsersByAdmin, isSuperAdmin: isSuperAdminFromUsers, isAdmin } = useUsersByAdmin();
+  const [expandedAdmins, setExpandedAdmins] = useState<Record<string, boolean>>({});
 
   if (isLoadingRole) {
     return (
@@ -124,15 +128,62 @@ export default function AdminPermissions() {
                   </CardContent>
                 </Card>
               ) : adminsWithPermissions && adminsWithPermissions.length > 0 ? (
-                <div className="grid gap-6">
-                  {adminsWithPermissions.map(admin => (
-                    <AdminPermissionsCard
-                      key={admin.id}
-                      admin={admin}
-                      onTogglePermission={togglePermission}
-                      isUpdating={isUpdating}
-                    />
-                  ))}
+                <div className="space-y-4">
+                  {adminsWithPermissions.map(admin => {
+                    const isExpanded = expandedAdmins[admin.id] || false;
+                    
+                    return (
+                      <Collapsible 
+                        key={admin.id} 
+                        open={isExpanded} 
+                        onOpenChange={(open) => 
+                          setExpandedAdmins(prev => ({
+                            ...prev,
+                            [admin.id]: open
+                          }))
+                        }
+                      >
+                        <Card>
+                          <CollapsibleTrigger asChild>
+                            <CardHeader className="cursor-pointer hover:bg-muted/50 transition-colors">
+                              <div className="flex items-center justify-between w-full">
+                                <div className="flex items-center gap-3">
+                                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                                    <span className="text-primary font-semibold">
+                                      {admin.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                                    </span>
+                                  </div>
+                                  <div>
+                                    <CardTitle className="text-lg">{admin.name}</CardTitle>
+                                    <CardDescription className="text-sm">{admin.email}</CardDescription>
+                                  </div>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                  <Badge variant="secondary" className="text-xs">
+                                    {admin.permissions.length} permissões
+                                  </Badge>
+                                  {isExpanded ? (
+                                    <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                                  ) : (
+                                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                                  )}
+                                </div>
+                              </div>
+                            </CardHeader>
+                          </CollapsibleTrigger>
+                          <CollapsibleContent>
+                            <CardContent className="pt-0">
+                              <AdminPermissionsCard
+                                admin={admin}
+                                onTogglePermission={togglePermission}
+                                isUpdating={isUpdating}
+                              />
+                            </CardContent>
+                          </CollapsibleContent>
+                        </Card>
+                      </Collapsible>
+                    );
+                  })}
                 </div>
               ) : (
                 <Card>

@@ -35,28 +35,7 @@ export function AdminPermissionsCard({ admin, onTogglePermission, isUpdating }: 
   const hasPermission = (permission: UserPermission) => admin.permissions.includes(permission);
 
   return (
-    <Card className="w-full">
-      <CardHeader className="pb-4">
-        <div className="flex items-center gap-3">
-          <Avatar className="h-10 w-10">
-            <AvatarImage src="" />
-            <AvatarFallback className="bg-primary/10 text-primary">
-              {admin.name.split(' ').map(n => n[0]).join('').toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
-          <div>
-            <CardTitle className="text-lg">{admin.name}</CardTitle>
-            <CardDescription className="text-sm">{admin.email}</CardDescription>
-          </div>
-          <div className="ml-auto">
-            <Badge variant="secondary" className="text-xs">
-              {admin.permissions.length} permissões ativas
-            </Badge>
-          </div>
-        </div>
-      </CardHeader>
-      
-      <CardContent className="space-y-6">
+    <div className="space-y-6">
         {Object.entries(permissionsByCategory).map(([category, permissions]) => (
           <div key={category} className="space-y-3">
             <div className="flex items-center gap-2">
@@ -93,7 +72,6 @@ export function AdminPermissionsCard({ admin, onTogglePermission, isUpdating }: 
             </div>
           </div>
         ))}
-      </CardContent>
-    </Card>
+    </div>
   );
 }

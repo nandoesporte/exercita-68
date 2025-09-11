@@ -39,18 +39,26 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 // Define o schema para validação do formulário exatamente como na página de login
 const formSchema = z.object({
   email: z.string().email('Email inválido'),
-  password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres'),
+  password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres').optional(),
+  firstName: z.string().min(2, 'Nome deve ter no mínimo 2 caracteres'),
+  lastName: z.string().min(2, 'Sobrenome deve ter no mínimo 2 caracteres'),
+});
+
+const editUserSchema = z.object({
   firstName: z.string().min(2, 'Nome deve ter no mínimo 2 caracteres'),
   lastName: z.string().min(2, 'Sobrenome deve ter no mínimo 2 caracteres'),
 });
 
 type FormValues = z.infer<typeof formSchema>;
+type EditUserFormValues = z.infer<typeof editUserSchema>;
 
 const UserManagement = () => {
   const queryClient = useQueryClient();
   const [isCreateUserOpen, setIsCreateUserOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isEditUserOpen, setIsEditUserOpen] = useState(false);
+  const [userToEdit, setUserToEdit] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { signUp } = useAuth();
   const { isSuperAdmin } = useAdminRole();
@@ -152,6 +160,33 @@ const UserManagement = () => {
     },
   });
 
+  // Update user mutation
+  const updateUserMutation = useMutation({
+    mutationFn: async ({ userId, data }: { userId: string, data: EditUserFormValues }) => {
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          first_name: data.firstName,
+          last_name: data.lastName,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', userId);
+      
+      if (error) throw new Error(error.message);
+      return { userId, data };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users-by-admin'] });
+      setIsEditUserOpen(false);
+      setUserToEdit(null);
+      editForm.reset();
+      toast.success('Usuário atualizado com sucesso!');
+    },
+    onError: (error: Error) => {
+      toast.error(`Erro ao atualizar usuário: ${error.message}`);
+    },
+  });
+
   const handleToggleUserActive = (userId: string, currentStatus: boolean) => {
     toggleUserActiveMutation.mutate({
       userId,
@@ -164,6 +199,14 @@ const UserManagement = () => {
     defaultValues: {
       email: '',
       password: '',
+      firstName: '',
+      lastName: '',
+    },
+  });
+
+  const editForm = useForm<EditUserFormValues>({
+    resolver: zodResolver(editUserSchema),
+    defaultValues: {
       firstName: '',
       lastName: '',
     },
@@ -222,6 +265,22 @@ const UserManagement = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const onEditSubmit = async (values: EditUserFormValues) => {
+    if (!userToEdit) return;
+    
+    updateUserMutation.mutate({
+      userId: userToEdit.user_id,
+      data: values
+    });
+  };
+
+  const handleEditUser = (user: any) => {
+    setUserToEdit(user);
+    editForm.setValue('firstName', user.raw_user_meta_data?.first_name || '');
+    editForm.setValue('lastName', user.raw_user_meta_data?.last_name || '');
+    setIsEditUserOpen(true);
   };
   
   const isMobile = useIsMobile();
@@ -286,6 +345,15 @@ const UserManagement = () => {
       header: 'Ações',
       cell: ({ row }: { row: { original: any } }) => {
         return (
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-8 px-3 text-xs"
+              onClick={() => handleEditUser(row.original)}
+            >
+              Editar
+            </Button>
             <Button
               variant="outline"
               size="sm"
@@ -297,6 +365,7 @@ const UserManagement = () => {
             >
               Excluir
             </Button>
+          </div>
         );
       },
     },
@@ -437,6 +506,63 @@ const UserManagement = () => {
           </Dialog>
         </div>
       </div>
+
+      {/* Edit User Dialog */}
+      <Dialog open={isEditUserOpen} onOpenChange={setIsEditUserOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Editar usuário</DialogTitle>
+          </DialogHeader>
+          <Form {...editForm}>
+            <form onSubmit={editForm.handleSubmit(onEditSubmit)} className="space-y-4">
+              <FormField
+                control={editForm.control}
+                name="firstName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nome</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Nome" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={editForm.control}
+                name="lastName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Sobrenome</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Sobrenome" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <DialogFooter>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsEditUserOpen(false)}
+                >
+                  Cancelar
+                </Button>
+                <Button 
+                  type="submit" 
+                  disabled={updateUserMutation.isPending}
+                >
+                  {updateUserMutation.isPending && (
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  )}
+                  Salvar
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
 
       {/* Super Admin Info Card */}
       {isSuperAdmin && (
