@@ -102,7 +102,7 @@ const AdminLayout = () => {
             <div className="flex items-center gap-4 w-full justify-between">
               <div className="flex items-center gap-4">
                 <img 
-                  src="/lovable-uploads/abe8bbb7-7e2f-4277-b5b0-1f923e57b6f7.png"
+                  src="/lovable-uploads/f79e9b59-2131-4427-bbe2-ac5f884ef83a.png"
                   alt="Exercita Logo"
                   className="h-10 w-10"
                 />

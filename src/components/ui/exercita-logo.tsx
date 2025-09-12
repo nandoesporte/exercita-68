@@ -13,7 +13,7 @@ export const ExercitaLogo: React.FC<ExercitaLogoProps> = ({
 }) => {
   return (
     <img 
-      src="/lovable-uploads/9c2e6dc1-75bf-4bee-9342-526b0e358b54.png" 
+      src="/lovable-uploads/f79e9b59-2131-4427-bbe2-ac5f884ef83a.png" 
       alt="Exercita" 
       className={className}
       width={width}

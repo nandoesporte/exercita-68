@@ -106,7 +106,7 @@ const ExerciseDetail = ({ workoutExercise, onBack }: ExerciseDetailProps) => {
           <div className={`absolute left-1/2 transform -translate-x-1/2 flex items-center ${!isMobile && 'hidden'}`}>
             <Link to="/" className="flex items-center gap-2">
               <img 
-                src="/lovable-uploads/abe8bbb7-7e2f-4277-b5b0-1f923e57b6f7.png"
+                src="/lovable-uploads/f79e9b59-2131-4427-bbe2-ac5f884ef83a.png"
                 alt="Exercita Logo"
                 className="h-10 w-10"
               />
@@ -119,7 +119,7 @@ const ExerciseDetail = ({ workoutExercise, onBack }: ExerciseDetailProps) => {
             <div className="flex-1 flex justify-center">
               <Link to="/" className="flex items-center gap-2">
                 <img 
-                  src="/lovable-uploads/abe8bbb7-7e2f-4277-b5b0-1f923e57b6f7.png"
+                  src="/lovable-uploads/f79e9b59-2131-4427-bbe2-ac5f884ef83a.png"
                   alt="Exercita Logo"
                   className="h-10 w-10"
                 />
