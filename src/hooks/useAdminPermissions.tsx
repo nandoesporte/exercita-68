@@ -20,27 +20,43 @@ export function useAdminPermissions() {
   const { data: adminsWithPermissions, isLoading } = useQuery({
     queryKey: ['admins-with-permissions'],
     queryFn: async () => {
+      console.log('Fetching admins with permissions...');
+      
       const { data: admins, error: adminsError } = await supabase
         .from('admins')
-        .select('id, name, email, user_id')
-        .eq('status', 'active');
+        .select('id, name, email, user_id, status')
+        .eq('status', 'active')
+        .order('created_at', { ascending: false });
 
-      if (adminsError) throw adminsError;
+      if (adminsError) {
+        console.error('Error fetching admins:', adminsError);
+        throw adminsError;
+      }
+
+      console.log('Admins found:', admins);
 
       const { data: permissions, error: permissionsError } = await supabase
         .from('admin_permissions')
         .select('admin_id, permission');
 
-      if (permissionsError) throw permissionsError;
+      if (permissionsError) {
+        console.error('Error fetching permissions:', permissionsError);
+        throw permissionsError;
+      }
 
-      return admins.map(admin => ({
+      console.log('Permissions found:', permissions);
+
+      const adminsWithPerms = admins.map(admin => ({
         id: admin.id,
-        name: admin.name,
-        email: admin.email,
+        name: admin.name || 'Admin sem nome',
+        email: admin.email || 'Email não disponível',
         permissions: permissions
           .filter(p => p.admin_id === admin.id)
           .map(p => p.permission)
       })) as AdminWithPermissions[];
+
+      console.log('Final admins with permissions:', adminsWithPerms);
+      return adminsWithPerms;
     },
   });
 
