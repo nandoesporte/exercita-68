@@ -103,11 +103,11 @@ const AdminLayout = () => {
               <div className="flex items-center gap-4">
                 <img 
                   src="/lovable-uploads/abe8bbb7-7e2f-4277-b5b0-1f923e57b6f7.png"
-                  alt="Mais Saúde Logo"
+                  alt="Exercita Logo"
                   className="h-10 w-10"
                 />
                 <div className="flex flex-col">
-                  <span className="font-bold text-lg md:text-xl">Mais Saúde</span>
+                  <span className="font-bold text-lg md:text-xl">Exercita</span>
                   <span className="text-sm text-muted-foreground hidden sm:inline-block">
                     {getCurrentPageTitle()}
                   </span>

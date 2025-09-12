@@ -1,5 +1,5 @@
+import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.7.1';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -26,9 +26,9 @@ serve(async (req) => {
       );
     }
 
-    const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
-    if (!GEMINI_API_KEY) {
-      console.error('GEMINI_API_KEY not found');
+    const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
+    if (!OPENAI_API_KEY) {
+      console.error('OPENAI_API_KEY not found');
       return new Response(
         JSON.stringify({ error: 'Configuração da API não encontrada' }),
         {
@@ -38,9 +38,8 @@ serve(async (req) => {
       );
     }
 
-    // Create prompt for Gemini
-    const prompt = `
-Crie um plano de corrida/caminhada personalizado para:
+    // Create prompt for OpenAI
+    const prompt = `Crie um plano de corrida/caminhada personalizado para:
 - Idade: ${age} anos
 - Peso: ${weight} kg
 - Nível de condicionamento: ${fitness_level}
@@ -49,12 +48,11 @@ Crie um plano de corrida/caminhada personalizado para:
 
 O plano deve ter duração de 4 semanas, ser progressivo e seguro. 
 
-IMPORTANTE: Retorne APENAS um JSON válido no seguinte formato, sem texto adicional:
+IMPORTANTE: Retorne APENAS um array JSON válido no seguinte formato, sem texto adicional:
 [
   { "semana": 1, "dia": "Segunda-feira", "atividade": "Caminhada leve", "duracao_min": 30, "intensidade": "Leve" },
   { "semana": 1, "dia": "Quarta-feira", "atividade": "Caminhada moderada", "duracao_min": 35, "intensidade": "Moderada" },
-  { "semana": 1, "dia": "Sexta-feira", "atividade": "Caminhada leve", "duracao_min": 30, "intensidade": "Leve" },
-  ...continue para as 4 semanas...
+  { "semana": 1, "dia": "Sexta-feira", "atividade": "Caminhada leve", "duracao_min": 30, "intensidade": "Leve" }
 ]
 
 Considere:
@@ -62,36 +60,34 @@ Considere:
 - Para intermediários: combinar caminhada e corrida
 - Para avançados: mais foco em corrida e intervalos
 - Intensidades: "Leve", "Moderada", "Intensa"
-- Inclua dias de descanso quando necessário
-- Cada semana deve ter progressão adequada
-`;
+- Inclua 3 dias de treino por semana com dias de descanso intercalados
+- Cada semana deve ter progressão adequada`;
 
-    console.log('Calling Gemini API...');
+    console.log('Calling OpenAI API...');
     
-    // Call Gemini API
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+    // Call OpenAI API
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
+        'Authorization': `Bearer ${OPENAI_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        contents: [{
-          parts: [{
-            text: prompt
-          }]
-        }],
-        generationConfig: {
-          temperature: 0.7,
-          topK: 40,
-          topP: 0.95,
-          maxOutputTokens: 2048,
-        }
+        model: 'gpt-4.1-2025-04-14',
+        messages: [
+          { 
+            role: 'system', 
+            content: 'Você é um especialista em treinamento físico. Responda sempre com um JSON válido contendo um plano de corrida/caminhada estruturado.' 
+          },
+          { role: 'user', content: prompt }
+        ],
+        max_completion_tokens: 2000,
       }),
     });
 
     if (!response.ok) {
       const errorData = await response.text();
-      console.error('Gemini API error:', errorData);
+      console.error('OpenAI API error:', errorData);
       return new Response(
         JSON.stringify({ error: 'Erro ao gerar plano de treino' }),
         {
@@ -102,10 +98,10 @@ Considere:
     }
 
     const data = await response.json();
-    console.log('Gemini response:', data);
+    console.log('OpenAI response:', data);
 
-    if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
-      console.error('Invalid Gemini response structure:', data);
+    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+      console.error('Invalid OpenAI response structure:', data);
       return new Response(
         JSON.stringify({ error: 'Resposta inválida da API' }),
         {
@@ -115,7 +111,7 @@ Considere:
       );
     }
 
-    const generatedText = data.candidates[0].content.parts[0].text;
+    const generatedText = data.choices[0].message.content;
     console.log('Generated text:', generatedText);
 
     // Parse the JSON from the response

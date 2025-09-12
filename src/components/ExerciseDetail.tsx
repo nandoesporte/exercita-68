@@ -107,10 +107,10 @@ const ExerciseDetail = ({ workoutExercise, onBack }: ExerciseDetailProps) => {
             <Link to="/" className="flex items-center gap-2">
               <img 
                 src="/lovable-uploads/abe8bbb7-7e2f-4277-b5b0-1f923e57b6f7.png"
-                alt="Mais Saúde Logo"
+                alt="Exercita Logo"
                 className="h-10 w-10"
               />
-              <span className="font-extrabold text-xl text-white">Mais Saúde</span>
+              <span className="font-extrabold text-xl text-white">Exercita</span>
             </Link>
           </div>
 
@@ -120,10 +120,10 @@ const ExerciseDetail = ({ workoutExercise, onBack }: ExerciseDetailProps) => {
               <Link to="/" className="flex items-center gap-2">
                 <img 
                   src="/lovable-uploads/abe8bbb7-7e2f-4277-b5b0-1f923e57b6f7.png"
-                  alt="Mais Saúde Logo"
+                  alt="Exercita Logo"
                   className="h-10 w-10"
                 />
-                <span className="font-extrabold text-xl text-white">Mais Saúde</span>
+                <span className="font-extrabold text-xl text-white">Exercita</span>
               </Link>
             </div>
           )}

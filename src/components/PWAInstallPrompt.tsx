@@ -103,7 +103,7 @@ const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ onClose }) => {
               <Smartphone className="h-6 w-6 text-fitness-orange" />
             </div>
             <div className="flex-1">
-              <h3 className="font-bold text-white">Instale o aplicativo Mais Saúde</h3>
+              <h3 className="font-bold text-white">Instale o aplicativo Exercita</h3>
               <p className="text-sm text-gray-300">
                 Acesse rapidamente e treine mesmo offline
               </p>
