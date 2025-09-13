@@ -217,7 +217,7 @@ const UserManagement = () => {
     setIsLoading(true);
     
     try {
-      // Get current admin ID to associate user with admin
+      // Get current admin ID from admins table (not profiles)
       const { data: currentUser } = await supabase.auth.getUser();
       if (!currentUser.user) throw new Error('Usuário não autenticado');
 

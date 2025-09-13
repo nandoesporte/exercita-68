@@ -256,17 +256,22 @@ const Dashboard = () => {
       const { data: currentUser } = await supabase.auth.getUser();
       if (!currentUser.user) throw new Error('Usuário não autenticado');
 
-      // Get current admin ID from profiles
-      const { data: currentProfile } = await supabase
-        .from('profiles')
-        .select('admin_id')
-        .eq('id', currentUser.user.id)
-        .single();
-
+      // Get current admin ID from admins table (not profiles)
       let adminId = null;
-      if (!isSuperAdmin && currentProfile?.admin_id) {
-        // Regular admin assigns to their own admin_id
-        adminId = currentProfile.admin_id;
+      
+      if (!isSuperAdmin) {
+        // Regular admin: get their admin ID from the admins table
+        const { data: adminData } = await supabase
+          .from('admins')
+          .select('id')
+          .eq('user_id', currentUser.user.id)
+          .single();
+        
+        if (adminData) {
+          adminId = adminData.id;
+        } else {
+          throw new Error('Admin ID não encontrado');
+        }
       }
 
       // Include admin_id in metadata
