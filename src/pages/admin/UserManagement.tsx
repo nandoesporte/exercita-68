@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
+import { PermissionGuard } from '@/components/admin/PermissionGuard';
 import {
   Dialog,
   DialogContent,
@@ -388,7 +389,8 @@ const UserManagement = () => {
   }
 
   return (
-    <div className="space-y-4 pb-16 md:pb-0">
+    <PermissionGuard permission="manage_users">
+      <div className="space-y-4 pb-16 md:pb-0">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-xl font-bold">Gerenciamento de Usuários</h1>
@@ -631,7 +633,8 @@ const UserManagement = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+      </div>
+    </PermissionGuard>
   );
 };
 

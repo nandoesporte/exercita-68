@@ -129,8 +129,8 @@ const AdminSidebar = ({ onNavItemClick }: AdminSidebarProps = {}) => {
       icon: <CreditCard className="h-4 w-4" />,
       to: '/admin/payment-methods'
     }] : []),
-    // Only show user management for Super Admins
-    ...(isSuperAdmin ? [{
+    // Show user management for users with manage_users permission
+    ...(hasPermission('manage_users') ? [{
       title: 'Gerenciamento de Usuários',
       icon: <Users className="h-4 w-4" />,
       to: '/admin/users'
@@ -188,17 +188,9 @@ const AdminSidebar = ({ onNavItemClick }: AdminSidebarProps = {}) => {
             </div>
           ) : (
             items.map((item) => {
-              const hasAccess = item.to === '/admin' || item.to === '/admin/permissions' || 
-                              item.to === '/admin/subscriptions' ||
-                              item.to === '/admin/super-dashboard' || item.to === '/admin/admins' || 
-                              item.to === '/admin/users' || item.to === '/admin/rls-checker' || 
-                              item.to === '/admin/health-integrations' ||
-                              isSuperAdmin;
-              
-              console.log('Menu item permission check:', { 
+              console.log('Menu item check:', { 
                 title: item.title, 
                 to: item.to, 
-                hasAccess, 
                 isSuperAdmin,
                 permissionsLoading 
               });

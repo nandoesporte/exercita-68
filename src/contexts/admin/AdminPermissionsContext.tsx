@@ -65,7 +65,9 @@ export function AdminPermissionsProvider({ children }: { children: ReactNode }) 
           'manage_gym_photos', 
           'manage_schedule', 
           'manage_appointments', 
-          'manage_payment_methods'
+          'manage_payment_methods',
+          'manage_users',
+          'view_analytics'
         ] as AdminPermission[];
       }
       
