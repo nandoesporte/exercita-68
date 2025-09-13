@@ -216,7 +216,7 @@ export function useAdminWorkouts() {
       
       console.log('Updating workout with data:', data);
       
-      // First, update the workout
+      // First, update the workout (also set admin_id if not set)
       const { error: workoutError } = await supabase
         .from('workouts')
         .update({
@@ -226,6 +226,7 @@ export function useAdminWorkouts() {
           level: workoutData.level,
           category_id: workoutData.category_id || null,
           calories: workoutData.calories || null,
+          admin_id: adminId, // Always set admin_id on update
           updated_at: new Date().toISOString(),
         })
         .eq('id', id);

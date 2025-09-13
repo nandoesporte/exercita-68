@@ -45,11 +45,14 @@ const EditWorkout = () => {
   const handleSubmit = (data: WorkoutFormData) => {
     if (!id) return;
     
+    console.log('Submitting workout update:', { id, ...data });
+    
     updateWorkout({
       id,
       ...data
     }, {
       onSuccess: () => {
+        console.log('Update successful!');
         toast.success('Treino atualizado com sucesso!');
         navigate('/admin/workouts');
       },
