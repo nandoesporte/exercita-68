@@ -269,7 +269,7 @@ export function useAdminWorkouts() {
       queryClient.invalidateQueries({ queryKey: ['admin-workouts'] });
       queryClient.invalidateQueries({ queryKey: ['workout-days'] });
       queryClient.invalidateQueries({ queryKey: ['workouts'] });
-      toast.success('Workout updated successfully');
+      toast.success('Treino atualizado com sucesso!');
     },
     onError: (error: Error) => {
       toast.error(error.message || 'Failed to update workout');

@@ -48,6 +48,15 @@ const EditWorkout = () => {
     updateWorkout({
       id,
       ...data
+    }, {
+      onSuccess: () => {
+        toast.success('Treino atualizado com sucesso!');
+        navigate('/admin/workouts');
+      },
+      onError: (error) => {
+        console.error("Erro ao atualizar treino:", error);
+        toast.error(`Erro ao atualizar treino: ${error.message}`);
+      }
     });
   };
 

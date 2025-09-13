@@ -78,7 +78,7 @@ const Dashboard = () => {
         const { count: workoutsCount, error: workoutsError } = await supabase
           .from('workouts')
           .select('*', { count: 'exact', head: true })
-          .eq('admin_id', adminId);
+          .or(`admin_id.is.null,admin_id.eq.${adminId}`);
         if (workoutsError) console.error("Error fetching workouts:", workoutsError);
         
         const { count: appointmentsCount, error: appointmentsError } = await supabase
