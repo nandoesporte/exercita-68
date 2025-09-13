@@ -143,7 +143,7 @@ const Dashboard = () => {
   const toggleUserActiveMutation = useMutation({
     mutationFn: async ({ userId, isActive }: { userId: string, isActive: boolean }) => {
       const { error } = await supabase.rpc('toggle_user_active_status', {
-        user_id: userId,
+        target_user_id: userId,
       });
       
       if (error) throw new Error(error.message);

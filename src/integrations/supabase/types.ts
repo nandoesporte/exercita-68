@@ -1660,7 +1660,7 @@ export type Database = {
         Returns: string
       }
       toggle_user_active_status: {
-        Args: { user_id: string }
+        Args: { target_user_id: string }
         Returns: boolean
       }
       toggle_user_admin_status: {
