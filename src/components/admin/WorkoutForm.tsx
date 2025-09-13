@@ -28,15 +28,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-// Define form schema com Zod
-const formSchema = z.object({
+// Define form schema com Zod - user_id is conditional based on editing mode
+const createFormSchema = (isEditing: boolean = false) => z.object({
   title: z.string().min(2, { message: "O título deve ter pelo menos 2 caracteres." }),
   description: z.string().optional(),
   duration: z.coerce.number().min(1, { message: "A duração deve ser de pelo menos 1 minuto." }),
   level: z.enum(['beginner', 'intermediate', 'advanced', 'all_levels']),
   category_id: z.string().optional().nullable(),
   calories: z.coerce.number().optional().nullable(),
-  user_id: z.string().min(1, { message: "É obrigatório selecionar um aluno." }),
+  user_id: isEditing ? z.string().optional() : z.string().min(1, { message: "É obrigatório selecionar um aluno." }),
   days_of_week: z.array(z.string()).optional(),
 });
 
@@ -67,6 +67,7 @@ const WorkoutForm = ({
   defaultValues,
   isEditing = false
 }: WorkoutFormProps) => {
+  const formSchema = createFormSchema(isEditing);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: defaultValues || {
