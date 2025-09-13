@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAdminRole } from './useAdminRole';
+import { useAdminPermissionsContext } from './useAdminPermissionsContext';
 
 interface UserProfile {
   id: string;
@@ -21,6 +22,7 @@ interface AdminUser {
 
 export function useUsersByAdmin() {
   const { isSuperAdmin, isAdmin } = useAdminRole();
+  const { adminId: contextAdminId } = useAdminPermissionsContext();
 
   // Fetch current admin ID first
   const { data: adminData } = useQuery({
@@ -163,8 +165,14 @@ export function useUsersByAdmin() {
   };
 
   const getMyAssignedUsers = () => {
-    if (!userProfiles || !adminData?.id) return [];
-    return userProfiles.filter(user => user.admin_id === adminData.id);
+    if (!userProfiles) return [];
+    // Use adminId from context if adminData is not available
+    const currentAdminId = adminData?.id || contextAdminId;
+    console.log('getMyAssignedUsers - currentAdminId:', currentAdminId, 'userProfiles:', userProfiles?.length);
+    if (!currentAdminId) return [];
+    const myUsers = userProfiles.filter(user => user.admin_id === currentAdminId);
+    console.log('getMyAssignedUsers - filtered users:', myUsers.length);
+    return myUsers;
   };
 
   const getAdminsWithUserCount = () => {
