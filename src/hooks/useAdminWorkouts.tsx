@@ -68,9 +68,9 @@ export function useAdminWorkouts() {
         `)
         .order('created_at', { ascending: false });
 
-      // Filter by admin_id if not super admin
+      // Filter by admin_id if not super admin - include both admin-specific workouts and legacy workouts without admin_id
       if (!isSuperAdmin && adminId) {
-        query = query.eq('admin_id', adminId);
+        query = query.or(`admin_id.is.null,admin_id.eq.${adminId}`);
       }
       
       const { data, error } = await query;
@@ -117,6 +117,7 @@ export function useAdminWorkouts() {
             level: formData.level,
             category_id: formData.category_id || null,
             calories: formData.calories || null,
+            admin_id: adminId,
           })
           .select('id')
           .single();
