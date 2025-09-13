@@ -604,6 +604,42 @@ export function useAdminWorkouts() {
     }
   });
 
+  // Reorder exercises via drag and drop
+  const reorderExercises = useMutation({
+    mutationFn: async ({ 
+      exercises,
+      workoutId
+    }: { 
+      exercises: Array<any>,
+      workoutId: string
+    }) => {
+      // Update all exercise positions in batch
+      const updates = exercises.map((exercise, index) => ({
+        id: exercise.id,
+        order_position: index + 1
+      }));
+
+      for (const update of updates) {
+        const { error } = await supabase
+          .from('workout_exercises')
+          .update({ order_position: update.order_position })
+          .eq('id', update.id);
+        
+        if (error) {
+          throw new Error(`Error updating exercise position: ${error.message}`);
+        }
+      }
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ 
+        queryKey: ['workout-exercises', variables.workoutId] 
+      });
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Falha ao reordenar exercícios');
+    }
+  });
+
   // Updated cloning function with improved error handling
   const cloneExercisesToDays = useMutation({
     mutationFn: async ({
@@ -738,6 +774,8 @@ export function useAdminWorkouts() {
     isRemovingExercise: removeExerciseFromWorkout.isPending,
     updateExerciseOrder: updateExerciseOrder.mutate,
     isUpdatingExerciseOrder: updateExerciseOrder.isPending,
+    reorderExercises: reorderExercises.mutate,
+    isReorderingExercises: reorderExercises.isPending,
     cloneExercisesToDays: cloneExercisesToDays.mutate,
     isCloningExercises: cloneExercisesToDays.isPending
   };

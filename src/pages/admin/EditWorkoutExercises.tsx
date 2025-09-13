@@ -60,6 +60,8 @@ const EditWorkoutExercises = () => {
     isRemovingExercise,
     updateExerciseOrder,
     isUpdatingExerciseOrder,
+    reorderExercises,
+    isReorderingExercises,
     cloneExercisesToDays,
     isCloningExercises,
   } = useAdminWorkouts();
@@ -147,8 +149,17 @@ const EditWorkoutExercises = () => {
     setIsCloneUserDialogOpen(true);
   };
 
+  const handleReorderExercises = (reorderedExercises: Array<any>) => {
+    if (!id) return;
+    
+    reorderExercises({
+      exercises: reorderedExercises,
+      workoutId: id
+    });
+  };
+
   const isLoading = isWorkoutLoading || areExercisesLoading || areWorkoutExercisesLoading;
-  const isActionLoading = isAddingExercise || isRemovingExercise || isUpdatingExerciseOrder || isCloningExercises;
+  const isActionLoading = isAddingExercise || isRemovingExercise || isUpdatingExerciseOrder || isCloningExercises || isReorderingExercises;
 
   // Filter out the current day and "all" option for cloning targets
   const availableTargetDays = daysOfWeek.filter(day => 
@@ -255,6 +266,7 @@ const EditWorkoutExercises = () => {
                   onRemove={handleRemoveExercise}
                   onMoveUp={handleMoveUp}
                   onMoveDown={handleMoveDown}
+                  onReorder={handleReorderExercises}
                   isLoading={areWorkoutExercisesLoading}
                 />
               </div>
