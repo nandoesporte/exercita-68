@@ -268,6 +268,7 @@ const EditWorkoutExercises = () => {
                   onMoveDown={handleMoveDown}
                   onReorder={handleReorderExercises}
                   isLoading={areWorkoutExercisesLoading}
+                  showByDay={selectedDayOfWeek === null}
                 />
               </div>
             </div>
