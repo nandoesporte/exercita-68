@@ -41,7 +41,7 @@ const Dashboard = () => {
   const { signUp } = useAuth(); // Importando a função signUp do hook useAuth
   const { isSuperAdmin } = useAdminRole();
   const { adminId, isAdmin } = useAdminPermissionsContext();
-  const { adminUsers, userProfiles, getUsersByAdmin, isLoading: usersLoading } = useUsersByAdmin();
+  const { adminUsers, userProfiles, getUsersByAdmin, getMyAssignedUsers, isLoading: usersLoading } = useUsersByAdmin();
 
   // Fetch statistics including real appointment data
   const { data: statsData, isLoading: statsLoading } = useQuery({
@@ -127,7 +127,7 @@ const Dashboard = () => {
     if (!userProfiles) return [];
     
     // Get users for this admin (or all users if super admin)
-    const relevantUsers = isSuperAdmin ? userProfiles : getUsersByAdmin(adminId);
+    const relevantUsers = isSuperAdmin ? userProfiles : getMyAssignedUsers();
     
     return relevantUsers.slice(0, 5).map(profile => ({
       id: profile.id,
@@ -137,7 +137,7 @@ const Dashboard = () => {
       isActive: true, // Default to active since we don't have banned_until in profiles
       avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${profile.first_name || profile.email || 'User'}`,
     }));
-  }, [userProfiles, adminId, isSuperAdmin, getUsersByAdmin]);
+  }, [userProfiles, isSuperAdmin, getMyAssignedUsers]);
 
   // Toggle user active status
   const toggleUserActiveMutation = useMutation({
