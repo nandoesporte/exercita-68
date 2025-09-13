@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { useAdminWorkouts, WorkoutFormData } from '@/hooks/useAdminWorkouts';
 import WorkoutForm from '@/components/admin/WorkoutForm';
-import { toast } from '@/lib/toast-wrapper';
+import { toast } from 'sonner';
 import { AdminDataRefresh } from '@/components/admin/AdminDataRefresh';
 
 const CreateWorkout = () => {
