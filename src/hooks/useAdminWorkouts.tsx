@@ -307,9 +307,9 @@ export function useAdminWorkouts() {
         .select('*')
         .order('name');
 
-      // Filter by admin_id if not super admin
+      // Filter by admin_id if not super admin - include global categories (admin_id IS NULL) and admin-specific ones
       if (!isSuperAdmin && adminId) {
-        query = query.eq('admin_id', adminId);
+        query = query.or(`admin_id.is.null,admin_id.eq.${adminId}`);
       }
       
       const { data, error } = await query;
