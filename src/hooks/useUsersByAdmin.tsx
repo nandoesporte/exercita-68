@@ -168,11 +168,8 @@ export function useUsersByAdmin() {
     if (!userProfiles) return [];
     // Use adminId from context if adminData is not available
     const currentAdminId = adminData?.id || contextAdminId;
-    console.log('getMyAssignedUsers - currentAdminId:', currentAdminId, 'userProfiles:', userProfiles?.length);
     if (!currentAdminId) return [];
-    const myUsers = userProfiles.filter(user => user.admin_id === currentAdminId);
-    console.log('getMyAssignedUsers - filtered users:', myUsers.length);
-    return myUsers;
+    return userProfiles.filter(user => user.admin_id === currentAdminId);
   };
 
   const getAdminsWithUserCount = () => {
