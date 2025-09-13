@@ -42,11 +42,15 @@ const Dashboard = () => {
   const { isSuperAdmin } = useAdminRole();
   const { adminId, isAdmin } = useAdminPermissionsContext();
   const { adminUsers, userProfiles, getUsersByAdmin, getMyAssignedUsers, isLoading: usersLoading } = useUsersByAdmin();
+  
+  console.log('Dashboard render - adminId from context:', adminId, 'isAdmin:', isAdmin, 'isSuperAdmin:', isSuperAdmin);
 
   // Fetch statistics including real appointment data
   const { data: statsData, isLoading: statsLoading } = useQuery({
     queryKey: ['admin-dashboard-stats', adminId],
     queryFn: async () => {
+      console.log('Dashboard stats query - adminId:', adminId, 'isSuperAdmin:', isSuperAdmin, 'isAdmin:', isAdmin);
+      
       if (isSuperAdmin) {
         // Super admin sees all data
         const { data: usersData, error: usersError } = await supabase.rpc('get_all_users');
@@ -62,12 +66,16 @@ const Dashboard = () => {
           .select('*', { count: 'exact', head: true });
         if (appointmentsError) console.error("Error fetching appointments:", appointmentsError);
         
+        console.log('Super admin stats:', { users: (usersData as any[])?.length || 0, workouts: workoutsCount || 0, appointments: appointmentsCount || 0 });
+        
         return {
           users: (usersData as any[])?.length || 0,
           workouts: workoutsCount || 0,
           appointments: appointmentsCount || 0
         };
       } else if (isAdmin && adminId) {
+        console.log('Regular admin fetching stats for adminId:', adminId);
+        
         // Regular admin sees only their data
         const { count: usersCount, error: usersError } = await supabase
           .from('profiles')
@@ -87,6 +95,8 @@ const Dashboard = () => {
           .eq('admin_id', adminId);
         if (appointmentsError) console.error("Error fetching appointments:", appointmentsError);
         
+        console.log('Regular admin stats:', { users: usersCount || 0, workouts: workoutsCount || 0, appointments: appointmentsCount || 0 });
+        
         return {
           users: usersCount || 0,
           workouts: workoutsCount || 0,
@@ -94,9 +104,10 @@ const Dashboard = () => {
         };
       }
       
+      console.log('No matching conditions for stats, returning zero');
       return { users: 0, workouts: 0, appointments: 0 };
     },
-    enabled: !!adminId,
+    enabled: (isSuperAdmin || (isAdmin && !!adminId)),
   });
 
   // Fetch appointments for display
@@ -124,10 +135,14 @@ const Dashboard = () => {
 
   // Process user data for display based on admin permissions
   const recentUsers = React.useMemo(() => {
+    console.log('Processing recent users - userProfiles:', userProfiles?.length, 'isSuperAdmin:', isSuperAdmin);
+    
     if (!userProfiles) return [];
     
     // Get users for this admin (or all users if super admin)
     const relevantUsers = isSuperAdmin ? userProfiles : getMyAssignedUsers();
+    
+    console.log('Relevant users for dashboard:', relevantUsers.length);
     
     return relevantUsers.slice(0, 5).map(profile => ({
       id: profile.id,
