@@ -15,7 +15,7 @@ import { useState } from 'react';
 export default function AdminPermissions() {
   const { isSuperAdmin, isLoading: isLoadingRole } = useAdminRole();
   const { adminsWithPermissions, isLoading: isLoadingPermissions, togglePermission, isUpdating } = useAdminPermissions();
-  const { adminUsers, getUsersByAdmin, isSuperAdmin: isSuperAdminFromUsers, isAdmin } = useUsersByAdmin();
+  const { adminUsers, getUsersByAdmin, getUnassignedUsers, getMyAssignedUsers, adminData, isSuperAdmin: isSuperAdminFromUsers, isAdmin } = useUsersByAdmin();
   const [expandedAdmins, setExpandedAdmins] = useState<Record<string, boolean>>({});
 
   if (isLoadingRole) {
@@ -224,6 +224,9 @@ export default function AdminPermissions() {
           <UsersByAdminCard
             adminUsers={adminUsers}
             getUsersByAdmin={getUsersByAdmin}
+            getUnassignedUsers={getUnassignedUsers}
+            getMyAssignedUsers={getMyAssignedUsers}
+            adminData={adminData}
             isSuperAdmin={isSuperAdminFromUsers}
           />
         </TabsContent>

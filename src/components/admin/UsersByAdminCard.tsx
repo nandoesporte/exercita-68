@@ -4,9 +4,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Users, ChevronDown, ChevronUp } from "lucide-react";
+import { Users, ChevronDown, ChevronUp, UserPlus } from "lucide-react";
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 interface UserProfile {
   id: string;
@@ -28,12 +30,51 @@ interface AdminUser {
 interface UsersByAdminCardProps {
   adminUsers: AdminUser[];
   getUsersByAdmin: (adminId?: string) => UserProfile[];
+  getUnassignedUsers: () => UserProfile[];
+  getMyAssignedUsers: () => UserProfile[];
+  adminData: { id: string } | null;
   isSuperAdmin: boolean;
 }
 
-export function UsersByAdminCard({ adminUsers, getUsersByAdmin, isSuperAdmin }: UsersByAdminCardProps) {
+export function UsersByAdminCard({ 
+  adminUsers, 
+  getUsersByAdmin, 
+  getUnassignedUsers, 
+  getMyAssignedUsers, 
+  adminData, 
+  isSuperAdmin 
+}: UsersByAdminCardProps) {
   const [selectedAdminId, setSelectedAdminId] = useState<string>('all');
   const [expandedAdmins, setExpandedAdmins] = useState<Set<string>>(new Set());
+  const [assigningUsers, setAssigningUsers] = useState<Set<string>>(new Set());
+
+  const handleAssignUser = async (userId: string) => {
+    if (!adminData?.id) return;
+    
+    setAssigningUsers(prev => new Set([...prev, userId]));
+    
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ admin_id: adminData.id })
+        .eq('id', userId);
+
+      if (error) throw error;
+      
+      toast.success('Usuário atribuído com sucesso!');
+      // Force refresh the data
+      window.location.reload();
+    } catch (error) {
+      console.error('Error assigning user:', error);
+      toast.error('Erro ao atribuir usuário');
+    } finally {
+      setAssigningUsers(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(userId);
+        return newSet;
+      });
+    }
+  };
 
   const toggleAdminExpansion = (adminId: string) => {
     const newExpanded = new Set(expandedAdmins);
@@ -58,56 +99,115 @@ export function UsersByAdminCard({ adminUsers, getUsersByAdmin, isSuperAdmin }: 
   };
 
   if (!isSuperAdmin) {
-    // Para admins normais, mostrar apenas seus usuários
-    const myUsers = getUsersByAdmin();
+    // Para admins normais, mostrar usuários atribuídos e não atribuídos
+    const myUsers = getMyAssignedUsers();
+    const unassignedUsers = getUnassignedUsers();
     
     return (
-      <Card>
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <Users className="h-5 w-5 text-primary" />
-            <CardTitle>Meus Usuários</CardTitle>
-          </div>
-          <CardDescription>
-            {myUsers.length} usuário{myUsers.length !== 1 ? 's' : ''} vinculado{myUsers.length !== 1 ? 's' : ''} à sua conta
-          </CardDescription>
-        </CardHeader>
-        
-        <CardContent>
-          <div className="space-y-3">
-            {myUsers.map(user => (
-              <div key={user.id} className="flex items-center gap-3 p-3 rounded-lg border bg-card/50">
-                <Avatar className="h-10 w-10">
-                  <AvatarImage src={user.avatar_url || ""} />
-                  <AvatarFallback className="bg-primary/10 text-primary text-xs">
-                    {getInitials(user)}
-                  </AvatarFallback>
-                </Avatar>
-                
-                <div className="flex-1 min-w-0">
-                  <p className="font-medium text-sm truncate">{formatUserName(user)}</p>
-                  {user.email && (
-                    <p className="text-xs text-muted-foreground truncate">{user.email}</p>
-                  )}
-                  <p className="text-xs text-muted-foreground">
-                    Criado {formatDistanceToNow(new Date(user.created_at), { 
-                      addSuffix: true, 
-                      locale: ptBR 
-                    })}
-                  </p>
+      <div className="space-y-6">
+        {/* Meus Usuários */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <Users className="h-5 w-5 text-primary" />
+              <CardTitle>Meus Usuários</CardTitle>
+            </div>
+            <CardDescription>
+              {myUsers.length} usuário{myUsers.length !== 1 ? 's' : ''} atribuído{myUsers.length !== 1 ? 's' : ''} a você
+            </CardDescription>
+          </CardHeader>
+          
+          <CardContent>
+            <div className="space-y-3">
+              {myUsers.map(user => (
+                <div key={user.id} className="flex items-center gap-3 p-3 rounded-lg border bg-card/50">
+                  <Avatar className="h-10 w-10">
+                    <AvatarImage src={user.avatar_url || ""} />
+                    <AvatarFallback className="bg-primary/10 text-primary text-xs">
+                      {getInitials(user)}
+                    </AvatarFallback>
+                  </Avatar>
+                  
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-sm truncate">{formatUserName(user)}</p>
+                    {user.email && (
+                      <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                    )}
+                    <p className="text-xs text-muted-foreground">
+                      Criado {formatDistanceToNow(new Date(user.created_at), { 
+                        addSuffix: true, 
+                        locale: ptBR 
+                      })}
+                    </p>
+                  </div>
+                  
+                  <Badge variant="secondary">Meu usuário</Badge>
                 </div>
+              ))}
+              
+              {myUsers.length === 0 && (
+                <div className="text-center py-8 text-muted-foreground">
+                  <Users className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                  <p>Nenhum usuário atribuído ainda</p>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Usuários Disponíveis */}
+        {unassignedUsers.length > 0 && (
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <UserPlus className="h-5 w-5 text-orange-500" />
+                <CardTitle>Usuários Disponíveis</CardTitle>
               </div>
-            ))}
+              <CardDescription>
+                {unassignedUsers.length} usuário{unassignedUsers.length !== 1 ? 's' : ''} não atribuído{unassignedUsers.length !== 1 ? 's' : ''} a nenhum admin
+              </CardDescription>
+            </CardHeader>
             
-            {myUsers.length === 0 && (
-              <div className="text-center py-8 text-muted-foreground">
-                <Users className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                <p>Nenhum usuário vinculado ainda</p>
+            <CardContent>
+              <div className="space-y-3">
+                {unassignedUsers.map(user => (
+                  <div key={user.id} className="flex items-center gap-3 p-3 rounded-lg border bg-orange-50/50 border-orange-200">
+                    <Avatar className="h-10 w-10">
+                      <AvatarImage src={user.avatar_url || ""} />
+                      <AvatarFallback className="bg-orange-100 text-orange-700 text-xs">
+                        {getInitials(user)}
+                      </AvatarFallback>
+                    </Avatar>
+                    
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-sm truncate">{formatUserName(user)}</p>
+                      {user.email && (
+                        <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                      )}
+                      <p className="text-xs text-muted-foreground">
+                        Criado {formatDistanceToNow(new Date(user.created_at), { 
+                          addSuffix: true, 
+                          locale: ptBR 
+                        })}
+                      </p>
+                    </div>
+                    
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                      onClick={() => handleAssignUser(user.id)}
+                      disabled={assigningUsers.has(user.id)}
+                    >
+                      {assigningUsers.has(user.id) ? 'Atribuindo...' : 'Atribuir a mim'}
+                    </Button>
+                  </div>
+                ))}
               </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
+        )}
+      </div>
     );
   }
 
