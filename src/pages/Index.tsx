@@ -179,7 +179,7 @@ const Index = () => {
                   <div className="mx-auto bg-secondary/50 w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mb-3 sm:mb-4">
                     <Calendar size={28} className="text-primary sm:w-9 sm:h-9" />
                   </div>
-                  <h3 className="text-lg sm:text-xl font-bold mb-2">Você ainda não tem um treino personalizado</h3>
+                  <h3 className="text-lg sm:text-xl font-bold mb-2 text-card-foreground">Você ainda não tem um treino personalizado</h3>
                   <p className="text-muted-foreground text-sm sm:text-base">
                     Agende uma consultoria com nossos especialistas e receba um plano de treino personalizado para suas necessidades.
                   </p>
@@ -213,7 +213,7 @@ const Index = () => {
               <div className="p-6 flex flex-col justify-center space-y-4">
                 <div className="flex items-center gap-2 mb-1">
                   <MessageCircle className="h-5 w-5 text-primary" />
-                  <h3 className="text-xl font-bold">Agende uma Consultoria Online</h3>
+                  <h3 className="text-xl font-bold text-card-foreground">Agende uma Consultoria Online</h3>
                 </div>
                 
                 <p className="text-muted-foreground">
@@ -282,7 +282,7 @@ const Index = () => {
                   <Camera className="text-primary-foreground" size={20} />
                 </div>
                 <div>
-                  <h3 className="font-bold">Envie fotos da sua academia</h3>
+                  <h3 className="font-bold text-card-foreground">Envie fotos da sua academia</h3>
                   <p className="text-sm text-muted-foreground">Ajude o personal trainer a analisar seu ambiente</p>
                 </div>
               </div>
@@ -321,30 +321,30 @@ const Index = () => {
               featuredProducts.map((product) => (
                 <CarouselItem key={product.id} className="basis-1/2 md:basis-1/2 lg:basis-1/3">
                   <Link to={`/store/${product.id}`} className="block">
-                    <div className="bg-white bg-opacity-5 rounded-xl overflow-hidden h-[240px] md:h-[280px] relative group hover:shadow-lg transition-all duration-300">
-                      {/* Imagem do produto */}
-                      <div className="h-[140px] md:h-[180px] overflow-hidden">
-                        <img 
-                          src={product.image_url || "https://via.placeholder.com/300x180?text=Produto"} 
-                          alt={product.name}
-                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                        />
-                      </div>
-                      
-                       {/* Informações do produto */}
-                       <div className="p-2 md:p-4 relative">
-                         <h3 className="font-bold text-sm md:text-lg truncate">{product.name}</h3>
-                         <p className="text-muted-foreground text-xs md:text-sm line-clamp-1 md:line-clamp-2 h-[20px] md:h-[40px]">{product.description}</p>
-                         
-                         <div className="flex items-center justify-between mt-1 md:mt-2">
-                           <span className="text-primary font-bold text-sm md:text-base">
-                             {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(product.price)}
-                           </span>
-                           <span className="bg-secondary/30 p-1 md:p-1.5 rounded-full">
-                             <ShoppingBag size={16} className="text-primary" />
-                           </span>
-                         </div>
+                     <div className="bg-card rounded-xl overflow-hidden h-[240px] md:h-[280px] relative group hover:shadow-lg transition-all duration-300 border border-border">
+                       {/* Imagem do produto */}
+                       <div className="h-[140px] md:h-[180px] overflow-hidden">
+                         <img 
+                           src={product.image_url || "https://via.placeholder.com/300x180?text=Produto"} 
+                           alt={product.name}
+                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                         />
                        </div>
+                       
+                        {/* Informações do produto */}
+                        <div className="p-2 md:p-4 relative">
+                          <h3 className="font-bold text-sm md:text-lg truncate text-card-foreground">{product.name}</h3>
+                          <p className="text-muted-foreground text-xs md:text-sm line-clamp-1 md:line-clamp-2 h-[20px] md:h-[40px]">{product.description}</p>
+                          
+                          <div className="flex items-center justify-between mt-1 md:mt-2">
+                            <span className="text-primary font-bold text-sm md:text-base">
+                              {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(product.price)}
+                            </span>
+                            <span className="bg-secondary/30 p-1 md:p-1.5 rounded-full">
+                              <ShoppingBag size={16} className="text-primary" />
+                            </span>
+                          </div>
+                        </div>
                     </div>
                   </Link>
                 </CarouselItem>
@@ -352,9 +352,9 @@ const Index = () => {
             ) : (
               // Sem produtos
                <CarouselItem className="basis-full">
-                 <div className="bg-secondary/30 rounded-xl p-8 text-center">
-                   <p className="text-muted-foreground">Nenhum produto disponível no momento</p>
-                 </div>
+                 <div className="bg-card rounded-xl p-8 text-center border border-border">
+                    <p className="text-muted-foreground">Nenhum produto disponível no momento</p>
+                  </div>
                </CarouselItem>
             )}
           </CarouselContent>
