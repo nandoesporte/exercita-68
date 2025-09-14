@@ -100,9 +100,11 @@ const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ onClose }) => {
         <CardContent className="pt-5 pb-4">
           <div className="flex items-center">
             <div className="mr-4 flex-shrink-0">
-              <div className="text-2xl font-black text-primary tracking-tight">
-                EXERCITA
-              </div>
+              <img 
+                src="/logo_with_background_hd.png" 
+                alt="Exercita Logo" 
+                className="w-12 h-12 object-contain"
+              />
             </div>
             <div className="flex-1">
               <h3 className="font-bold text-foreground">Instale o aplicativo</h3>
