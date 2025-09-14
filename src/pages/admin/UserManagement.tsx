@@ -603,15 +603,19 @@ const UserManagement = () => {
                   <FormItem>
                     <FormLabel className="flex items-center gap-2">
                       <Lock className="h-4 w-4" />
-                      Nova Senha (opcional)
+                      Redefinir Senha
                     </FormLabel>
                     <FormControl>
                       <Input 
                         type="password"
-                        placeholder="Deixe em branco para não alterar" 
+                        placeholder="Digite uma nova senha (opcional)" 
                         {...field} 
                       />
                     </FormControl>
+                    <p className="text-xs text-muted-foreground">
+                      Por segurança, alterações de senha são registradas mas não aplicadas diretamente. 
+                      Para alterar a senha, use o processo de redefinição.
+                    </p>
                     <FormMessage />
                   </FormItem>
                 )}
