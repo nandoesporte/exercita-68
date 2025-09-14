@@ -1619,6 +1619,16 @@ export type Database = {
         Args: { p_pix_key_id: string }
         Returns: Json
       }
+      admin_update_user: {
+        Args: {
+          p_email?: string
+          p_first_name?: string
+          p_last_name?: string
+          p_password?: string
+          target_user_id: string
+        }
+        Returns: Json
+      }
       clone_workout_for_user: {
         Args: { target_user_id: string; workout_id: string }
         Returns: boolean

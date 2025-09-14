@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Users, Crown, Shield, User, ShieldCheck, CreditCard } from 'lucide-react';
+import { Users, Crown, Shield, User, ShieldCheck, CreditCard, Edit } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { useSubscriptionPlans } from '@/hooks/useSubscriptionPlans';
+import { EditUserDialog } from '@/components/admin/EditUserDialog';
 
 // Tipo para usuários do sistema
 type UserWithProfile = {
@@ -28,6 +29,8 @@ type UserWithProfile = {
 export default function AdminManagement() {
   const queryClient = useQueryClient();
   const { plans } = useSubscriptionPlans();
+  const [editingUser, setEditingUser] = useState<UserWithProfile | null>(null);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
   // Buscar todos os usuários do sistema com status de assinatura
   const { data: usersData, isLoading: isLoadingUsers, error } = useQuery({
@@ -228,6 +231,16 @@ export default function AdminManagement() {
     activateSubscriptionMutation.mutate(userId);
   };
 
+  const handleEditUser = (user: UserWithProfile) => {
+    setEditingUser(user);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleCloseEditDialog = () => {
+    setEditingUser(null);
+    setIsEditDialogOpen(false);
+  };
+
   // Colunas da tabela
   const columns = [
     {
@@ -304,6 +317,27 @@ export default function AdminManagement() {
               )}
             </Badge>
           </div>
+        );
+      }
+    },
+    {
+      accessorKey: 'actions',
+      header: 'Ações',
+      cell: ({ row }: { row: { original: UserWithProfile } }) => {
+        const user = row.original;
+        const isDisabled = Boolean(user.banned_until);
+        
+        return (
+          <Button
+            size="sm"
+            variant="ghost"
+            className="h-8 px-2 text-xs hover:bg-muted"
+            onClick={() => handleEditUser(user)}
+            disabled={isDisabled}
+          >
+            <Edit className="w-3 h-3 mr-1" />
+            Editar
+          </Button>
         );
       }
     },
@@ -445,6 +479,12 @@ export default function AdminManagement() {
           />
         </CardContent>
       </Card>
+
+      <EditUserDialog
+        isOpen={isEditDialogOpen}
+        onClose={handleCloseEditDialog}
+        user={editingUser}
+      />
     </div>
   );
 }
