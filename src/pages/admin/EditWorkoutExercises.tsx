@@ -6,15 +6,6 @@ import { useAdminWorkouts, WorkoutExercise } from '@/hooks/useAdminWorkouts';
 import { useWorkout } from '@/hooks/useWorkouts';
 import ExerciseList from '@/components/admin/ExerciseList';
 import AddExerciseForm from '@/components/admin/AddExerciseForm';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useIsMobile } from '@/hooks/use-mobile';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   Dialog,
   DialogContent,
@@ -45,7 +36,6 @@ const EditWorkoutExercises = () => {
   const navigate = useNavigate();
   const { data: workout, isLoading: isWorkoutLoading } = useWorkout(id);
   const [selectedDayOfWeek, setSelectedDayOfWeek] = useState<string | null>(null);
-  const isMobile = useIsMobile();
   const [isCloneDialogOpen, setIsCloneDialogOpen] = useState(false);
   const [targetDays, setTargetDays] = useState<string[]>([]);
   const [isCloneUserDialogOpen, setIsCloneUserDialogOpen] = useState(false);
@@ -230,31 +220,22 @@ const EditWorkoutExercises = () => {
               )}
             </div>
             
-            {/* Mobile: Select dropdown, Desktop: Tabs */}
-            {isMobile ? (
-              <Select defaultValue="all" onValueChange={handleDayChange}>
-                <SelectTrigger className="w-full bg-card text-card-foreground">
-                  <SelectValue placeholder="Selecionar dia" />
-                </SelectTrigger>
-                <SelectContent>
-                  {daysOfWeek.map((day) => (
-                    <SelectItem key={day.id} value={day.id}>
-                      {day.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            ) : (
-              <Tabs defaultValue="all" onValueChange={handleDayChange}>
-                <TabsList className="grid grid-cols-4 md:grid-cols-8">
-                  {daysOfWeek.map((day) => (
-                    <TabsTrigger key={day.id} value={day.id}>
-                      {day.label}
-                    </TabsTrigger>
-                  ))}
-                </TabsList>
-              </Tabs>
-            )}
+            {/* Card-style filter buttons */}
+            <div className="flex flex-wrap gap-2">
+              {daysOfWeek.map((day) => (
+                <button
+                  key={day.id}
+                  className={`px-4 py-2 rounded-full whitespace-nowrap text-sm font-medium flex-shrink-0 transition-colors ${
+                    (selectedDayOfWeek === null && day.id === 'all') || selectedDayOfWeek === day.id
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-secondary text-foreground hover:bg-secondary/80'
+                  }`}
+                  onClick={() => handleDayChange(day.id)}
+                >
+                  {day.label}
+                </button>
+              ))}
+            </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 mb-10">
