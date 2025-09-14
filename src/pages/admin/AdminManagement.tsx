@@ -22,13 +22,14 @@ type UserWithProfile = {
   created_at: string;
   last_sign_in_at?: string;
   banned_until?: string;
+  has_active_subscription?: boolean;
 };
 
 export default function AdminManagement() {
   const queryClient = useQueryClient();
   const { plans } = useSubscriptionPlans();
 
-  // Buscar todos os usuários do sistema
+  // Buscar todos os usuários do sistema com status de assinatura
   const { data: usersData, isLoading: isLoadingUsers, error } = useQuery({
     queryKey: ['all-users'],
     queryFn: async () => {
@@ -36,17 +37,48 @@ export default function AdminManagement() {
       
       if (error) throw new Error(error.message);
       
-      // A função agora retorna os dados completos incluindo is_admin
-      return (data as any[])?.map((user: any) => ({
-        id: user.id,
-        email: user.email,
-        first_name: user.first_name,
-        last_name: user.last_name,
-        is_admin: user.is_admin,
-        created_at: user.created_at,
-        last_sign_in_at: user.last_sign_in_at,
-        banned_until: user.banned_until
-      })) || [];
+      // Buscar status de assinatura para cada admin
+      const users = (data as any[]) || [];
+      const usersWithSubscriptions = await Promise.all(
+        users.map(async (user: any) => {
+          let hasActiveSubscription = false;
+          
+          if (user.is_admin) {
+            // Buscar admin_id
+            const { data: adminData } = await supabase
+              .from('admins')
+              .select('id')
+              .eq('user_id', user.id)
+              .maybeSingle();
+            
+            if (adminData) {
+              // Verificar se tem assinatura ativa
+              const { data: subscription } = await supabase
+                .from('admin_subscriptions')
+                .select('id, status')
+                .eq('admin_id', adminData.id)
+                .eq('status', 'active')
+                .maybeSingle();
+              
+              hasActiveSubscription = !!subscription;
+            }
+          }
+          
+          return {
+            id: user.id,
+            email: user.email,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            is_admin: user.is_admin,
+            created_at: user.created_at,
+            last_sign_in_at: user.last_sign_in_at,
+            banned_until: user.banned_until,
+            has_active_subscription: hasActiveSubscription
+          };
+        })
+      );
+      
+      return usersWithSubscriptions;
     },
   });
 
@@ -285,6 +317,17 @@ export default function AdminManagement() {
         // Só mostrar o botão para administradores
         if (!user.is_admin) {
           return <span className="text-muted-foreground text-sm">-</span>;
+        }
+        
+        const hasActiveSubscription = (user as any).has_active_subscription;
+        
+        if (hasActiveSubscription) {
+          return (
+            <Badge variant="default" className="bg-green-600 hover:bg-green-700 text-white">
+              <CreditCard className="w-3 h-3 mr-1" />
+              Assinatura Ativa
+            </Badge>
+          );
         }
         
         return (
