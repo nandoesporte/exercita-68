@@ -1,6 +1,7 @@
 import { useAdminRole } from '@/hooks/useAdminRole';
 import { SubscriptionPlansManagement } from '@/components/admin/SubscriptionPlansManagement';
 import { SubscriptionStatusCard } from '@/components/admin/SubscriptionStatusCard';
+import { AllSubscriptionsList } from '@/components/admin/AllSubscriptionsList';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -31,19 +32,7 @@ export default function SubscriptionManagement() {
           </TabsContent>
           
           <TabsContent value="subscriptions" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Assinaturas dos Administradores</CardTitle>
-                <CardDescription>
-                  Monitore o status das assinaturas de todos os administradores
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  Lista de assinaturas será implementada em breve...
-                </p>
-              </CardContent>
-            </Card>
+            <AllSubscriptionsList />
           </TabsContent>
         </Tabs>
       ) : (

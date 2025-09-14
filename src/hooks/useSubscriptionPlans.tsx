@@ -205,6 +205,31 @@ export function useSubscriptionPlans() {
     }
   });
 
+  // Buscar todas as assinaturas (Super Admin)
+  const { data: allSubscriptions = [], isLoading: isLoadingAllSubscriptions } = useQuery({
+    queryKey: ['allAdminSubscriptions'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('admin_subscriptions')
+        .select(`
+          *,
+          subscription_plans(*),
+          admins(name, email)
+        `)
+        .order('created_at', { ascending: false });
+        
+      if (error) {
+        console.error('Error fetching all subscriptions:', error);
+        return [];
+      }
+      
+      return data as (AdminSubscription & {
+        admins?: { name: string; email: string };
+      })[];
+    },
+    enabled: !!user
+  });
+
   // Verificar status da assinatura
   const { mutate: checkSubscriptionStatus } = useMutation({
     mutationFn: async () => {
@@ -215,11 +240,38 @@ export function useSubscriptionPlans() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['adminSubscription'] });
+      queryClient.invalidateQueries({ queryKey: ['allAdminSubscriptions'] });
       toast.success('Status da assinatura atualizado');
     },
     onError: (error) => {
       console.error('Error checking subscription status:', error);
       toast.error('Erro ao verificar status da assinatura');
+    }
+  });
+
+  // Ativar/Desativar assinatura (Super Admin)
+  const { mutate: toggleSubscriptionStatus } = useMutation({
+    mutationFn: async ({ subscriptionId, newStatus }: { subscriptionId: string; newStatus: 'active' | 'cancelled' }) => {
+      const { data, error } = await supabase
+        .from('admin_subscriptions')
+        .update({ 
+          status: newStatus,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', subscriptionId)
+        .select()
+        .single();
+        
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: (_, { newStatus }) => {
+      queryClient.invalidateQueries({ queryKey: ['allAdminSubscriptions'] });
+      toast.success(`Assinatura ${newStatus === 'active' ? 'ativada' : 'desativada'} com sucesso`);
+    },
+    onError: (error) => {
+      console.error('Error toggling subscription status:', error);
+      toast.error('Erro ao alterar status da assinatura');
     }
   });
 
@@ -237,6 +289,11 @@ export function useSubscriptionPlans() {
     subscribeToplan,
     isSubscribing,
     checkSubscriptionStatus,
+    
+    // Todas as assinaturas (Super Admin)
+    allSubscriptions,
+    isLoadingAllSubscriptions,
+    toggleSubscriptionStatus,
     
     // Helpers
     hasActiveSubscription: currentSubscription?.status === 'active' && 
