@@ -3,13 +3,14 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Users, Crown, Shield, User, ShieldCheck } from 'lucide-react';
+import { Users, Crown, Shield, User, ShieldCheck, CreditCard } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
+import { useSubscriptionPlans } from '@/hooks/useSubscriptionPlans';
 
 // Tipo para usuários do sistema
 type UserWithProfile = {
@@ -25,6 +26,7 @@ type UserWithProfile = {
 
 export default function AdminManagement() {
   const queryClient = useQueryClient();
+  const { plans } = useSubscriptionPlans();
 
   // Buscar todos os usuários do sistema
   const { data: usersData, isLoading: isLoadingUsers, error } = useQuery({
@@ -82,6 +84,83 @@ export default function AdminManagement() {
       userId,
       makeAdmin: !currentIsAdmin,
     });
+  };
+
+  // Ativar assinatura para administrador
+  const activateSubscriptionMutation = useMutation({
+    mutationFn: async (userId: string) => {
+      // Primeiro, buscar o admin_id do usuário
+      const { data: adminData, error: adminError } = await supabase
+        .from('admins')
+        .select('id')
+        .eq('user_id', userId)
+        .single();
+
+      if (adminError) throw new Error('Erro ao encontrar dados do administrador');
+
+      // Buscar o primeiro plano ativo
+      const { data: planData, error: planError } = await supabase
+        .from('subscription_plans')
+        .select('id')
+        .eq('is_active', true)
+        .limit(1)
+        .single();
+
+      if (planError) throw new Error('Nenhum plano de assinatura ativo encontrado');
+
+      // Verificar se já existe uma assinatura
+      const { data: existingSubscription, error: checkError } = await supabase
+        .from('admin_subscriptions')
+        .select('id, status')
+        .eq('admin_id', adminData.id)
+        .single();
+
+      if (checkError && checkError.code !== 'PGRST116') {
+        throw new Error('Erro ao verificar assinatura existente');
+      }
+
+      if (existingSubscription) {
+        // Ativar assinatura existente
+        const { error: updateError } = await supabase
+          .from('admin_subscriptions')
+          .update({
+            status: 'active',
+            start_date: new Date().toISOString(),
+            end_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 dias
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', existingSubscription.id);
+
+        if (updateError) throw updateError;
+      } else {
+        // Criar nova assinatura
+        const { error: insertError } = await supabase
+          .from('admin_subscriptions')
+          .insert({
+            admin_id: adminData.id,
+            plan_id: planData.id,
+            status: 'active',
+            start_date: new Date().toISOString(),
+            end_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 dias
+          });
+
+        if (insertError) throw insertError;
+      }
+
+      return { success: true };
+    },
+    onSuccess: () => {
+      toast.success('Assinatura ativada com sucesso!');
+      queryClient.invalidateQueries({ queryKey: ['all-users'] });
+      queryClient.invalidateQueries({ queryKey: ['subscription-plans'] });
+    },
+    onError: (error: Error) => {
+      toast.error(`Erro ao ativar assinatura: ${error.message}`);
+    },
+  });
+
+  const handleActivateSubscription = (userId: string) => {
+    activateSubscriptionMutation.mutate(userId);
   };
 
   // Colunas da tabela
@@ -160,6 +239,32 @@ export default function AdminManagement() {
               )}
             </Badge>
           </div>
+        );
+      }
+    },
+    {
+      accessorKey: 'subscription_actions',
+      header: 'Assinatura',
+      cell: ({ row }: { row: { original: UserWithProfile } }) => {
+        const user = row.original;
+        const isDisabled = Boolean(user.banned_until);
+        
+        // Só mostrar o botão para administradores
+        if (!user.is_admin) {
+          return <span className="text-muted-foreground text-sm">-</span>;
+        }
+        
+        return (
+          <Button
+            size="sm"
+            variant="outline"
+            className="h-8 px-3 text-xs border-primary text-primary hover:bg-primary hover:text-white rounded-md"
+            onClick={() => handleActivateSubscription(user.id)}
+            disabled={activateSubscriptionMutation.isPending || isDisabled}
+          >
+            <CreditCard className="w-3 h-3 mr-1" />
+            Ativar Assinatura
+          </Button>
         );
       }
     },
