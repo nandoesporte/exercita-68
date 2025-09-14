@@ -83,14 +83,34 @@ const UserManagement = () => {
 
   const [selectedAdminFilter, setSelectedAdminFilter] = useState<string>('all');
 
-  // Use the useUsersByAdmin hook instead of custom query
+  // Use the useUsersByAdmin hook for profiles and fetch auth data separately
   const { userProfiles, getUsersByAdmin, isLoading: isLoadingUsers } = useUsersByAdmin();
+
+  // Fetch actual user status from auth.users table
+  const { data: usersAuthData, isLoading: isLoadingAuthData } = useQuery({
+    queryKey: ['users-auth-status', userProfiles?.map(u => u.id)],
+    queryFn: async () => {
+      if (!userProfiles?.length) return [];
+      
+      const { data, error } = await supabase.rpc('get_all_users');
+      if (error) throw error;
+      
+      return (data as any[]) || [];
+    },
+    enabled: !!userProfiles?.length,
+  });
   
-  // Get users for the selected admin (or current admin's users)
+  // Get users for the selected admin (or current admin's users) with real auth status
   const usersData = React.useMemo(() => {
-    if (isSuperAdmin && selectedAdminFilter && selectedAdminFilter !== 'all') {
-      // Filter by specific admin
-      return getUsersByAdmin(selectedAdminFilter).map(profile => ({
+    if (!userProfiles || !usersAuthData) return [];
+    
+    const profilesData = isSuperAdmin && selectedAdminFilter && selectedAdminFilter !== 'all' 
+      ? getUsersByAdmin(selectedAdminFilter)
+      : userProfiles;
+    
+    return profilesData.map(profile => {
+      const authData = (usersAuthData as any[]).find((u: any) => u.id === profile.id);
+      return {
         user_id: profile.id,
         email: profile.email,
         raw_user_meta_data: {
@@ -98,39 +118,28 @@ const UserManagement = () => {
           last_name: profile.last_name,
         },
         created_at: profile.created_at,
-        banned_until: null, // Profiles don't have banned_until, assume active
-      }));
-    } else {
-      // Get all users for this admin
-      return (userProfiles || []).map(profile => ({
-        user_id: profile.id,
-        email: profile.email,
-        raw_user_meta_data: {
-          first_name: profile.first_name,
-          last_name: profile.last_name,
-        },
-        created_at: profile.created_at,
-        banned_until: null,
-      }));
-    }
-  }, [userProfiles, getUsersByAdmin, selectedAdminFilter, isSuperAdmin]);
+        banned_until: authData?.banned_until || null,
+      };
+    });
+  }, [userProfiles, usersAuthData, getUsersByAdmin, selectedAdminFilter, isSuperAdmin]);
 
   const error = null; // Remove error handling since useUsersByAdmin handles it
 
   // Toggle user active status
   const toggleUserActiveMutation = useMutation({
-    mutationFn: async ({ userId, isActive }: { userId: string, isActive: boolean }) => {
-      const { error } = await supabase.rpc('toggle_user_active_status', {
+    mutationFn: async ({ userId, newActiveStatus }: { userId: string, newActiveStatus: boolean }) => {
+      const { data, error } = await supabase.rpc('toggle_user_active_status', {
         target_user_id: userId,
       });
       
       if (error) throw new Error(error.message);
-      return { userId, isActive };
+      return { userId, newActiveStatus: data };
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['users-by-admin'] });
+      queryClient.invalidateQueries({ queryKey: ['users-auth-status'] });
       toast.success(
-        data.isActive 
+        data.newActiveStatus 
           ? 'Usuário ativado com sucesso!' 
           : 'Usuário desativado com sucesso!'
       );
@@ -191,7 +200,7 @@ const UserManagement = () => {
   const handleToggleUserActive = (userId: string, currentStatus: boolean) => {
     toggleUserActiveMutation.mutate({
       userId,
-      isActive: !currentStatus,
+      newActiveStatus: !currentStatus,
     });
   };
 
@@ -326,12 +335,14 @@ const UserManagement = () => {
       accessorKey: 'status',
       header: 'Status',
       cell: ({ row }: { row: { original: any } }) => {
-        const isActive = !row.original.banned_until;
+        const bannedUntil = row.original.banned_until;
+        const isActive = !bannedUntil || new Date(bannedUntil) < new Date();
         return (
           <div className="flex items-center gap-2">
             <Switch
               checked={isActive}
               onCheckedChange={() => handleToggleUserActive(row.original.user_id, isActive)}
+              disabled={toggleUserActiveMutation.isPending}
               className="data-[state=checked]:bg-success data-[state=unchecked]:bg-destructive"
             />
             <span className={`text-sm font-medium ${isActive ? 'text-success' : 'text-destructive'}`}>
@@ -595,7 +606,7 @@ const UserManagement = () => {
           <DataTable
             columns={columns}
             data={usersData || []}
-            isLoading={isLoadingUsers}
+            isLoading={isLoadingUsers || isLoadingAuthData}
           />
         </CardContent>
       </Card>
