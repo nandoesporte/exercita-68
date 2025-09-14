@@ -89,6 +89,8 @@ export default function AdminManagement() {
   // Ativar assinatura para administrador
   const activateSubscriptionMutation = useMutation({
     mutationFn: async (userId: string) => {
+      console.log('Iniciando ativação de assinatura para usuário:', userId);
+      
       // Primeiro, buscar o admin_id do usuário
       const { data: adminData, error: adminError } = await supabase
         .from('admins')
@@ -96,7 +98,12 @@ export default function AdminManagement() {
         .eq('user_id', userId)
         .maybeSingle();
 
-      if (adminError) throw new Error('Erro ao encontrar dados do administrador');
+      console.log('Admin data result:', { adminData, adminError });
+      
+      if (adminError) {
+        console.error('Erro ao buscar admin:', adminError);
+        throw new Error(`Erro ao encontrar dados do administrador: ${adminError.message}`);
+      }
       if (!adminData) throw new Error('Usuário não é um administrador');
 
       // Buscar o primeiro plano ativo
@@ -107,18 +114,27 @@ export default function AdminManagement() {
         .limit(1)
         .maybeSingle();
 
-      if (planError) throw new Error('Erro ao buscar planos de assinatura');
+      console.log('Plan data result:', { planData, planError });
+      
+      if (planError) {
+        console.error('Erro ao buscar plano:', planError);
+        throw new Error(`Erro ao buscar planos de assinatura: ${planError.message}`);
+      }
       if (!planData) throw new Error('Nenhum plano de assinatura ativo encontrado');
 
       // Verificar se já existe uma assinatura
+      console.log('Verificando assinatura existente para admin_id:', adminData.id);
       const { data: existingSubscription, error: checkError } = await supabase
         .from('admin_subscriptions')
         .select('id, status')
         .eq('admin_id', adminData.id)
         .maybeSingle();
 
+      console.log('Subscription check result:', { existingSubscription, checkError });
+
       if (checkError) {
-        throw new Error('Erro ao verificar assinatura existente');
+        console.error('Erro ao verificar assinatura:', checkError);
+        throw new Error(`Erro ao verificar assinatura existente: ${checkError.message}`);
       }
 
       if (existingSubscription) {
