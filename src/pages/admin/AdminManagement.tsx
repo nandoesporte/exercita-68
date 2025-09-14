@@ -142,7 +142,42 @@ export default function AdminManagement() {
         console.error('Erro ao buscar admin:', adminError);
         throw new Error(`Erro ao encontrar dados do administrador: ${adminError.message}`);
       }
-      if (!adminData) throw new Error('Usuário não é um administrador');
+      
+      let finalAdminData = adminData;
+      
+      if (!adminData) {
+        // Se não existe entrada na tabela admins, criar uma
+        console.log('Criando entrada na tabela admins para usuário:', userId);
+        const { data: profileData } = await supabase
+          .from('profiles')
+          .select('first_name, last_name, is_admin')
+          .eq('id', userId)
+          .single();
+          
+        if (!profileData?.is_admin) {
+          throw new Error('Usuário não é um administrador');
+        }
+        
+        const { data: newAdminData, error: insertAdminError } = await supabase
+          .from('admins')
+          .insert({
+            user_id: userId,
+            name: `${profileData.first_name || ''} ${profileData.last_name || ''}`.trim() || 'Admin',
+            email: `${profileData.first_name || 'admin'}@admin.local`,
+            status: 'active',
+            is_active: true
+          })
+          .select('id')
+          .single();
+          
+        if (insertAdminError) {
+          console.error('Erro ao criar admin:', insertAdminError);
+          throw new Error(`Erro ao criar entrada de administrador: ${insertAdminError.message}`);
+        }
+        
+        // Usar o novo admin_id
+        finalAdminData = newAdminData;
+      }
 
       // Buscar o primeiro plano ativo
       const { data: planData, error: planError } = await supabase
@@ -161,11 +196,11 @@ export default function AdminManagement() {
       if (!planData) throw new Error('Nenhum plano de assinatura ativo encontrado');
 
       // Verificar se já existe uma assinatura (pode haver múltiplas)
-      console.log('Verificando assinaturas existentes para admin_id:', adminData.id);
+      console.log('Verificando assinaturas existentes para admin_id:', finalAdminData.id);
       const { data: existingSubscriptions, error: checkError } = await supabase
         .from('admin_subscriptions')
         .select('id, status')
-        .eq('admin_id', adminData.id)
+        .eq('admin_id', finalAdminData.id)
         .order('created_at', { ascending: false });
 
       console.log('Subscriptions check result:', { existingSubscriptions, checkError });
@@ -208,7 +243,7 @@ export default function AdminManagement() {
         const { error: insertError } = await supabase
           .from('admin_subscriptions')
           .insert({
-            admin_id: adminData.id,
+            admin_id: finalAdminData.id,
             plan_id: planData.id,
             status: 'active',
             start_date: new Date().toISOString(),
@@ -224,6 +259,7 @@ export default function AdminManagement() {
       toast.success('Assinatura ativada com sucesso!');
       queryClient.invalidateQueries({ queryKey: ['all-users'] });
       queryClient.invalidateQueries({ queryKey: ['subscription-plans'] });
+      queryClient.invalidateQueries({ queryKey: ['adminSubscription'] });
     },
     onError: (error: Error) => {
       toast.error(`Erro ao ativar assinatura: ${error.message}`);
