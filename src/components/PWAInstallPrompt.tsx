@@ -100,7 +100,7 @@ const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ onClose }) => {
         
         <CardContent className="pt-5 pb-4">
           <div className="flex items-center">
-            <div className="mr-4 flex-shrink-0 bg-primary/10 p-3 rounded-full">
+            <div className="mr-4 flex-shrink-0 bg-black/95 p-3 rounded-full">
               <ExercitaLogo width={32} height={32} className="h-8 w-8" />
             </div>
             <div className="flex-1">
