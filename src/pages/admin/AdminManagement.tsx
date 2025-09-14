@@ -55,15 +55,18 @@ export default function AdminManagement() {
               .maybeSingle();
             
             if (adminData) {
-              // Verificar se tem assinatura ativa
+              // Verificar se tem assinatura ativa e dentro da validade
               const { data: subscription } = await supabase
                 .from('admin_subscriptions')
-                .select('id, status')
+                .select('id, status, end_date')
                 .eq('admin_id', adminData.id)
                 .eq('status', 'active')
                 .maybeSingle();
               
-              hasActiveSubscription = !!subscription;
+              // Verificar se está ativa E dentro da data de validade
+              hasActiveSubscription = !!(subscription && 
+                subscription.end_date && 
+                new Date(subscription.end_date) > new Date());
             }
           }
           
