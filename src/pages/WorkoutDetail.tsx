@@ -166,21 +166,22 @@ const WorkoutDetail = () => {
   // Set the first available day as active when workout loads
   useEffect(() => {
     if (workout && !activeDay) {
-      // First try to use a day with exercises
+      // First try to use a day with exercises, prioritizing Monday
       const daysWithExercises = Object.keys(exercisesByDay).filter(day => 
-        exercisesByDay[day].length > 0
+        day !== 'all_days' && exercisesByDay[day].length > 0
       );
       
       if (daysWithExercises.length > 0) {
-        // Prioritize a real day over 'all_days'
-        const realDays = daysWithExercises.filter(day => day !== 'all_days');
-        setActiveDay(realDays.length > 0 ? realDays[0] : daysWithExercises[0]);
+        // Sort days and pick the first one (which will be Monday if available)
+        const sortedDays = sortDaysOfWeek(daysWithExercises);
+        setActiveDay(sortedDays[0]);
       } 
-      // If no days with exercises, use the first day from workout.days_of_week
+      // If no days with exercises, use the first day from workout.days_of_week (sorted)
       else if (workout.days_of_week && workout.days_of_week.length > 0) {
-        setActiveDay(workout.days_of_week[0]);
+        const sortedWorkoutDays = sortDaysOfWeek(workout.days_of_week);
+        setActiveDay(sortedWorkoutDays[0]);
       }
-      // Fallback to 'all_days'
+      // Only use 'all_days' as absolute fallback if no real days exist
       else {
         setActiveDay('all_days');
       }
@@ -189,7 +190,7 @@ const WorkoutDetail = () => {
 
   // Get days for display - moved outside conditional rendering
   const daysToDisplay = useMemo(() => {
-    if (!workout) return ['all_days'];
+    if (!workout) return [];
     
     // Get days that have exercises
     const daysWithExercises = Object.keys(exercisesByDay).filter(day => 
@@ -206,8 +207,8 @@ const WorkoutDetail = () => {
       return sortDaysOfWeek(workout.days_of_week);
     }
     
-    // Fallback to 'all_days'
-    return ['all_days'];
+    // Return empty array if no real days (don't show filter)
+    return [];
   }, [workout, exercisesByDay]);
 
   if (isLoading) {
