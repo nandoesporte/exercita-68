@@ -115,9 +115,25 @@ export function usePersonalTrainer() {
         .from('trainer_photos')
         .getPublicUrl(fileName);
 
-      return data.publicUrl;
+      const photoUrl = data.publicUrl;
+
+      // Se já existe um trainer, atualizar com a nova foto automaticamente
+      if (trainer?.id) {
+        const { error: updateError } = await supabase
+          .from('personal_trainers')
+          .update({ photo_url: photoUrl, updated_at: new Date().toISOString() })
+          .eq('id', trainer.id);
+
+        if (updateError) {
+          console.warn('Error auto-updating trainer photo:', updateError);
+        }
+      }
+
+      return photoUrl;
     },
-    onSuccess: () => {
+    onSuccess: (photoUrl) => {
+      // Invalidate queries to refresh trainer data
+      queryClient.invalidateQueries({ queryKey: ['personal-trainer'] });
       toast("Foto enviada com sucesso: A foto do perfil foi atualizada.");
     },
     onError: (error) => {

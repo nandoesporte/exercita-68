@@ -89,23 +89,23 @@ const ScheduleManagement = () => {
   };
 
   return (
-    <div className="container max-w-4xl py-6">
-      <h1 className="text-3xl font-bold mb-6">Gerenciar Página de Agendamento</h1>
+    <div className="container max-w-4xl py-6 px-4">
+      <h1 className="text-2xl md:text-3xl font-bold mb-6">Gerenciar Página de Agendamento</h1>
 
       <Card>
-        <CardHeader>
-          <CardTitle>Informações do Personal Trainer</CardTitle>
-          <CardDescription>
+        <CardHeader className="px-4 md:px-6">
+          <CardTitle className="text-lg md:text-xl">Informações do Personal Trainer</CardTitle>
+          <CardDescription className="text-sm">
             Atualize as informações e foto do personal trainer que aparecem na página de agendamento
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="px-4 md:px-6">
           <div className="space-y-6">
-            {/* Photo Upload Section */}
+            {/* Photo Upload Section - Mobile Optimized */}
             <div className="space-y-3">
-              <Label htmlFor="photo-upload">Foto do Perfil</Label>
-              <div className="flex items-center gap-6">
-                <div className="w-32 h-32 rounded-lg overflow-hidden bg-muted relative">
+              <Label htmlFor="photo-upload" className="text-sm font-medium">Foto do Perfil</Label>
+              <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
+                <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-lg overflow-hidden bg-muted relative flex-shrink-0">
                   {photoUrl ? (
                     <img 
                       src={photoUrl} 
@@ -113,13 +113,18 @@ const ScheduleManagement = () => {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-muted text-muted-foreground text-sm">
+                    <div className="w-full h-full flex items-center justify-center bg-muted text-muted-foreground text-xs sm:text-sm text-center p-2">
                       Sem foto
                     </div>
                   )}
                 </div>
-                <div>
-                  <Button variant="outline" className="relative" disabled={isUploading}>
+                <div className="flex-1 w-full sm:w-auto">
+                  <Button 
+                    variant="outline" 
+                    className="relative w-full sm:w-auto" 
+                    disabled={isUploading}
+                    size="sm"
+                  >
                     <input 
                       id="photo-upload"
                       type="file" 
@@ -140,8 +145,8 @@ const ScheduleManagement = () => {
                       </>
                     )}
                   </Button>
-                  <p className="text-xs text-muted-foreground mt-2">
-                    Formatos aceitos: JPG, PNG. Tamanho máximo: 2MB
+                  <p className="text-xs text-muted-foreground mt-2 text-center sm:text-left">
+                    Formatos: JPG, PNG. Máx: 2MB
                   </p>
                 </div>
               </div>
@@ -154,70 +159,87 @@ const ScheduleManagement = () => {
             ) : (
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Nome</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Nome do Personal Trainer" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="credentials"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Credenciais</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Ex: Personal Trainer - CREF 123456" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="whatsapp"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>WhatsApp</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Apenas números, ex: 44997270698" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="bio"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Biografia</FormLabel>
-                      <FormControl>
-                        <Textarea 
-                          placeholder="Descrição curta sobre o personal trainer..." 
-                          className="min-h-20"
-                          {...field} 
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
+                  {/* Grid Layout for better mobile experience */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm">Nome</FormLabel>
+                          <FormControl>
+                            <Input 
+                              placeholder="Nome do Personal Trainer" 
+                              className="text-base"
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="credentials"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm">Credenciais</FormLabel>
+                          <FormControl>
+                            <Input 
+                              placeholder="Ex: Personal Trainer - CREF 123456" 
+                              className="text-base"
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  
+                  <FormField
+                    control={form.control}
+                    name="whatsapp"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm">WhatsApp</FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="Apenas números, ex: 44997270698" 
+                            type="tel"
+                            className="text-base"
+                            {...field} 
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="bio"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm">Biografia</FormLabel>
+                        <FormControl>
+                          <Textarea 
+                            placeholder="Descrição curta sobre o personal trainer..." 
+                            className="min-h-[80px] md:min-h-20 text-base resize-none"
+                            {...field} 
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
                   <Button 
                     type="submit" 
-                    className="w-full bg-gradient-to-r from-fitness-green to-fitness-blue"
+                    className="w-full bg-gradient-to-r from-fitness-green to-fitness-blue mt-6"
                     disabled={isUpdating}
+                    size="lg"
                   >
                     {isUpdating ? (
                       <>
@@ -234,6 +256,9 @@ const ScheduleManagement = () => {
           </div>
         </CardContent>
       </Card>
+      
+      {/* Mobile bottom padding for navigation */}
+      <div className="h-20 md:h-0"></div>
     </div>
   );
 };
