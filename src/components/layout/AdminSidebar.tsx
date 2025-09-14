@@ -21,6 +21,7 @@ import {
   Lock,
   Wallet,
   HeartHandshake,
+  History,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -80,6 +81,12 @@ const AdminSidebar = ({ onNavItemClick }: AdminSidebarProps = {}) => {
       title: 'Gerenciamento de Treinos',
       icon: <Dumbbell className="h-4 w-4" />,
       to: '/admin/workouts'
+    }] : []),
+    // Only show if user has workouts permission
+    ...(hasPermission('manage_workouts') ? [{
+      title: 'Histórico de Treinos',
+      icon: <History className="h-4 w-4" />,
+      to: '/admin/workout-history'
     }] : []),
     // Only show if user has exercises permission
     ...(hasPermission('manage_exercises') ? [{

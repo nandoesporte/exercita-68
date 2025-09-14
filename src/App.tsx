@@ -57,6 +57,8 @@ import SuperAdminDashboard from "@/pages/admin/SuperAdminDashboard";
 import RLSChecker from "@/pages/admin/RLSChecker";
 import AdminManagement from "@/pages/admin/AdminManagement";
 import AdminPermissions from "@/pages/admin/AdminPermissions";
+import AdminWorkoutHistory from "@/pages/admin/AdminWorkoutHistory";
+import ProtectedAdminWorkoutHistory from "@/pages/admin/ProtectedAdminWorkoutHistory";
 import Health from "@/pages/Health";
 import RunningPlans from "@/pages/RunningPlans";
 import SubscriptionManagement from "@/pages/admin/SubscriptionManagement";
@@ -107,6 +109,7 @@ const App = () => {
               <Route path="workouts/create" element={<CreateWorkout />} />
               <Route path="workouts/:id/edit" element={<EditWorkout />} />
               <Route path="workouts/:id/exercises" element={<EditWorkoutExercises />} />
+              <Route path="workout-history" element={<ProtectedAdminWorkoutHistory />} />
               {/* Exercises */}
               <Route path="exercises" element={<ProtectedExerciseManagement />} />
               <Route path="exercises/library" element={<ExerciseLibrary />} />
