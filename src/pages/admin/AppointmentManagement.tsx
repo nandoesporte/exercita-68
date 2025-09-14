@@ -36,6 +36,7 @@ import { toast } from 'sonner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useAppointmentsRealtime } from '@/hooks/useRealtime';
 
 // Define the time slots that are available for booking
 const TIME_SLOTS = [
@@ -60,6 +61,12 @@ interface Appointment {
 const AppointmentManagement = () => {
   const queryClient = useQueryClient();
   const isMobile = useIsMobile();
+  
+  // Habilitar atualizações em tempo real para appointments
+  useAppointmentsRealtime();
+  
+  // Habilitar atualizações em tempo real para appointments
+  useAppointmentsRealtime();
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [isCreating, setIsCreating] = useState(false);
   const [selectedTime, setSelectedTime] = useState<string | undefined>();

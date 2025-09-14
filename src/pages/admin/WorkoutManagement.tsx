@@ -18,8 +18,11 @@ import {
 } from "@/components/ui/alert-dialog";
 import { CloneWorkoutDialog } from '@/components/admin/CloneWorkoutDialog';
 import { DataTable } from '@/components/ui/data-table';
+import { useWorkoutsRealtime } from '@/hooks/useRealtime';
 
 const WorkoutManagement = () => {
+  // Habilitar atualizações em tempo real para workouts
+  useWorkoutsRealtime();
   const navigate = useNavigate();
   const { workouts, isLoading, deleteWorkout } = useAdminWorkouts();
   const [searchTerm, setSearchTerm] = useState('');

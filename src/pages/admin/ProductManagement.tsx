@@ -8,8 +8,11 @@ import { ProductActions } from '@/components/admin/ProductActions';
 import { ProductTable } from '@/components/admin/ProductTable';
 import { Button } from '@/components/ui/button';
 import { ListPlus } from 'lucide-react';
+import { useProductsRealtime } from '@/hooks/useRealtime';
 
 const ProductManagement = () => {
+  // Habilitar atualizações em tempo real para products
+  useProductsRealtime();
   const navigate = useNavigate();
   const { products, isLoadingProducts, deleteProduct, toggleFeaturedProduct } = useAdminStore();
   const [searchTerm, setSearchTerm] = useState('');

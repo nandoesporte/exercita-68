@@ -5,8 +5,11 @@ import { Link } from 'react-router-dom';
 import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useWorkoutHistory } from '@/hooks/useWorkoutHistory';
+import { useWorkoutHistoryRealtime } from '@/hooks/useRealtime';
 
 const WorkoutHistory = () => {
+  // Habilitar atualizações em tempo real para workout history
+  useWorkoutHistoryRealtime();
   const { data: history, isLoading } = useWorkoutHistory();
   
   // Group workouts by month for the list view

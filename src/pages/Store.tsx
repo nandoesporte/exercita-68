@@ -5,8 +5,11 @@ import { useStore } from '@/hooks/useStore';
 import { ProductCard } from '@/components/ui/product-card';
 import { Input } from '@/components/ui/input';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useProductsRealtime } from '@/hooks/useRealtime';
 
 const Store = () => {
+  // Habilitar atualizações em tempo real para products
+  useProductsRealtime();
   const { products, isLoadingProducts, categories, featuredProducts } = useStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);

@@ -4,6 +4,7 @@ import { AuthProvider } from '@/contexts/auth';
 import { AdminPermissionsProvider } from '@/contexts/admin/AdminPermissionsContext';
 import { Toaster } from '@/components/ui/sonner';
 import { ReactQueryProvider } from '@/lib/react-query';
+import { RealtimeProvider } from '@/components/RealtimeProvider';
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { useAuth } from "@/contexts/auth";
 
@@ -67,8 +68,9 @@ import HealthIntegrationManagement from "@/pages/admin/HealthIntegrationManageme
 const App = () => {
   return (
     <ReactQueryProvider>
-      <AuthProvider>
-        <AdminPermissionsProvider>
+      <RealtimeProvider>
+        <AuthProvider>
+          <AdminPermissionsProvider>
           <Routes>
             {/* Public Routes */}
             <Route path="/login" element={<Login />} />
@@ -146,9 +148,10 @@ const App = () => {
             {/* 404 */}
             <Route path="*" element={<NotFound />} />
           </Routes>
-          <Toaster />
-        </AdminPermissionsProvider>
-      </AuthProvider>
+            <Toaster />
+          </AdminPermissionsProvider>
+        </AuthProvider>
+      </RealtimeProvider>
     </ReactQueryProvider>
   );
 };

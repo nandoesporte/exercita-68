@@ -7,8 +7,11 @@ import { DataTable } from "@/components/ui/data-table";
 import ExerciseForm from '@/components/admin/ExerciseForm';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useExercisesRealtime } from '@/hooks/useRealtime';
 
 const ExerciseManagement = () => {
+  // Habilitar atualizações em tempo real para exercises
+  useExercisesRealtime();
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [selectedExerciseId, setSelectedExerciseId] = useState<string | null>(null);

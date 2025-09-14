@@ -18,6 +18,9 @@ import {
   DialogFooter,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { Skeleton } from "@/components/ui/skeleton";
+import { EditUserDialog } from "@/components/admin/EditUserDialog";
+import { useProfilesRealtime } from '@/hooks/useRealtime';
 import {
   Card,
   CardContent,
@@ -55,6 +58,8 @@ type FormValues = z.infer<typeof formSchema>;
 type EditUserFormValues = z.infer<typeof editUserSchema>;
 
 const UserManagement = () => {
+  // Habilitar atualizações em tempo real para profiles
+  useProfilesRealtime();
   const queryClient = useQueryClient();
   const [isCreateUserOpen, setIsCreateUserOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<any>(null);

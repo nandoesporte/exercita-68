@@ -8,8 +8,16 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAdminWorkoutHistory } from "@/hooks/useAdminWorkoutHistory";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useRealtime } from '@/hooks/useRealtime';
 
 const AdminWorkoutHistory = () => {
+  // Habilitar atualizações em tempo real para workout history
+  useRealtime({
+    table: 'user_workout_history',
+    queryKey: ['admin-workout-history'],
+    enabled: true,
+  });
+  
   const { data: workoutHistory, isLoading } = useAdminWorkoutHistory();
   const [searchTerm, setSearchTerm] = useState("");
 
