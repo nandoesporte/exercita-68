@@ -1,11 +1,12 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { X, Download, Smartphone } from 'lucide-react';
+import { X, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { isPwaInstalled } from '@/utils/pwaUtils';
 import { Card, CardContent } from '@/components/ui/card';
 import { motion } from '@/components/ui/motion';
 import { toast } from 'sonner';
+import { ExercitaLogo } from '@/components/ui/exercita-logo';
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -100,7 +101,7 @@ const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ onClose }) => {
         <CardContent className="pt-5 pb-4">
           <div className="flex items-center">
             <div className="mr-4 flex-shrink-0 bg-fitness-orange/10 p-3 rounded-full">
-              <Smartphone className="h-6 w-6 text-fitness-orange" />
+              <ExercitaLogo width={32} height={32} className="h-8 w-8" />
             </div>
             <div className="flex-1">
               <h3 className="font-bold text-white">Instale o aplicativo Exercita</h3>
