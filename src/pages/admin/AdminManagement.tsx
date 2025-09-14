@@ -94,9 +94,10 @@ export default function AdminManagement() {
         .from('admins')
         .select('id')
         .eq('user_id', userId)
-        .single();
+        .maybeSingle();
 
       if (adminError) throw new Error('Erro ao encontrar dados do administrador');
+      if (!adminData) throw new Error('Usuário não é um administrador');
 
       // Buscar o primeiro plano ativo
       const { data: planData, error: planError } = await supabase
@@ -104,18 +105,19 @@ export default function AdminManagement() {
         .select('id')
         .eq('is_active', true)
         .limit(1)
-        .single();
+        .maybeSingle();
 
-      if (planError) throw new Error('Nenhum plano de assinatura ativo encontrado');
+      if (planError) throw new Error('Erro ao buscar planos de assinatura');
+      if (!planData) throw new Error('Nenhum plano de assinatura ativo encontrado');
 
       // Verificar se já existe uma assinatura
       const { data: existingSubscription, error: checkError } = await supabase
         .from('admin_subscriptions')
         .select('id, status')
         .eq('admin_id', adminData.id)
-        .single();
+        .maybeSingle();
 
-      if (checkError && checkError.code !== 'PGRST116') {
+      if (checkError) {
         throw new Error('Erro ao verificar assinatura existente');
       }
 
@@ -131,7 +133,7 @@ export default function AdminManagement() {
           })
           .eq('id', existingSubscription.id);
 
-        if (updateError) throw updateError;
+        if (updateError) throw new Error('Erro ao atualizar assinatura existente');
       } else {
         // Criar nova assinatura
         const { error: insertError } = await supabase
@@ -144,7 +146,7 @@ export default function AdminManagement() {
             end_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 dias
           });
 
-        if (insertError) throw insertError;
+        if (insertError) throw new Error(`Erro ao criar nova assinatura: ${insertError.message}`);
       }
 
       return { success: true };
