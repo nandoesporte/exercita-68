@@ -76,11 +76,16 @@ const AppointmentManagement = () => {
   const { data: appointments = [], isLoading } = useQuery({
     queryKey: ['admin-appointments'],
     queryFn: async () => {
+      console.log('Fetching appointments...');
       const { data, error } = await supabase
         .from('appointments')
-        .select('*')
+        .select(`
+          *,
+          user:profiles(first_name, last_name)
+        `)
         .order('appointment_date', { ascending: true });
 
+      console.log('Appointments result:', { data, error });
       if (error) throw error;
       return data as Appointment[];
     },
@@ -154,27 +159,53 @@ const AppointmentManagement = () => {
     },
   });
 
-  const handleCreateAppointment = () => {
+  const handleCreateAppointment = async () => {
     if (!date || !selectedTime || !title || !trainerName) {
       toast.error('Por favor, preencha todos os campos obrigatórios');
       return;
     }
 
-    const appointmentDateTime = new Date(date);
-    const [hours, minutes] = selectedTime.split(':').map(Number);
-    appointmentDateTime.setHours(hours, minutes, 0, 0);
+    try {
+      // Buscar o admin_id do usuário atual
+      const { data: user } = await supabase.auth.getUser();
+      if (!user.user) {
+        toast.error('Usuário não autenticado');
+        return;
+      }
 
-    const newAppointment = {
-      title,
-      description,
-      appointment_date: appointmentDateTime.toISOString(),
-      duration: selectedDuration,
-      trainer_name: trainerName,
-      status,
-      // admin_id será definido automaticamente pelo trigger RLS
-    };
+      const { data: adminData, error: adminError } = await supabase
+        .from('admins')
+        .select('id')
+        .eq('user_id', user.user.id)
+        .single();
 
-    createAppointmentMutation.mutate(newAppointment as any);
+      if (adminError || !adminData) {
+        console.error('Admin data error:', adminError);
+        toast.error('Erro ao encontrar dados do administrador');
+        return;
+      }
+
+      const appointmentDateTime = new Date(date);
+      const [hours, minutes] = selectedTime.split(':').map(Number);
+      appointmentDateTime.setHours(hours, minutes, 0, 0);
+
+      const newAppointment = {
+        title,
+        description,
+        appointment_date: appointmentDateTime.toISOString(),
+        duration: selectedDuration,
+        trainer_name: trainerName,
+        status,
+        admin_id: adminData.id,
+        user_id: null, // Para consultas administrativas, não vinculamos a um usuário específico
+      };
+
+      console.log('Creating appointment:', newAppointment);
+      createAppointmentMutation.mutate(newAppointment as any);
+    } catch (error) {
+      console.error('Error creating appointment:', error);
+      toast.error('Erro ao criar consulta');
+    }
   };
 
   const resetForm = () => {
