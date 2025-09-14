@@ -380,11 +380,11 @@ const Dashboard = () => {
               </div>
               <div className="flex items-center mt-1">
                 {stat.trend === 'up' ? (
-                  <ArrowUp className="h-3 w-3 text-green-500 mr-1" />
+                  <ArrowUp className="h-3 w-3 text-emerald-400 mr-1" />
                 ) : (
-                  <ArrowDown className="h-3 w-3 text-red-500 mr-1" />
+                  <ArrowDown className="h-3 w-3 text-orange-400 mr-1" />
                 )}
-                <span className={`text-xs ${stat.trend === 'up' ? 'text-green-500' : 'text-red-500'}`}>
+                <span className={`text-xs ${stat.trend === 'up' ? 'text-emerald-400' : 'text-orange-400'}`}>
                   {stat.change}
                 </span>
               </div>
@@ -445,7 +445,7 @@ const Dashboard = () => {
                         onCheckedChange={() => handleToggleUserActive(user.id, user.isActive)}
                         className="h-5 w-9"
                       />
-                      <span className={`text-xs ${user.isActive ? 'text-green-600' : 'text-red-600'}`}>
+                      <span className={`text-xs font-medium ${user.isActive ? 'text-emerald-400' : 'text-orange-400'}`}>
                         {user.isActive ? 'Ativo' : 'Inativo'}
                       </span>
                     </div>
