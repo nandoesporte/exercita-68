@@ -11,6 +11,13 @@ export function useAppointments() {
   const { user } = useAuth();
   const { adminId, isSuperAdmin, isAdmin } = useAdminPermissionsContext();
   
+  console.log('useAppointments - Debug values:', { 
+    userId: user?.id, 
+    adminId, 
+    isSuperAdmin, 
+    isAdmin 
+  });
+  
   return useQuery({
     queryKey: ['appointments', user?.id, adminId],
     queryFn: async () => {
@@ -23,7 +30,12 @@ export function useAppointments() {
 
       if (isAdmin && !isSuperAdmin) {
         // Admin sees appointments from their managed users or their own appointments
-        query = query.or(`user_id.eq.${user.id},admin_id.eq.${adminId}`);
+        if (adminId) {
+          query = query.or(`user_id.eq.${user.id},admin_id.eq.${adminId}`);
+        } else {
+          // If adminId is null, just show appointments where user is the admin (by user_id)
+          query = query.eq('user_id', user.id);
+        }
       } else if (!isAdmin) {
         // Regular users see only their own appointments
         query = query.eq('user_id', user.id);
@@ -47,6 +59,6 @@ export function useAppointments() {
       
       return { upcoming, past };
     },
-    enabled: !!user && !!adminId,
+    enabled: !!user && (!!adminId || isAdmin),
   });
 }
