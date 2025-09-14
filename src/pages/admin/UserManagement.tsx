@@ -49,7 +49,6 @@ const editUserSchema = z.object({
   firstName: z.string().min(2, 'Nome deve ter no mínimo 2 caracteres'),
   lastName: z.string().min(2, 'Sobrenome deve ter no mínimo 2 caracteres'),
   email: z.string().email('Email inválido').optional(),
-  password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres').optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -181,7 +180,6 @@ const UserManagement = () => {
       if (data.firstName) updateData.p_first_name = data.firstName;
       if (data.lastName) updateData.p_last_name = data.lastName;
       if (data.email) updateData.p_email = data.email;
-      if (data.password) updateData.p_password = data.password;
 
       const { data: result, error } = await supabase.rpc('admin_update_user', {
         target_user_id: userId,
@@ -233,7 +231,6 @@ const UserManagement = () => {
       firstName: '',
       lastName: '',
       email: '',
-      password: '',
     },
   });
 
@@ -306,7 +303,6 @@ const UserManagement = () => {
     editForm.setValue('firstName', user.raw_user_meta_data?.first_name || '');
     editForm.setValue('lastName', user.raw_user_meta_data?.last_name || '');
     editForm.setValue('email', user.email || '');
-    editForm.setValue('password', ''); // Sempre vazio por segurança
     setIsEditUserOpen(true);
   };
   
@@ -596,30 +592,12 @@ const UserManagement = () => {
                 )}
               />
               
-              <FormField
-                control={editForm.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex items-center gap-2">
-                      <Lock className="h-4 w-4" />
-                      Redefinir Senha
-                    </FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="password"
-                        placeholder="Digite uma nova senha (opcional)" 
-                        {...field} 
-                      />
-                    </FormControl>
-                    <p className="text-xs text-muted-foreground">
-                      Por segurança, alterações de senha são registradas mas não aplicadas diretamente. 
-                      Para alterar a senha, use o processo de redefinição.
-                    </p>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="p-3 bg-muted rounded-md">
+                <p className="text-sm text-muted-foreground flex items-center gap-2">
+                  <Lock className="h-4 w-4" />
+                  <strong>Alteração de senha:</strong> Por questões de segurança, a alteração de senha deve ser feita através do processo de redefinição de senha do sistema.
+                </p>
+              </div>
               
               <DialogFooter>
                 <Button
