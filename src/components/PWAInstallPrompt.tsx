@@ -90,22 +90,22 @@ const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ onClose }) => {
       exit={{ opacity: 0, y: 20 }}
       className="fixed bottom-4 left-4 right-4 z-50"
     >
-      <Card className="border border-fitness-orange/20 bg-fitness-darkGray/95 backdrop-blur-sm">
+      <Card className="border border-primary/20 bg-card/95 backdrop-blur-sm">
         <button 
           onClick={handleClose} 
-          className="absolute right-2 top-2 p-1 text-gray-400 hover:text-white"
+          className="absolute right-2 top-2 p-1 text-muted-foreground hover:text-foreground"
         >
           <X size={18} />
         </button>
         
         <CardContent className="pt-5 pb-4">
           <div className="flex items-center">
-            <div className="mr-4 flex-shrink-0 bg-fitness-orange/10 p-3 rounded-full">
+            <div className="mr-4 flex-shrink-0 bg-primary/10 p-3 rounded-full">
               <ExercitaLogo width={32} height={32} className="h-8 w-8" />
             </div>
             <div className="flex-1">
-              <h3 className="font-bold text-white">Instale o aplicativo Exercita</h3>
-              <p className="text-sm text-gray-300">
+              <h3 className="font-bold text-foreground">Instale o aplicativo Exercita</h3>
+              <p className="text-sm text-muted-foreground">
                 Acesse rapidamente e treine mesmo offline
               </p>
             </div>
@@ -114,14 +114,14 @@ const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ onClose }) => {
           <div className="mt-4 flex gap-3">
             <Button 
               onClick={handleInstall}
-              className="flex-1 bg-fitness-orange hover:bg-fitness-orange/90"
+              className="flex-1 bg-primary hover:bg-primary/90"
             >
               <Download className="mr-2 h-4 w-4" /> Instalar App
             </Button>
             <Button 
               onClick={handleClose}
               variant="outline" 
-              className="border-gray-600 text-gray-300 hover:bg-gray-700"
+              className="border-border text-muted-foreground hover:bg-accent"
             >
               Agora não
             </Button>
