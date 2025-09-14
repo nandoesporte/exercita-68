@@ -90,7 +90,7 @@ const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ onClose }) => {
       exit={{ opacity: 0, y: 20 }}
       className="fixed bottom-4 left-4 right-4 z-50"
     >
-      <Card className="border border-primary/20 bg-card/95 backdrop-blur-sm">
+      <Card className="border border-primary/20 bg-black/95 backdrop-blur-sm">
         <button 
           onClick={handleClose} 
           className="absolute right-2 top-2 p-1 text-muted-foreground hover:text-foreground"
