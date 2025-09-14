@@ -26,22 +26,19 @@ serve(async (req) => {
       );
     }
 
-    // Initialize Supabase client with anon key for user operations
+    // Initialize Supabase client with service role key for auth verification
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
-      {
-        global: {
-          headers: { Authorization: authHeader },
-        },
-      }
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+      { auth: { persistSession: false } }
     );
 
-    // Get user from auth
+    // Extract token and verify user
+    const token = authHeader.replace('Bearer ', '');
     const {
       data: { user },
       error: authError,
-    } = await supabaseClient.auth.getUser();
+    } = await supabaseClient.auth.getUser(token);
 
     if (authError || !user) {
       return new Response(
@@ -53,7 +50,10 @@ serve(async (req) => {
       );
     }
 
-    const { title, plan, age, weight, fitness_level, goal, available_time } = await req.json();
+    const requestBody = await req.json();
+    console.log('Request body received:', requestBody);
+    
+    const { title, plan, age, weight, fitness_level, goal, available_time } = requestBody;
 
     // Validate required fields
     if (!title || !plan || !age || !weight || !fitness_level || !goal || !available_time) {
