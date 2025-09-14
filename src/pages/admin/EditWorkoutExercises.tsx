@@ -19,9 +19,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from 'sonner';
 import { CloneWorkoutDialog } from '@/components/admin/CloneWorkoutDialog';
 
-// Define the days of week options
+// Define the days of week options (without 'all' option)
 const daysOfWeek = [
-  { id: 'all', label: 'Todos os dias' },
   { id: 'monday', label: 'Segunda' },
   { id: 'tuesday', label: 'Terça' },
   { id: 'wednesday', label: 'Quarta' },
@@ -35,7 +34,7 @@ const EditWorkoutExercises = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { data: workout, isLoading: isWorkoutLoading } = useWorkout(id);
-  const [selectedDayOfWeek, setSelectedDayOfWeek] = useState<string | null>(null);
+  const [selectedDayOfWeek, setSelectedDayOfWeek] = useState<string>('monday'); // Start with Monday
   const [isCloneDialogOpen, setIsCloneDialogOpen] = useState(false);
   const [targetDays, setTargetDays] = useState<string[]>([]);
   const [isCloneUserDialogOpen, setIsCloneUserDialogOpen] = useState(false);
@@ -104,7 +103,7 @@ const EditWorkoutExercises = () => {
   };
 
   const handleDayChange = (day: string) => {
-    setSelectedDayOfWeek(day === 'all' ? null : day);
+    setSelectedDayOfWeek(day);
   };
 
   const handleOpenCloneDialog = () => {
@@ -151,9 +150,9 @@ const EditWorkoutExercises = () => {
   const isLoading = isWorkoutLoading || areExercisesLoading || areWorkoutExercisesLoading;
   const isActionLoading = isAddingExercise || isRemovingExercise || isUpdatingExerciseOrder || isCloningExercises || isReorderingExercises;
 
-  // Filter out the current day and "all" option for cloning targets
+  // Filter out the current day for cloning targets
   const availableTargetDays = daysOfWeek.filter(day => 
-    day.id !== 'all' && day.id !== selectedDayOfWeek
+    day.id !== selectedDayOfWeek
   );
 
   return (
@@ -206,12 +205,11 @@ const EditWorkoutExercises = () => {
                 <Calendar className="mr-2 h-4 w-4" />
                 <h2 className="font-medium">Filtrar por dia</h2>
               </div>
-              {selectedDayOfWeek && selectedDayOfWeek !== 'all' && (
+              {selectedDayOfWeek && (
                 <Button 
                   size="sm" 
                   variant="outline" 
                   onClick={handleOpenCloneDialog}
-                  disabled={!selectedDayOfWeek || selectedDayOfWeek === 'all'}
                   className="flex items-center gap-1"
                 >
                   <Copy className="h-4 w-4 mr-1" />
@@ -226,7 +224,7 @@ const EditWorkoutExercises = () => {
                 <button
                   key={day.id}
                   className={`px-4 py-2 rounded-full whitespace-nowrap text-sm font-medium flex-shrink-0 transition-colors ${
-                    (selectedDayOfWeek === null && day.id === 'all') || selectedDayOfWeek === day.id
+                    selectedDayOfWeek === day.id
                       ? 'bg-primary text-primary-foreground'
                       : 'bg-secondary text-foreground hover:bg-secondary/80'
                   }`}
@@ -249,7 +247,7 @@ const EditWorkoutExercises = () => {
                   onMoveDown={handleMoveDown}
                   onReorder={handleReorderExercises}
                   isLoading={areWorkoutExercisesLoading}
-                  showByDay={selectedDayOfWeek === null}
+                  showByDay={false}
                 />
               </div>
             </div>
