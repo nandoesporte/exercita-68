@@ -369,7 +369,7 @@ const UserManagement = () => {
             <Button
               variant="outline"
               size="sm"
-              className="h-8 px-3 text-xs border-destructive/30 text-destructive hover:bg-destructive/10 hover:text-destructive hover:border-destructive/50 rounded-md"
+              className="h-8 px-3 text-xs border-destructive text-white bg-destructive hover:bg-destructive/90 hover:border-destructive rounded-md"
               onClick={() => {
                 setSelectedUser(row.original);
                 setIsDeleteDialogOpen(true);

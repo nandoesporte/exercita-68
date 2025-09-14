@@ -452,7 +452,7 @@ const Dashboard = () => {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="h-7 text-xs px-2 border-destructive/30 text-destructive hover:bg-destructive/10 hover:text-destructive hover:border-destructive/50 rounded-md"
+                      className="h-7 text-xs px-2 border-destructive text-white bg-destructive hover:bg-destructive/90 hover:border-destructive rounded-md"
                       onClick={() => {
                         setSelectedUser(user);
                         setIsDeleteDialogOpen(true);
