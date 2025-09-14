@@ -40,6 +40,18 @@ const shortDayNames: Record<string, string> = {
   "sunday": "Dom"
 };
 
+// Define the correct order of days of the week
+const dayOrder = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+
+// Function to sort days of the week in correct order
+const sortDaysOfWeek = (days: string[]): string[] => {
+  return days.sort((a, b) => {
+    const indexA = dayOrder.indexOf(a);
+    const indexB = dayOrder.indexOf(b);
+    return indexA - indexB;
+  });
+};
+
 // Define WorkoutExercise type to match the data structure from the database
 type Exercise = Database['public']['Tables']['exercises']['Row'];
 type WorkoutExercise = Database['public']['Tables']['workout_exercises']['Row'] & {
@@ -186,12 +198,12 @@ const WorkoutDetail = () => {
     
     // If we have days with exercises, use those
     if (daysWithExercises.length > 0) {
-      return daysWithExercises;
+      return sortDaysOfWeek(daysWithExercises);
     }
     
     // Otherwise, use days defined for the workout
     if (workout.days_of_week && workout.days_of_week.length > 0) {
-      return workout.days_of_week;
+      return sortDaysOfWeek(workout.days_of_week);
     }
     
     // Fallback to 'all_days'
