@@ -23,6 +23,18 @@ const dayTranslations: Record<string, string> = {
   'sunday': 'Dom',
 };
 
+// Define the correct order of days of the week
+const dayOrder = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+
+// Function to sort days of the week in correct order
+const sortDaysOfWeek = (days: string[]): string[] => {
+  return days.sort((a, b) => {
+    const indexA = dayOrder.indexOf(a);
+    const indexB = dayOrder.indexOf(b);
+    return indexA - indexB;
+  });
+};
+
 export function WorkoutCard({ id, title, image, duration, level, calories, daysOfWeek }: WorkoutCardProps) {
   return (
     <Link
@@ -61,7 +73,7 @@ export function WorkoutCard({ id, title, image, duration, level, calories, daysO
             <div className="flex items-center gap-1 mt-2">
               <Calendar size={12} className="text-white" />
               <div className="flex flex-wrap gap-1">
-                {daysOfWeek.map(day => (
+                {sortDaysOfWeek(daysOfWeek).map(day => (
                   <span 
                     key={day} 
                     className="text-white text-xs bg-slate-700/50 px-1.5 py-0.5 rounded"
