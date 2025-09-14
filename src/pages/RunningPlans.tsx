@@ -109,13 +109,13 @@ const RunningPlans = () => {
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
       <div className="mb-8 text-center">
-        <h1 className="text-4xl font-bold text-foreground mb-4">Treinos de Corrida</h1>
-        <p className="text-lg text-muted-foreground">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-4">Treinos de Corrida</h1>
+        <p className="text-base sm:text-lg text-muted-foreground px-2">
           Gere planos de corrida e caminhada personalizados com inteligência artificial
         </p>
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
         {/* Form Section */}
         <Card>
           <CardHeader>
@@ -130,7 +130,7 @@ const RunningPlans = () => {
           <CardContent>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <FormField
                     control={form.control}
                     name="age"
@@ -301,7 +301,7 @@ const RunningPlans = () => {
                 />
               </div>
 
-              <div className="max-h-96 overflow-y-auto space-y-3">
+              <div className="max-h-96 overflow-y-auto space-y-3 pr-2">
                 {[1, 2, 3, 4].map((week) => (
                   <div key={week} className="border rounded-lg p-3">
                     <h4 className="font-semibold mb-2 text-sm">Semana {week}</h4>
@@ -309,12 +309,12 @@ const RunningPlans = () => {
                       {generatedPlan
                         .filter((item) => item.semana === week)
                         .map((item, index) => (
-                          <div key={index} className="flex items-center justify-between text-xs bg-muted p-2 rounded">
-                            <div>
-                              <span className="font-medium">{item.dia}</span>
-                              <p className="text-muted-foreground">{item.atividade}</p>
+                          <div key={index} className="flex flex-col sm:flex-row sm:items-center sm:justify-between text-xs bg-muted p-2 rounded gap-2">
+                            <div className="flex-1 min-w-0">
+                              <span className="font-medium block">{item.dia}</span>
+                              <p className="text-muted-foreground break-words">{item.atividade}</p>
                             </div>
-                            <div className="text-right">
+                            <div className="flex items-center justify-between sm:justify-end gap-2 flex-shrink-0">
                               <p className="font-medium">{item.duracao_min} min</p>
                               <Badge className={`text-xs ${getIntensityColor(item.intensidade)}`}>
                                 {item.intensidade}
@@ -358,7 +358,7 @@ const RunningPlans = () => {
             <Loader2 className="h-8 w-8 animate-spin" />
           </div>
         ) : plans && plans.length > 0 ? (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             {plans.map((plan) => (
               <Card key={plan.id}>
                 <CardHeader>
@@ -395,12 +395,12 @@ const RunningPlans = () => {
                             <h5 className="font-medium text-xs text-primary mb-1">Semana {week}</h5>
                             <div className="space-y-1">
                               {weekActivities.map((item, index) => (
-                                <div key={index} className="flex items-center justify-between text-xs">
-                                  <div className="flex-1">
-                                    <span className="font-medium">{item.dia}</span>
-                                    <p className="text-muted-foreground text-xs truncate">{item.atividade}</p>
+                                <div key={index} className="flex flex-col sm:flex-row sm:items-center justify-between text-xs gap-1">
+                                  <div className="flex-1 min-w-0">
+                                    <span className="font-medium block">{item.dia}</span>
+                                    <p className="text-muted-foreground text-xs break-words">{item.atividade}</p>
                                   </div>
-                                  <div className="text-right ml-2">
+                                  <div className="flex items-center gap-2 flex-shrink-0">
                                     <p className="font-medium">{item.duracao_min}min</p>
                                     <Badge className={`text-xs h-4 ${getIntensityColor(item.intensidade)}`}>
                                       {item.intensidade}
@@ -418,7 +418,7 @@ const RunningPlans = () => {
                     </p>
                   </div>
 
-                  <div className="mt-4 flex gap-2">
+                  <div className="mt-4 flex flex-col sm:flex-row gap-2">
                     <Button 
                       variant="outline" 
                       size="sm" 
