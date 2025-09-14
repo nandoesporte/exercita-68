@@ -6,7 +6,6 @@ import { isPwaInstalled } from '@/utils/pwaUtils';
 import { Card, CardContent } from '@/components/ui/card';
 import { motion } from '@/components/ui/motion';
 import { toast } from 'sonner';
-import { ExercitaLogo } from '@/components/ui/exercita-logo';
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -100,11 +99,13 @@ const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ onClose }) => {
         
         <CardContent className="pt-5 pb-4">
           <div className="flex items-center">
-            <div className="mr-4 flex-shrink-0 bg-black/95 p-3 rounded-full">
-              <ExercitaLogo width={32} height={32} className="h-8 w-8" />
+            <div className="mr-4 flex-shrink-0">
+              <div className="text-2xl font-black text-primary tracking-tight">
+                EXERCITA
+              </div>
             </div>
             <div className="flex-1">
-              <h3 className="font-bold text-foreground">Instale o aplicativo Exercita</h3>
+              <h3 className="font-bold text-foreground">Instale o aplicativo</h3>
               <p className="text-sm text-muted-foreground">
                 Acesse rapidamente e treine mesmo offline
               </p>
