@@ -80,9 +80,10 @@ const SortableExerciseItem: React.FC<SortableExerciseItemProps> = ({
             <div 
               {...attributes}
               {...listeners}
-              className="cursor-grab active:cursor-grabbing p-1 hover:bg-primary/20 rounded"
+              className="cursor-grab active:cursor-grabbing p-2 hover:bg-primary/20 rounded-md touch-manipulation select-none"
+              style={{ touchAction: 'none' }}
             >
-              <GripVertical className="h-4 w-4 text-muted-foreground" />
+              <GripVertical className="h-5 w-5 text-primary" />
             </div>
             <div className="bg-primary/20 text-primary font-medium rounded-full w-6 h-6 flex items-center justify-center">
               {index + 1}
@@ -151,9 +152,10 @@ const SortableExerciseItem: React.FC<SortableExerciseItemProps> = ({
             <div 
               {...attributes}
               {...listeners}
-              className="cursor-grab active:cursor-grabbing p-1 hover:bg-muted rounded"
+              className="cursor-grab active:cursor-grabbing p-2 hover:bg-muted rounded-md touch-manipulation select-none"
+              style={{ touchAction: 'none' }}
             >
-              <GripVertical className="h-4 w-4 text-muted-foreground" />
+              <GripVertical className="h-5 w-5 text-primary" />
             </div>
             <div className="bg-primary/20 text-primary font-medium rounded-full w-6 h-6 flex items-center justify-center">
               {index + 1}
