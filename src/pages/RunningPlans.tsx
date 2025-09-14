@@ -10,8 +10,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { useRunningPlans, RunningPlanFormData, RunningPlanItem } from '@/hooks/useRunningPlans';
-import { Loader2, Play, Save, Trash2, Calendar, Clock, Target, User, Weight } from 'lucide-react';
+import { RunningPlanViewer } from '@/components/ui/running-plan-viewer';
+import { useRunningPlans, RunningPlanFormData, RunningPlanItem, RunningPlan } from '@/hooks/useRunningPlans';
+import { Loader2, Play, Save, Trash2, Calendar, Clock, Target, User, Weight, Eye } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 
 const formSchema = z.object({
@@ -37,6 +38,8 @@ const RunningPlans = () => {
   const [generatedPlan, setGeneratedPlan] = useState<RunningPlanItem[] | null>(null);
   const [formData, setFormData] = useState<RunningPlanFormData | null>(null);
   const [planTitle, setPlanTitle] = useState('');
+  const [selectedPlan, setSelectedPlan] = useState<RunningPlan | null>(null);
+  const [isPlanViewerOpen, setIsPlanViewerOpen] = useState(false);
 
   const form = useForm<RunningPlanFormData>({
     resolver: zodResolver(formSchema),
@@ -83,6 +86,11 @@ const RunningPlans = () => {
     setGeneratedPlan(null);
     setFormData(null);
     setPlanTitle('');
+  };
+
+  const handleViewPlan = (plan: RunningPlan) => {
+    setSelectedPlan(plan);
+    setIsPlanViewerOpen(true);
   };
 
   const getIntensityColor = (intensity: string) => {
@@ -378,13 +386,47 @@ const RunningPlans = () => {
                   <Separator className="my-4" />
 
                   <div className="text-sm">
-                    <p className="font-medium mb-2">Resumo do plano:</p>
-                    <p className="text-muted-foreground">
+                    <p className="font-medium mb-2">Plano de treino:</p>
+                    <div className="max-h-48 overflow-y-auto space-y-2 bg-muted/30 p-3 rounded-lg">
+                      {[1, 2, 3, 4].map((week) => {
+                        const weekActivities = plan.plan.filter((item) => item.semana === week);
+                        return weekActivities.length > 0 ? (
+                          <div key={week} className="border-l-2 border-primary/20 pl-2">
+                            <h5 className="font-medium text-xs text-primary mb-1">Semana {week}</h5>
+                            <div className="space-y-1">
+                              {weekActivities.map((item, index) => (
+                                <div key={index} className="flex items-center justify-between text-xs">
+                                  <div className="flex-1">
+                                    <span className="font-medium">{item.dia}</span>
+                                    <p className="text-muted-foreground text-xs truncate">{item.atividade}</p>
+                                  </div>
+                                  <div className="text-right ml-2">
+                                    <p className="font-medium">{item.duracao_min}min</p>
+                                    <Badge className={`text-xs h-4 ${getIntensityColor(item.intensidade)}`}>
+                                      {item.intensidade}
+                                    </Badge>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        ) : null;
+                      })}
+                    </div>
+                    <p className="text-muted-foreground text-xs mt-2">
                       {plan.plan.length} atividades distribuídas em 4 semanas
                     </p>
                   </div>
 
-                  <div className="mt-4">
+                  <div className="mt-4 flex gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => handleViewPlan(plan)}
+                    >
+                      <Eye className="h-4 w-4 mr-2" />
+                      Ver completo
+                    </Button>
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
                         <Button variant="destructive" size="sm" disabled={isDeletingPlan}>
@@ -426,6 +468,13 @@ const RunningPlans = () => {
           </Card>
         )}
       </div>
+
+      {/* Plan Viewer Modal */}
+      <RunningPlanViewer 
+        plan={selectedPlan}
+        open={isPlanViewerOpen}
+        onOpenChange={setIsPlanViewerOpen}
+      />
     </div>
   );
 };
