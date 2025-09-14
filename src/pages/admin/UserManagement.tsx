@@ -274,6 +274,7 @@ const UserManagement = () => {
       };
       
       // Use admin_create_user RPC function instead of signUp to create authenticated user
+      console.log('Admin creating user - current admin session preserved');
       const { data, error } = await supabase.rpc('admin_create_user', {
         user_email: values.email,
         user_password: values.password,
@@ -281,9 +282,11 @@ const UserManagement = () => {
       });
       
       if (error) {
+        console.error('Error creating user:', error);
         throw new Error(error.message);
       }
       
+      console.log('User created successfully, admin session maintained:', data);
       toast.success('Usuário criado com sucesso! A conta já está ativa e pode fazer login imediatamente.');
       
       // Invalidate multiple queries to update all admin data
