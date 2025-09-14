@@ -37,6 +37,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useAppointmentsRealtime } from '@/hooks/useRealtime';
+import { useAppointments } from '@/hooks/useAppointments';
 
 // Define the time slots that are available for booking
 const TIME_SLOTS = [
@@ -79,24 +80,12 @@ const AppointmentManagement = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('upcoming');
 
-  // Fetch appointments (filtered by RLS automatically)
-  const { data: appointments = [], isLoading } = useQuery({
-    queryKey: ['admin-appointments'],
-    queryFn: async () => {
-      console.log('Fetching appointments...');
-      const { data, error } = await supabase
-        .from('appointments')
-        .select(`
-          *,
-          user:profiles(first_name, last_name)
-        `)
-        .order('appointment_date', { ascending: true });
-
-      console.log('Appointments result:', { data, error });
-      if (error) throw error;
-      return data as Appointment[];
-    },
-  });
+  // Fetch appointments using the hook with proper admin filtering
+  const { data: appointmentsData, isLoading } = useAppointments();
+  const appointments = [
+    ...(appointmentsData?.upcoming || []),
+    ...(appointmentsData?.past || [])
+  ];
 
   // Filter appointments for the selected date
   const appointmentsForSelectedDate = date
