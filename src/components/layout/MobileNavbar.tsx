@@ -3,12 +3,10 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Home, Dumbbell, History, User, ShoppingBag, Calendar, Camera, Activity, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useWorkouts } from '@/hooks/useWorkouts';
 import { useUserPersonalizedWorkout } from '@/hooks/useWorkoutHistory';
 
 const MobileNavbar = () => {
   const location = useLocation();
-  const { data: workouts } = useWorkouts();
   const { data: personalizedWorkoutId, isLoading } = useUserPersonalizedWorkout();
   
   // Determine which workout to link to
@@ -17,9 +15,6 @@ const MobileNavbar = () => {
   if (personalizedWorkoutId) {
     // Use the personalized workout if available
     workoutLink = `/workout/${personalizedWorkoutId}`;
-  } else if (!isLoading && workouts && workouts.length > 0) {
-    // Fall back to the first workout in the list if no personalized workout
-    workoutLink = `/workout/${workouts[0].id}`;
   }
   
   const navItems = [

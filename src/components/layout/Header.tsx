@@ -6,6 +6,7 @@ import { useProfile } from '@/hooks/useProfile';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/hooks/useAuth';
 import { useWorkouts } from '@/hooks/useWorkouts';
+import { useUserPersonalizedWorkout } from '@/hooks/useWorkoutHistory';
 import { ExercitaLogo } from '@/components/ui/exercita-logo';
 
 interface HeaderProps {
@@ -29,6 +30,7 @@ const Header: React.FC<HeaderProps> = ({
   const { user, isAdmin, loading: authLoading } = useAuth();
   const location = useLocation();
   const { data: workouts } = useWorkouts();
+  const { data: personalizedWorkoutId } = useUserPersonalizedWorkout();
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [imageError, setImageError] = useState(false);
   
@@ -55,9 +57,7 @@ const Header: React.FC<HeaderProps> = ({
   }, [profile?.avatar_url, imageError]);
   
   // Find the first workout to link to, or use a fallback
-  const firstWorkoutId = workouts && workouts.length > 0 
-    ? workouts[0].id 
-    : 'default';
+  const firstWorkoutId = personalizedWorkoutId || 'default';
   
   // Check if we're on a workout detail page to hide the header
   const isWorkoutDetailPage = location.pathname.startsWith('/workout/');

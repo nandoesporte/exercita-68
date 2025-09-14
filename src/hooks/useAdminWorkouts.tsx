@@ -118,6 +118,7 @@ export function useAdminWorkouts() {
             category_id: formData.category_id || null,
             calories: formData.calories || null,
             admin_id: adminId,
+            user_id: formData.user_id || null, // Define user_id se treino for específico para um usuário
           })
           .select('id')
           .single();
@@ -153,27 +154,11 @@ export function useAdminWorkouts() {
           }
         }
 
-        // Se um user_id foi fornecido, esse treino deve ser APENAS para esse usuário
+        // Se um user_id foi fornecido, esse treino foi criado especificamente para esse usuário
         if (formData.user_id && workout) {
-          console.log(`Assigning workout exclusively to user: ${formData.user_id}`);
+          console.log(`Workout created exclusively for user: ${formData.user_id}`);
           
-          // Adicionar ao histórico de treino do usuário
-          const { error: historyError } = await supabase
-            .from('user_workout_history')
-            .insert({
-              user_id: formData.user_id,
-              workout_id: workout.id,
-              completed_at: null, // Não concluído ainda
-            });
-          
-          if (historyError) {
-            console.error("Error assigning workout to user history:", historyError);
-            toast.error(`Error assigning workout to user history: ${historyError.message}`);
-          } else {
-            console.log("Workout added to user history successfully");
-          }
-
-          // Adicionar como recomendação específica para este usuário
+          // Adicionar como recomendação específica para este usuário para compatibilidade
           const { error: recommendationError } = await supabase
             .from('workout_recommendations')
             .insert({
@@ -188,8 +173,7 @@ export function useAdminWorkouts() {
             console.log(`Workout recommendation added successfully for user ${formData.user_id}`);
           }
         } else {
-          // Se o treino não foi atribuído a um usuário específico, 
-          // não fazer nada especial - treino fica como público
+          // Treino público - fica disponível para todos
           console.log("Workout created as public workout");
         }
       
