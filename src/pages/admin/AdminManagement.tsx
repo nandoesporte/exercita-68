@@ -122,23 +122,35 @@ export default function AdminManagement() {
       }
       if (!planData) throw new Error('Nenhum plano de assinatura ativo encontrado');
 
-      // Verificar se já existe uma assinatura
-      console.log('Verificando assinatura existente para admin_id:', adminData.id);
-      const { data: existingSubscription, error: checkError } = await supabase
+      // Verificar se já existe uma assinatura (pode haver múltiplas)
+      console.log('Verificando assinaturas existentes para admin_id:', adminData.id);
+      const { data: existingSubscriptions, error: checkError } = await supabase
         .from('admin_subscriptions')
         .select('id, status')
         .eq('admin_id', adminData.id)
-        .maybeSingle();
+        .order('created_at', { ascending: false });
 
-      console.log('Subscription check result:', { existingSubscription, checkError });
+      console.log('Subscriptions check result:', { existingSubscriptions, checkError });
 
       if (checkError) {
-        console.error('Erro ao verificar assinatura:', checkError);
-        throw new Error(`Erro ao verificar assinatura existente: ${checkError.message}`);
+        console.error('Erro ao verificar assinaturas:', checkError);
+        throw new Error(`Erro ao verificar assinaturas existentes: ${checkError.message}`);
       }
 
-      if (existingSubscription) {
+      // Verificar se já existe uma assinatura ativa
+      const activeSubscription = existingSubscriptions?.find(sub => sub.status === 'active');
+      
+      if (activeSubscription) {
+        console.log('Usuário já possui assinatura ativa:', activeSubscription.id);
+        throw new Error('Usuário já possui uma assinatura ativa');
+      }
+
+      // Pegar a assinatura mais recente (se houver)
+      const latestSubscription = existingSubscriptions?.[0];
+
+      if (latestSubscription) {
         // Ativar assinatura existente
+        console.log('Ativando assinatura existente:', latestSubscription.id);
         const { error: updateError } = await supabase
           .from('admin_subscriptions')
           .update({
@@ -147,9 +159,12 @@ export default function AdminManagement() {
             end_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 dias
             updated_at: new Date().toISOString()
           })
-          .eq('id', existingSubscription.id);
+          .eq('id', latestSubscription.id);
 
-        if (updateError) throw new Error('Erro ao atualizar assinatura existente');
+        if (updateError) {
+          console.error('Erro ao atualizar assinatura:', updateError);
+          throw new Error(`Erro ao atualizar assinatura existente: ${updateError.message}`);
+        }
       } else {
         // Criar nova assinatura
         const { error: insertError } = await supabase
