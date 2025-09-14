@@ -273,21 +273,8 @@ const UserManagement = () => {
         created_by_admin_id: adminId
       };
       
-      // Use admin_create_user RPC function instead of signUp to create authenticated user
-      console.log('Admin creating user - current admin session preserved');
-      const { data, error } = await supabase.rpc('admin_create_user', {
-        user_email: values.email,
-        user_password: values.password,
-        user_metadata: metadata
-      });
-      
-      if (error) {
-        console.error('Error creating user:', error);
-        throw new Error(error.message);
-      }
-      
-      console.log('User created successfully, admin session maintained:', data);
-      toast.success('Usuário criado com sucesso! A conta já está ativa e pode fazer login imediatamente.');
+      await signUp(values.email, values.password, metadata);
+      toast.success('Conta criada com sucesso!');
       
       // Invalidate multiple queries to update all admin data
       queryClient.invalidateQueries({ queryKey: ['users-by-admin'] });
@@ -295,7 +282,6 @@ const UserManagement = () => {
       queryClient.invalidateQueries({ queryKey: ['admin-permissions'] });
       queryClient.invalidateQueries({ queryKey: ['admin-workout-categories'] });
       queryClient.invalidateQueries({ queryKey: ['admin-users'] });
-      queryClient.invalidateQueries({ queryKey: ['users-auth-status'] });
       
       // Fecha o modal e reseta o formulário
       setIsCreateUserOpen(false);

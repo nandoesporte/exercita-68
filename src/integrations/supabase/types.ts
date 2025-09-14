@@ -1591,9 +1591,7 @@ export type Database = {
         Returns: Json
       }
       admin_create_user: {
-        Args:
-          | { user_data: Json }
-          | { user_email: string; user_metadata?: Json; user_password: string }
+        Args: { user_data: Json }
         Returns: boolean
       }
       admin_delete_pix_key: {
