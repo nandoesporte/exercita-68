@@ -101,7 +101,7 @@ const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ onClose }) => {
           <div className="flex items-center">
             <div className="mr-4 flex-shrink-0">
               <img 
-                src="/logo_with_background_hd.png" 
+                src="/logo_with_solid_background.png" 
                 alt="Exercita Logo" 
                 className="w-12 h-12 object-contain"
               />
