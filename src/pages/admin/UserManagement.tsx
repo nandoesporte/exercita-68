@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Loader2, UserPlus, UserCheck, UserX, Crown } from 'lucide-react';
+import { Loader2, UserPlus, UserCheck, UserX, Crown, Mail, Lock, Edit } from 'lucide-react';
 import { toast } from 'sonner';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
@@ -48,6 +48,8 @@ const formSchema = z.object({
 const editUserSchema = z.object({
   firstName: z.string().min(2, 'Nome deve ter no mínimo 2 caracteres'),
   lastName: z.string().min(2, 'Sobrenome deve ter no mínimo 2 caracteres'),
+  email: z.string().email('Email inválido').optional(),
+  password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres').optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -173,27 +175,38 @@ const UserManagement = () => {
   // Update user mutation
   const updateUserMutation = useMutation({
     mutationFn: async ({ userId, data }: { userId: string, data: EditUserFormValues }) => {
-      const { error } = await supabase
-        .from('profiles')
-        .update({
-          first_name: data.firstName,
-          last_name: data.lastName,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', userId);
+      const updateData: any = {};
       
+      // Só incluir campos que foram preenchidos
+      if (data.firstName) updateData.p_first_name = data.firstName;
+      if (data.lastName) updateData.p_last_name = data.lastName;
+      if (data.email) updateData.p_email = data.email;
+      if (data.password) updateData.p_password = data.password;
+
+      const { data: result, error } = await supabase.rpc('admin_update_user', {
+        target_user_id: userId,
+        ...updateData,
+      });
+
       if (error) throw new Error(error.message);
-      return { userId, data };
+      
+      const resultObj = result as any;
+      if (!resultObj?.success) {
+        throw new Error(resultObj?.message || 'Erro ao atualizar usuário');
+      }
+
+      return resultObj;
     },
-    onSuccess: () => {
+    onSuccess: (result) => {
+      toast.success(result.message);
       queryClient.invalidateQueries({ queryKey: ['users-by-admin'] });
+      queryClient.invalidateQueries({ queryKey: ['users-auth-status'] });
       setIsEditUserOpen(false);
       setUserToEdit(null);
       editForm.reset();
-      toast.success('Usuário atualizado com sucesso!');
     },
     onError: (error: Error) => {
-      toast.error(`Erro ao atualizar usuário: ${error.message}`);
+      toast.error(error.message);
     },
   });
 
@@ -219,6 +232,8 @@ const UserManagement = () => {
     defaultValues: {
       firstName: '',
       lastName: '',
+      email: '',
+      password: '',
     },
   });
 
@@ -290,6 +305,8 @@ const UserManagement = () => {
     setUserToEdit(user);
     editForm.setValue('firstName', user.raw_user_meta_data?.first_name || '');
     editForm.setValue('lastName', user.raw_user_meta_data?.last_name || '');
+    editForm.setValue('email', user.email || '');
+    editForm.setValue('password', ''); // Sempre vazio por segurança
     setIsEditUserOpen(true);
   };
   
@@ -364,6 +381,7 @@ const UserManagement = () => {
               className="h-8 px-3 text-xs"
               onClick={() => handleEditUser(row.original)}
             >
+              <Edit className="h-3 w-3 mr-1" />
               Editar
             </Button>
             <Button
@@ -522,38 +540,83 @@ const UserManagement = () => {
 
       {/* Edit User Dialog */}
       <Dialog open={isEditUserOpen} onOpenChange={setIsEditUserOpen}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Editar usuário</DialogTitle>
           </DialogHeader>
           <Form {...editForm}>
             <form onSubmit={editForm.handleSubmit(onEditSubmit)} className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={editForm.control}
+                  name="firstName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nome</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Nome" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={editForm.control}
+                  name="lastName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Sobrenome</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Sobrenome" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              
               <FormField
                 control={editForm.control}
-                name="firstName"
+                name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nome</FormLabel>
+                    <FormLabel className="flex items-center gap-2">
+                      <Mail className="h-4 w-4" />
+                      Email
+                    </FormLabel>
                     <FormControl>
-                      <Input placeholder="Nome" {...field} />
+                      <Input 
+                        type="email"
+                        placeholder="email@exemplo.com" 
+                        {...field} 
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+              
               <FormField
                 control={editForm.control}
-                name="lastName"
+                name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Sobrenome</FormLabel>
+                    <FormLabel className="flex items-center gap-2">
+                      <Lock className="h-4 w-4" />
+                      Nova Senha (opcional)
+                    </FormLabel>
                     <FormControl>
-                      <Input placeholder="Sobrenome" {...field} />
+                      <Input 
+                        type="password"
+                        placeholder="Deixe em branco para não alterar" 
+                        {...field} 
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+              
               <DialogFooter>
                 <Button
                   type="button"
@@ -569,7 +632,7 @@ const UserManagement = () => {
                   {updateUserMutation.isPending && (
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                   )}
-                  Salvar
+                  Salvar Alterações
                 </Button>
               </DialogFooter>
             </form>
