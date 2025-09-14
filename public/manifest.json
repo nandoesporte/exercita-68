@@ -10,49 +10,49 @@
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/icon-512.png",
+      "src": "/lovable-uploads/261bfa34-e60d-4bd5-aeff-5868a556342b.png",
       "sizes": "72x72",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/icon-512.png",
+      "src": "/lovable-uploads/261bfa34-e60d-4bd5-aeff-5868a556342b.png",
       "sizes": "96x96",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/icon-512.png",
+      "src": "/lovable-uploads/261bfa34-e60d-4bd5-aeff-5868a556342b.png",
       "sizes": "128x128",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/icon-512.png",
+      "src": "/lovable-uploads/261bfa34-e60d-4bd5-aeff-5868a556342b.png",
       "sizes": "144x144",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/icon-512.png",
+      "src": "/lovable-uploads/261bfa34-e60d-4bd5-aeff-5868a556342b.png",
       "sizes": "152x152",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/icon-512.png",
+      "src": "/lovable-uploads/261bfa34-e60d-4bd5-aeff-5868a556342b.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/icon-512.png",
+      "src": "/lovable-uploads/261bfa34-e60d-4bd5-aeff-5868a556342b.png",
       "sizes": "384x384",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/icon-512.png",
+      "src": "/lovable-uploads/261bfa34-e60d-4bd5-aeff-5868a556342b.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
@@ -64,14 +64,14 @@
       "short_name": "Treinos",
       "description": "Ver seus treinos",
       "url": "/workouts",
-      "icons": [{ "src": "/icon-512.png", "sizes": "96x96" }]
+      "icons": [{ "src": "/lovable-uploads/261bfa34-e60d-4bd5-aeff-5868a556342b.png", "sizes": "96x96" }]
     },
     {
       "name": "Perfil",
       "short_name": "Perfil",
       "description": "Acessar seu perfil",
       "url": "/profile",
-      "icons": [{ "src": "/icon-512.png", "sizes": "96x96" }]
+      "icons": [{ "src": "/lovable-uploads/261bfa34-e60d-4bd5-aeff-5868a556342b.png", "sizes": "96x96" }]
     }
   ]
 }
