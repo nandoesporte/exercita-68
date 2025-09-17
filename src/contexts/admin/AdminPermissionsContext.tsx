@@ -62,6 +62,7 @@ export function AdminPermissionsProvider({ children }: { children: ReactNode }) 
           'manage_categories', 
           'manage_products', 
           'manage_store',
+          'manage_payments',
           'manage_gym_photos', 
           'manage_schedule', 
           'manage_appointments', 
