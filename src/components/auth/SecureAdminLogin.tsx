@@ -38,8 +38,25 @@ export function SecureAdminLogin({ onSuccess }: SecureAdminLoginProps) {
         return;
       }
 
-      if (!data?.success) {
-        toast.error(data?.message || 'Credenciais inválidas');
+      // Type check and parse the response
+      let response: { success: boolean; message?: string };
+      
+      if (typeof data === 'string') {
+        try {
+          response = JSON.parse(data);
+        } catch {
+          toast.error('Resposta inválida do servidor');
+          return;
+        }
+      } else if (typeof data === 'object' && data !== null) {
+        response = data as { success: boolean; message?: string };
+      } else {
+        toast.error('Resposta inválida do servidor');
+        return;
+      }
+
+      if (!response?.success) {
+        toast.error(response?.message || 'Credenciais inválidas');
         return;
       }
 
