@@ -5,6 +5,7 @@ import { Database } from '@/integrations/supabase/types';
 import { toast } from '@/lib/toast-wrapper';
 import { v4 as uuidv4 } from 'uuid';
 import { useAdminPermissionsContext } from '@/hooks/useAdminPermissionsContext';
+import { useExerciseCategories } from '@/hooks/useExerciseCategories';
 
 export type AdminExercise = Database['public']['Tables']['exercises']['Row'] & {
   category?: Database['public']['Tables']['workout_categories']['Row'] | null;
@@ -29,6 +30,7 @@ export type BatchExerciseFormData = {
 export function useAdminExercises() {
   const queryClient = useQueryClient();
   const { adminId, isSuperAdmin, hasPermission } = useAdminPermissionsContext();
+  const { categories, isLoadingCategories } = useExerciseCategories();
   
   // Helper function to validate UUID format
   const isValidUUID = (uuid: string) => {
@@ -241,41 +243,6 @@ export function useAdminExercises() {
     }
   });
 
-  const workoutCategoriesQuery = useQuery({
-    queryKey: ['admin-workout-categories', adminId, isSuperAdmin],
-    queryFn: async () => {
-      try {
-        let query = supabase
-          .from('workout_categories')
-          .select('*')
-          .order('name');
-
-        // Filter by admin_id if not super admin
-        if (!isSuperAdmin && adminId && adminId !== 'super_admin') {
-          // Include both admin-specific categories and global categories (admin_id IS NULL)
-          query = query.or(`admin_id.eq.${adminId},admin_id.is.null`);
-        } else if (isSuperAdmin) {
-          // Super admin sees all categories
-        } else {
-          // No admin ID, show only global categories
-          query = query.is('admin_id', null);
-        }
-        
-        const { data, error } = await query;
-        
-        if (error) {
-          throw new Error(`Erro ao buscar categorias: ${error.message}`);
-        }
-        
-        return data;
-      } catch (error: any) {
-        console.error('Error in workoutCategoriesQuery:', error);
-        throw error;
-      }
-    },
-    enabled: !!adminId || isSuperAdmin, // Allow any admin to view categories for exercise selection
-  });
-
   // Create or check storage bucket
   const checkStorageBucket = async () => {
     try {
@@ -310,8 +277,8 @@ export function useAdminExercises() {
     isUpdating: updateExercise.isPending,
     deleteExercise: deleteExercise.mutate,
     isDeleting: deleteExercise.isPending,
-    categories: workoutCategoriesQuery.data || [],
-    areCategoriesLoading: workoutCategoriesQuery.isLoading,
+    categories: categories,
+    areCategoriesLoading: isLoadingCategories,
     checkStorageBucket,
     isValidUUID
   };
