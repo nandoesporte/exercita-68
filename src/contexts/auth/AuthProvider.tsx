@@ -249,32 +249,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const adminLogin = async (password: string) => {
     try {
-      // Check if the password matches the admin password
-      if (password !== 'Nando045+-') {
-        throw new Error('Invalid admin password');
-      }
-
-      // If there is a logged-in user, make them an admin
-      if (user) {
-        console.log("Setting admin status for user:", user.id);
-        const { error } = await supabase
-          .from('profiles')
-          .update({ is_admin: true })
-          .eq('id', user.id);
-          
-        if (error) {
-          console.error("Error setting admin status:", error);
-          throw error;
-        }
-        
-        setIsAdmin(true);
-        toast.success('Admin access granted!');
-        navigate('/admin');
-        return;
-      }
-      
-      // If no user is logged in, show an error
-      throw new Error('You must be logged in to become an admin');
+      // Use secure admin credentials system instead of hardcoded password
+      // This is now handled through the database with proper security
+      throw new Error('Admin login has been disabled for security. Please contact a super admin to grant admin privileges.');
     } catch (error: any) {
       toast.error(error.message || 'Error granting admin access');
       throw error;
