@@ -14,6 +14,81 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_audit_log: {
+        Row: {
+          action: string
+          admin_user_id: string | null
+          created_at: string | null
+          id: string
+          ip_address: unknown | null
+          new_values: Json | null
+          old_values: Json | null
+          record_id: string | null
+          table_name: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          action: string
+          admin_user_id?: string | null
+          created_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          new_values?: Json | null
+          old_values?: Json | null
+          record_id?: string | null
+          table_name?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          action?: string
+          admin_user_id?: string | null
+          created_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          new_values?: Json | null
+          old_values?: Json | null
+          record_id?: string | null
+          table_name?: string | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
+      admin_credentials: {
+        Row: {
+          created_at: string | null
+          failed_attempts: number | null
+          id: string
+          last_login_at: string | null
+          locked_until: string | null
+          password_hash: string
+          salt: string
+          updated_at: string | null
+          username: string
+        }
+        Insert: {
+          created_at?: string | null
+          failed_attempts?: number | null
+          id?: string
+          last_login_at?: string | null
+          locked_until?: string | null
+          password_hash: string
+          salt: string
+          updated_at?: string | null
+          username: string
+        }
+        Update: {
+          created_at?: string | null
+          failed_attempts?: number | null
+          id?: string
+          last_login_at?: string | null
+          locked_until?: string | null
+          password_hash?: string
+          salt?: string
+          updated_at?: string | null
+          username?: string
+        }
+        Relationships: []
+      }
       admin_permissions: {
         Row: {
           admin_id: string
@@ -1635,6 +1710,10 @@ export type Database = {
         Args: { target_user_id: string; workout_id: string }
         Returns: boolean
       }
+      create_admin_credentials: {
+        Args: { p_password: string; p_username: string }
+        Returns: Json
+      }
       debug_get_all_users: {
         Args: Record<PropertyKey, never>
         Returns: Json
@@ -1662,6 +1741,10 @@ export type Database = {
       revoke_health_tokens: {
         Args: { p_connection_id: string }
         Returns: boolean
+      }
+      secure_admin_login: {
+        Args: { p_password: string; p_username: string }
+        Returns: Json
       }
       store_encrypted_health_token: {
         Args: {
