@@ -15,30 +15,33 @@ export interface ExerciseCategory {
 
 export const useExerciseCategories = () => {
   const queryClient = useQueryClient();
-  const { adminId, isSuperAdmin, isLoading: permissionsLoading } = useAdminPermissionsContext();
+  const { adminId, isSuperAdmin, isAdmin, isLoading: permissionsLoading } = useAdminPermissionsContext();
 
   // Fetch exercise categories
   const { 
     data: categories = [], 
     isLoading: isLoadingCategories 
   } = useQuery({
-    queryKey: ['admin-workout-categories', adminId],
+    queryKey: ['admin-workout-categories', adminId, isSuperAdmin, isAdmin],
     queryFn: async () => {
-      console.log('Fetching categories with adminId:', adminId, 'isSuperAdmin:', isSuperAdmin);
+      console.log('Fetching categories with adminId:', adminId, 'isSuperAdmin:', isSuperAdmin, 'isAdmin:', isAdmin);
       
       let query = supabase
         .from('workout_categories')
         .select('*');
 
-      // Filter by admin_id for non-super admins
-      if (!isSuperAdmin && adminId && adminId !== 'super_admin') {
-        // Include both admin-specific categories and global categories (admin_id IS NULL)
+      // Super admins see all categories
+      if (isSuperAdmin) {
+        // No filter - super admin sees everything
+        console.log('Super admin - fetching all categories');
+      } else if (isAdmin && adminId) {
+        // Regular admins see their own categories + global ones (admin_id IS NULL)
         query = query.or(`admin_id.eq.${adminId},admin_id.is.null`);
-      } else if (isSuperAdmin) {
-        // Super admin sees all categories
+        console.log('Regular admin - fetching admin-specific and global categories');
       } else {
-        // No admin ID, show only global categories
+        // Non-admins or no adminId - show only global categories
         query = query.is('admin_id', null);
+        console.log('Non-admin or no adminId - fetching only global categories');
       }
 
       const { data, error } = await query.order('name');
@@ -49,10 +52,10 @@ export const useExerciseCategories = () => {
         return [];
       }
 
-      console.log('Categories fetched:', data);
+      console.log('Categories fetched:', data?.length || 0, 'categories');
       return data as ExerciseCategory[];
     },
-    enabled: !permissionsLoading && (!!adminId || isSuperAdmin),
+    enabled: !permissionsLoading && (isAdmin || isSuperAdmin),
   });
 
   // Create a category
