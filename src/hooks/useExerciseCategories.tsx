@@ -32,7 +32,13 @@ export const useExerciseCategories = () => {
 
       // Filter by admin_id for non-super admins
       if (!isSuperAdmin && adminId && adminId !== 'super_admin') {
-        query = query.eq('admin_id', adminId);
+        // Include both admin-specific categories and global categories (admin_id IS NULL)
+        query = query.or(`admin_id.eq.${adminId},admin_id.is.null`);
+      } else if (isSuperAdmin) {
+        // Super admin sees all categories
+      } else {
+        // No admin ID, show only global categories
+        query = query.is('admin_id', null);
       }
 
       const { data, error } = await query.order('name');
