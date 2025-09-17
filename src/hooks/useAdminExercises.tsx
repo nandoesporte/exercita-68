@@ -244,10 +244,6 @@ export function useAdminExercises() {
   const workoutCategoriesQuery = useQuery({
     queryKey: ['admin-workout-categories', adminId, isSuperAdmin],
     queryFn: async () => {
-      if (!hasPermission('manage_categories') && !hasPermission('manage_exercises')) {
-        throw new Error('Você não tem permissão para gerenciar categorias');
-      }
-
       try {
         let query = supabase
           .from('workout_categories')
@@ -277,7 +273,7 @@ export function useAdminExercises() {
         throw error;
       }
     },
-    enabled: hasPermission('manage_categories') || hasPermission('manage_exercises'),
+    enabled: !!adminId || isSuperAdmin, // Allow any admin to view categories for exercise selection
   });
 
   // Create or check storage bucket
