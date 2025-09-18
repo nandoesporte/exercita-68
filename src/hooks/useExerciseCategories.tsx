@@ -30,18 +30,14 @@ export const useExerciseCategories = () => {
         .from('workout_categories')
         .select('*');
 
-      // Super admins see all categories
-      if (isSuperAdmin) {
-        // No filter - super admin sees everything
-        console.log('Super admin - fetching all categories');
-      } else if (isAdmin && adminId) {
-        // Regular admins see their own categories + global ones (admin_id IS NULL)
-        query = query.or(`admin_id.eq.${adminId},admin_id.is.null`);
-        console.log('Regular admin - fetching admin-specific and global categories');
+      // Super admins and regular admins see all categories
+      if (isSuperAdmin || isAdmin) {
+        // No filter - admins see all categories
+        console.log('Admin - fetching all categories');
       } else {
-        // Non-admins or no adminId - show only global categories
+        // Non-admins - show only global categories
         query = query.is('admin_id', null);
-        console.log('Non-admin or no adminId - fetching only global categories');
+        console.log('Non-admin - fetching only global categories');
       }
 
       const { data, error } = await query.order('name');
