@@ -63,12 +63,12 @@ const GymPhotoManagement = () => {
     <div className="container p-4 max-w-7xl mx-auto">
       <div className="flex items-center gap-3 mb-2">
         <GalleryHorizontal className="h-7 w-7 text-fitness-green" />
-        <h1 className="text-3xl font-bold text-[#000000] tracking-tight">
-          Gerenciamento de Fotos
-        </h1>
+          <h1 className="text-3xl font-bold text-white tracking-tight">
+            Gerenciamento de Fotos
+          </h1>
       </div>
       
-      <p className="text-lg text-[#000000e6] dark:text-gray-300 mb-6 max-w-3xl leading-relaxed">
+      <p className="text-lg text-white dark:text-gray-300 mb-6 max-w-3xl leading-relaxed">
         Aprove ou rejeite fotos enviadas pelos usuários para análise do ambiente da academia.
         Todas as fotos são identificadas com o nome do usuário que as enviou.
       </p>
@@ -153,13 +153,13 @@ interface PhotoGridProps {
 const PhotoGrid = ({ photos, handleApprove, handleReject, setSelectedPhoto, selectedPhoto, searchQuery }: PhotoGridProps) => {
   if (photos.length === 0) {
     return (
-      <div className="text-center py-16 bg-fitness-darkGray/40 rounded-lg">
-        {searchQuery ? (
-          <p className="text-xl text-[#222222] dark:text-gray-300 font-medium">Nenhuma foto encontrada para este usuário</p>
-        ) : (
-          <p className="text-xl text-[#222222] dark:text-gray-300 font-medium">Nenhuma foto encontrada nesta categoria</p>
-        )}
-      </div>
+        <div className="text-center py-16 bg-fitness-darkGray/40 rounded-lg">
+          {searchQuery ? (
+            <p className="text-xl text-white dark:text-gray-300 font-medium">Nenhuma foto encontrada para este usuário</p>
+          ) : (
+            <p className="text-xl text-white dark:text-gray-300 font-medium">Nenhuma foto encontrada nesta categoria</p>
+          )}
+        </div>
     );
   }
   
