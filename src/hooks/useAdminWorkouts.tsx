@@ -284,17 +284,10 @@ export function useAdminWorkouts() {
   const workoutCategoriesQuery = useQuery({
     queryKey: ['admin-workout-categories', adminId],
     queryFn: async () => {
-      let query = supabase
+      const { data, error } = await supabase
         .from('workout_categories')
         .select('*')
         .order('name');
-
-      // Filter by admin_id if not super admin - include global categories (admin_id IS NULL) and admin-specific ones
-      if (!isSuperAdmin && adminId) {
-        query = query.or(`admin_id.is.null,admin_id.eq.${adminId}`);
-      }
-      
-      const { data, error } = await query;
       
       if (error) {
         throw new Error(`Error fetching workout categories: ${error.message}`);
