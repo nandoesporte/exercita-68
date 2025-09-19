@@ -283,35 +283,18 @@ const AppointmentManagement = () => {
                           {format(parseISO(appointment.appointment_date), 'HH:mm')} - {appointment.trainer_name}
                         </div>
                       </div>
-                      {(() => {
-                        const now = new Date();
-                        const appointmentDate = new Date(appointment.appointment_date);
-                        const isInFuture = appointmentDate >= now;
-                        const isScheduled = appointment.status === 'scheduled';
-                        
-                        console.log('Delete button check (calendar):', {
-                          appointmentId: appointment.id,
-                          appointmentDate: appointmentDate.toISOString(),
-                          now: now.toISOString(),
-                          isInFuture,
-                          status: appointment.status,
-                          isScheduled,
-                          shouldShowButton: isInFuture && isScheduled
-                        });
-                        
-                        return (isInFuture && isScheduled) ? (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => {
-                              setSelectedAppointment(appointment);
-                              setIsDeleteDialogOpen(true);
-                            }}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        ) : null;
-                      })()}
+                       {appointment.status === 'scheduled' && (
+                         <Button
+                           variant="ghost"
+                           size="sm"
+                           onClick={() => {
+                             setSelectedAppointment(appointment);
+                             setIsDeleteDialogOpen(true);
+                           }}
+                         >
+                           <Trash2 className="h-4 w-4" />
+                         </Button>
+                       )}
                     </div>
                   ))
                 ) : (
@@ -370,35 +353,18 @@ const AppointmentManagement = () => {
                        appointment.status === 'completed' ? 'Concluída' :
                        appointment.status === 'cancelled' ? 'Cancelada' : appointment.status}
                     </div>
-                    {(() => {
-                      const now = new Date();
-                      const appointmentDate = new Date(appointment.appointment_date);
-                      const isInFuture = appointmentDate >= now;
-                      const isScheduled = appointment.status === 'scheduled';
-                      
-                      console.log('Delete button check (list):', {
-                        appointmentId: appointment.id,
-                        appointmentDate: appointmentDate.toISOString(),
-                        now: now.toISOString(),
-                        isInFuture,
-                        status: appointment.status,
-                        isScheduled,
-                        shouldShowButton: isInFuture && isScheduled
-                      });
-                      
-                      return (isInFuture && isScheduled) ? (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => {
-                            setSelectedAppointment(appointment);
-                            setIsDeleteDialogOpen(true);
-                          }}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      ) : null;
-                    })()}
+                     {appointment.status === 'scheduled' && (
+                       <Button
+                         variant="ghost"
+                         size="sm"
+                         onClick={() => {
+                           setSelectedAppointment(appointment);
+                           setIsDeleteDialogOpen(true);
+                         }}
+                       >
+                         <Trash2 className="h-4 w-4" />
+                       </Button>
+                     )}
                   </div>
                 </div>
               ))}
