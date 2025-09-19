@@ -1677,7 +1677,7 @@ export type Database = {
       }
       admin_delete_user: {
         Args: { user_id: string }
-        Returns: boolean
+        Returns: undefined
       }
       admin_enable_rls: {
         Args: { p_table_name: string }
