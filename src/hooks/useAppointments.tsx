@@ -48,6 +48,8 @@ export function useAppointments() {
         throw new Error(`Error fetching appointments: ${error.message}`);
       }
       
+      console.log('useAppointments - Raw appointments data:', data);
+      
       const now = new Date();
       const upcoming = data.filter(
         appointment => new Date(appointment.appointment_date) >= now
