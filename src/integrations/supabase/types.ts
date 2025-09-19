@@ -1676,7 +1676,7 @@ export type Database = {
         Returns: Json
       }
       admin_delete_user: {
-        Args: { user_id: string }
+        Args: { target_user_id: string }
         Returns: undefined
       }
       admin_enable_rls: {

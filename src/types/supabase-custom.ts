@@ -34,7 +34,7 @@ export type ExtendedDatabase = Database & {
       }
       admin_delete_user: {
         Args: {
-          user_id: string
+          target_user_id: string
         }
         Returns: { success: boolean; message: string }
       }

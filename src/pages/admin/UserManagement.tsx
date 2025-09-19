@@ -159,7 +159,7 @@ const UserManagement = () => {
   const deleteUserMutation = useMutation({
     mutationFn: async (userId: string) => {
       const { error } = await supabase.rpc('admin_delete_user', {
-        user_id: userId,
+        target_user_id: userId,
       });
       
       if (error) throw new Error(error.message);
