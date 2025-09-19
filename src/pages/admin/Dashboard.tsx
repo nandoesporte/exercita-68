@@ -492,12 +492,14 @@ const Dashboard = () => {
               <CalendarIcon className="h-4 w-4" />
               <span>Agendamentos</span>
             </Link>
-            <Link to="/admin/products/create"
-              className="flex items-center justify-center gap-2 bg-secondary text-foreground p-2 rounded-lg hover:bg-muted transition-colors text-center text-sm"
-            >
-              <Gift className="h-4 w-4" />
-              <span>Novo Produto</span>
-            </Link>
+            {isSuperAdmin && (
+              <Link to="/admin/products/create"
+                className="flex items-center justify-center gap-2 bg-secondary text-foreground p-2 rounded-lg hover:bg-muted transition-colors text-center text-sm"
+              >
+                <Gift className="h-4 w-4" />
+                <span>Novo Produto</span>
+              </Link>
+            )}
             <Link to="/admin/photos"
               className="flex items-center justify-center gap-2 bg-secondary text-foreground p-2 rounded-lg hover:bg-muted transition-colors text-center text-sm"
             >
