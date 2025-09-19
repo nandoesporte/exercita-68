@@ -279,16 +279,18 @@ const AppointmentManagement = () => {
                           {format(parseISO(appointment.appointment_date), 'HH:mm')} - {appointment.trainer_name}
                         </div>
                       </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => {
-                          setSelectedAppointment(appointment);
-                          setIsDeleteDialogOpen(true);
-                        }}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      {(new Date(appointment.appointment_date) >= new Date() && appointment.status === 'scheduled') && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            setSelectedAppointment(appointment);
+                            setIsDeleteDialogOpen(true);
+                          }}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      )}
                     </div>
                   ))
                 ) : (
@@ -347,7 +349,7 @@ const AppointmentManagement = () => {
                        appointment.status === 'completed' ? 'Concluída' :
                        appointment.status === 'cancelled' ? 'Cancelada' : appointment.status}
                     </div>
-                    {activeTab === 'upcoming' && (
+                    {(new Date(appointment.appointment_date) >= new Date() && appointment.status === 'scheduled') && (
                       <Button
                         variant="ghost"
                         size="sm"
