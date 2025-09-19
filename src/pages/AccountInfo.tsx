@@ -198,7 +198,7 @@ const AccountInfo = () => {
                   <FormControl>
                     <Input
                       placeholder="Seu nome"
-                      className="bg-fitness-darkGray border-fitness-darkGray/50 text-white"
+                      className="bg-fitness-darkGray border-fitness-darkGray/50 text-black"
                       {...field}
                     />
                   </FormControl>
@@ -216,7 +216,7 @@ const AccountInfo = () => {
                   <FormControl>
                     <Input
                       placeholder="Seu sobrenome"
-                      className="bg-fitness-darkGray border-fitness-darkGray/50 text-white"
+                      className="bg-fitness-darkGray border-fitness-darkGray/50 text-black"
                       {...field}
                     />
                   </FormControl>
@@ -236,7 +236,7 @@ const AccountInfo = () => {
                   <FormControl>
                     <Input
                       placeholder="dd/mm/aaaa"
-                      className="bg-fitness-darkGray border-fitness-darkGray/50 text-white"
+                      className="bg-fitness-darkGray border-fitness-darkGray/50 text-black"
                       {...field}
                     />
                   </FormControl>
@@ -252,7 +252,7 @@ const AccountInfo = () => {
                 <FormItem>
                   <FormLabel>Gênero</FormLabel>
                   <select 
-                    className="w-full rounded border bg-fitness-darkGray border-fitness-darkGray/50 p-2 text-white"
+                    className="w-full rounded border bg-fitness-darkGray border-fitness-darkGray/50 p-2 text-black"
                     value={field.value}
                     onChange={field.onChange}
                   >
@@ -279,7 +279,7 @@ const AccountInfo = () => {
                     <Input
                       type="number"
                       placeholder="70"
-                      className="bg-fitness-darkGray border-fitness-darkGray/50 text-white"
+                      className="bg-fitness-darkGray border-fitness-darkGray/50 text-black"
                       {...field}
                     />
                   </FormControl>
@@ -298,7 +298,7 @@ const AccountInfo = () => {
                     <Input
                       type="number"
                       placeholder="175"
-                      className="bg-fitness-darkGray border-fitness-darkGray/50 text-white"
+                      className="bg-fitness-darkGray border-fitness-darkGray/50 text-black"
                       {...field}
                     />
                   </FormControl>
@@ -315,7 +315,7 @@ const AccountInfo = () => {
               <FormItem>
                 <FormLabel>Objetivo Fitness</FormLabel>
                 <select 
-                  className="w-full rounded border bg-fitness-darkGray border-fitness-darkGray/50 p-2 text-white"
+                  className="w-full rounded border bg-fitness-darkGray border-fitness-darkGray/50 p-2 text-black"
                   value={field.value}
                   onChange={field.onChange}
                 >
