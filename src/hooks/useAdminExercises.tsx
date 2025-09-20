@@ -62,19 +62,8 @@ export function useAdminExercises() {
           `)
           .order('name');
 
-        // Filter by admin_id if not super admin
-        if (!isSuperAdmin && adminId && adminId !== 'super_admin') {
-          // Include both admin-specific exercises and global exercises (admin_id IS NULL)
-          console.log('Adding admin filter for adminId:', adminId);
-          query = query.or(`admin_id.eq.${adminId},admin_id.is.null`);
-        } else if (isSuperAdmin) {
-          // Super admin sees all exercises
-          console.log('Super admin - showing all exercises');
-        } else {
-          // No admin ID, show only global exercises
-          console.log('No admin ID - showing only global exercises');
-          query = query.is('admin_id', null);
-        }
+        // Remove admin_id filter so all admins can see all exercises
+        console.log('Showing all exercises for admin access');
         
         const { data, error } = await query;
         
