@@ -67,11 +67,11 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				'chart-1': 'hsl(18 85% 60%)',
-				'chart-2': 'hsl(142 76% 46%)',
-				'chart-3': 'hsl(210 80% 60%)',
-				'chart-4': 'hsl(280 60% 60%)',
-				'chart-5': 'hsl(340 75% 55%)'
+				'chart-1': 'hsl(270 60% 60%)',
+				'chart-2': 'hsl(330 70% 65%)',
+				'chart-3': 'hsl(160 60% 55%)',
+				'chart-4': 'hsl(290 55% 60%)',
+				'chart-5': 'hsl(310 65% 60%)'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
