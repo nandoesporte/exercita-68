@@ -135,8 +135,8 @@ const Login = () => {
           <div className="flex items-center justify-center mb-4">
             <ExercitaLogo width={64} height={64} />
           </div>
-          <h1 className="font-extrabold text-3xl text-primary">Exercita</h1>
-          <p className="text-muted-foreground mt-2">Seu companheiro de fitness pessoal</p>
+          <h1 className="font-extrabold text-3xl text-primary">ILIVI</h1>
+          <p className="text-muted-foreground mt-2">Instituto Lipedema & Vida</p>
         </div>
 
         <Card className="border-muted/30 shadow-lg">

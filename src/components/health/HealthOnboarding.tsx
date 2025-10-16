@@ -27,7 +27,7 @@ export function HealthOnboarding({ onComplete, className }: HealthOnboardingProp
   const steps: OnboardingStep[] = [
     {
       id: 'welcome',
-      title: 'Bem-vindo ao Exercita Health',
+      title: 'Bem-vindo ao ILIVI Health',
       description: 'Sincronize seus dados de saúde e acompanhe seu progresso automaticamente',
       icon: <Heart className="h-6 w-6 text-primary" />,
       completed: false
@@ -37,7 +37,7 @@ export function HealthOnboarding({ onComplete, className }: HealthOnboardingProp
       title: isNative ? 'Abrir App Companion' : 'Instalar App Móvel',
       description: isNative 
         ? 'Use o app companion para registrar dispositivos e configurar sincronização em segundo plano'
-        : 'Para acessar dados de saúde, instale o app móvel do Exercita',
+        : 'Para acessar dados de saúde, instale o app móvel do ILIVI',
       icon: <Smartphone className="h-6 w-6 text-primary" />,
       completed: false
     },
@@ -155,7 +155,7 @@ export function HealthOnboarding({ onComplete, className }: HealthOnboardingProp
           {currentStep === 1 && !isNative && (
             <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4">
               <p className="text-blue-400 text-sm">
-                💡 Para acessar dados de saúde reais, você precisa usar o app móvel nativo do Exercita em seu smartphone.
+                💡 Para acessar dados de saúde reais, você precisa usar o app móvel nativo do ILIVI em seu smartphone.
               </p>
             </div>
           )}

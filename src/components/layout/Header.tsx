@@ -89,7 +89,7 @@ const Header: React.FC<HeaderProps> = ({
         <div className="container flex h-16 items-center justify-between px-4">
           <div className="flex items-center gap-3">
             <ExercitaLogo width={40} height={40} />
-            <span className="font-extrabold text-xl text-white">Exercita</span>
+            <span className="font-extrabold text-xl text-white">ILIVI</span>
           </div>
           <div className="animate-pulse w-8 h-8 bg-fitness-darkGray rounded-full"></div>
         </div>
@@ -132,7 +132,7 @@ const Header: React.FC<HeaderProps> = ({
         <div className={`absolute left-1/2 transform -translate-x-1/2 flex items-center ${!isMobile && 'hidden'}`}>
           <Link to="/" className="flex items-center gap-2">
             <ExercitaLogo width={40} height={40} />
-            <span className="font-extrabold text-xl text-white">Exercita</span>
+            <span className="font-extrabold text-xl text-white">ILIVI</span>
           </Link>
         </div>
 
@@ -142,7 +142,7 @@ const Header: React.FC<HeaderProps> = ({
             <div className="flex items-center gap-6">
               <Link to="/" className="flex items-center gap-2">
                 <ExercitaLogo width={40} height={40} />
-                <span className="font-extrabold text-xl text-white">Exercita</span>
+                <span className="font-extrabold text-xl text-white">ILIVI</span>
               </Link>
               
               <nav className="flex items-center ml-6 space-x-4">

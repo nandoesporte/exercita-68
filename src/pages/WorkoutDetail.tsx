@@ -383,11 +383,11 @@ const WorkoutDetail = () => {
           <div className={`absolute left-1/2 transform -translate-x-1/2 flex items-center ${!isMobile && 'hidden'}`}>
             <Link to="/" className="flex items-center gap-2">
               <img 
-                src="/lovable-uploads/f79e9b59-2131-4427-bbe2-ac5f884ef83a.png"
-                alt="Exercita Logo"
+                src="/ilivi-logo.png"
+                alt="ILIVI Logo"
                 className="h-10 w-10"
               />
-              <span className="font-extrabold text-xl text-white">Exercita</span>
+              <span className="font-extrabold text-xl text-white">ILIVI</span>
             </Link>
           </div>
 
@@ -396,11 +396,11 @@ const WorkoutDetail = () => {
             <div className="flex-1 flex justify-center">
               <Link to="/" className="flex items-center gap-2">
                 <img 
-                  src="/lovable-uploads/f79e9b59-2131-4427-bbe2-ac5f884ef83a.png"
-                  alt="Exercita Logo"
+                  src="/ilivi-logo.png"
+                  alt="ILIVI Logo"
                   className="h-10 w-10"
                 />
-                <span className="font-extrabold text-xl text-white">Exercita</span>
+                <span className="font-extrabold text-xl text-white">ILIVI</span>
               </Link>
             </div>
           )}
