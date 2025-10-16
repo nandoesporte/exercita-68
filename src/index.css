@@ -22,25 +22,31 @@
     --muted: 270 35% 90%;
     --muted-foreground: 270 15% 45%;
 
-    --accent: 330 70% 60%;
+    --accent: 165 55% 55%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --success: 160 60% 50%;
+    --success: 165 55% 55%;
     --success-foreground: 0 0% 100%;
 
     --border: 270 25% 88%;
     --input: 270 25% 88%;
-    --ring: 270 60% 55%;
+    --ring: 165 55% 55%;
 
     --radius: 0.75rem;
 
+    /* Verde turquesa da logo */
+    --turquoise: 165 55% 55%;
+    --turquoise-light: 165 50% 65%;
+    --turquoise-dark: 165 60% 45%;
+
     /* Gradients */
     --gradient-primary: linear-gradient(135deg, hsl(270 60% 55%), hsl(330 70% 60%));
-    --gradient-accent: linear-gradient(135deg, hsl(330 70% 60%), hsl(0 70% 65%));
-    --gradient-success: linear-gradient(135deg, hsl(160 60% 50%), hsl(180 55% 55%));
+    --gradient-accent: linear-gradient(135deg, hsl(165 55% 55%), hsl(180 60% 60%));
+    --gradient-success: linear-gradient(135deg, hsl(165 55% 55%), hsl(180 55% 55%));
+    --gradient-turquoise: linear-gradient(135deg, hsl(165 60% 45%), hsl(165 50% 65%));
 
     --sidebar-background: 270 50% 98%;
     --sidebar-foreground: 270 30% 20%;
@@ -49,7 +55,7 @@
     --sidebar-accent: 270 35% 93%;
     --sidebar-accent-foreground: 270 30% 20%;
     --sidebar-border: 270 25% 88%;
-    --sidebar-ring: 270 60% 55%;
+    --sidebar-ring: 165 55% 55%;
   }
 
   .dark {
@@ -71,23 +77,29 @@
     --muted: 270 30% 22%;
     --muted-foreground: 270 15% 65%;
 
-    --accent: 330 70% 65%;
+    --accent: 165 55% 60%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 70% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --success: 160 60% 55%;
+    --success: 165 55% 60%;
     --success-foreground: 0 0% 100%;
 
     --border: 270 30% 28%;
     --input: 270 30% 28%;
-    --ring: 270 60% 60%;
+    --ring: 165 55% 60%;
+
+    /* Verde turquesa da logo */
+    --turquoise: 165 55% 60%;
+    --turquoise-light: 165 50% 70%;
+    --turquoise-dark: 165 60% 50%;
 
     /* Dark mode gradients */
     --gradient-primary: linear-gradient(135deg, hsl(270 60% 60%), hsl(330 70% 65%));
-    --gradient-accent: linear-gradient(135deg, hsl(330 70% 65%), hsl(0 70% 70%));
-    --gradient-success: linear-gradient(135deg, hsl(160 60% 55%), hsl(180 55% 60%));
+    --gradient-accent: linear-gradient(135deg, hsl(165 55% 60%), hsl(180 60% 65%));
+    --gradient-success: linear-gradient(135deg, hsl(165 55% 60%), hsl(180 55% 60%));
+    --gradient-turquoise: linear-gradient(135deg, hsl(165 60% 50%), hsl(165 50% 70%));
 
     --sidebar-background: 270 45% 15%;
     --sidebar-foreground: 270 20% 90%;
@@ -96,7 +108,7 @@
     --sidebar-accent: 270 35% 22%;
     --sidebar-accent-foreground: 270 20% 90%;
     --sidebar-border: 270 30% 28%;
-    --sidebar-ring: 270 60% 60%;
+    --sidebar-ring: 165 55% 60%;
   }
 }
 
@@ -333,6 +345,39 @@
 
   .bg-gradient-success {
     background: var(--gradient-success);
+  }
+
+  .bg-gradient-turquoise {
+    background: var(--gradient-turquoise);
+  }
+
+  /* Verde turquesa utilities */
+  .text-turquoise {
+    color: hsl(var(--turquoise));
+  }
+
+  .border-turquoise {
+    border-color: hsl(var(--turquoise));
+  }
+
+  .bg-turquoise {
+    background-color: hsl(var(--turquoise));
+  }
+
+  /* Animação de brilho turquesa */
+  .glow-turquoise {
+    box-shadow: 0 0 20px hsl(var(--turquoise) / 0.4), 0 0 40px hsl(var(--turquoise) / 0.2);
+  }
+
+  /* Hover com verde turquesa */
+  .hover-turquoise:hover {
+    color: hsl(var(--turquoise));
+    transition: color 0.3s ease;
+  }
+
+  .hover-border-turquoise:hover {
+    border-color: hsl(var(--turquoise));
+    transition: border-color 0.3s ease;
   }
 }
 

@@ -68,10 +68,15 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				'chart-1': 'hsl(270 60% 60%)',
-				'chart-2': 'hsl(330 70% 65%)',
-				'chart-3': 'hsl(160 60% 55%)',
+				'chart-2': 'hsl(165 55% 55%)',
+				'chart-3': 'hsl(330 70% 65%)',
 				'chart-4': 'hsl(290 55% 60%)',
-				'chart-5': 'hsl(310 65% 60%)'
+				'chart-5': 'hsl(180 60% 60%)',
+				turquoise: {
+					DEFAULT: 'hsl(var(--turquoise))',
+					light: 'hsl(var(--turquoise-light))',
+					dark: 'hsl(var(--turquoise-dark))'
+				}
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
