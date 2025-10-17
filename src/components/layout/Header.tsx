@@ -148,50 +148,50 @@ const Header: React.FC<HeaderProps> = ({
               <nav className="flex items-center ml-6 space-x-4">
                 <Link 
                   to="/" 
-                  className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                  className={`px-3 py-2 text-sm font-medium rounded-md transition-all duration-200 active:scale-95 ${
                     location.pathname === '/' 
-                     ? 'text-primary bg-fitness-darkGray/30' 
-                       : 'text-muted-foreground hover:text-white hover:bg-fitness-darkGray/20'
+                     ? 'text-turquoise bg-turquoise/10 shadow-sm' 
+                       : 'text-muted-foreground hover:text-turquoise hover:bg-turquoise/5'
                   }`}
                 >
                   Início
                 </Link>
                 <Link 
                   to={`/workout/${firstWorkoutId}`}
-                  className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                  className={`px-3 py-2 text-sm font-medium rounded-md transition-all duration-200 active:scale-95 ${
                     location.pathname.startsWith('/workout/') 
-                     ? 'text-primary bg-fitness-darkGray/30' 
-                       : 'text-muted-foreground hover:text-white hover:bg-fitness-darkGray/20'
+                     ? 'text-turquoise bg-turquoise/10 shadow-sm' 
+                       : 'text-muted-foreground hover:text-turquoise hover:bg-turquoise/5'
                   }`}
                 >
                   Treinos
                 </Link>
                 <Link 
                   to="/schedule"
-                  className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                  className={`px-3 py-2 text-sm font-medium rounded-md transition-all duration-200 active:scale-95 ${
                     location.pathname === '/schedule' 
-                     ? 'text-primary bg-fitness-darkGray/30' 
-                       : 'text-muted-foreground hover:text-white hover:bg-fitness-darkGray/20'
+                     ? 'text-turquoise bg-turquoise/10 shadow-sm' 
+                       : 'text-muted-foreground hover:text-turquoise hover:bg-turquoise/5'
                   }`}
                 >
                   Agendar
                 </Link>
                 <Link 
                   to="/store"
-                  className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                  className={`px-3 py-2 text-sm font-medium rounded-md transition-all duration-200 active:scale-95 ${
                     location.pathname.startsWith('/store') 
-                     ? 'text-primary bg-fitness-darkGray/30' 
-                       : 'text-muted-foreground hover:text-white hover:bg-fitness-darkGray/20'
+                     ? 'text-turquoise bg-turquoise/10 shadow-sm' 
+                       : 'text-muted-foreground hover:text-turquoise hover:bg-turquoise/5'
                   }`}
                 >
                   Loja
                 </Link>
                 <Link 
                   to="/history" 
-                  className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                  className={`px-3 py-2 text-sm font-medium rounded-md transition-all duration-200 active:scale-95 ${
                     location.pathname === '/history' 
-                     ? 'text-primary bg-fitness-darkGray/30' 
-                       : 'text-muted-foreground hover:text-white hover:bg-fitness-darkGray/20'
+                     ? 'text-turquoise bg-turquoise/10 shadow-sm' 
+                       : 'text-muted-foreground hover:text-turquoise hover:bg-turquoise/5'
                   }`}
                 >
                   Histórico
@@ -199,10 +199,10 @@ const Header: React.FC<HeaderProps> = ({
                 {isAdmin && (
                   <Link 
                     to="/admin" 
-                    className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                    className={`px-3 py-2 text-sm font-medium rounded-md transition-all duration-200 active:scale-95 ${
                       location.pathname.startsWith('/admin') 
-                       ? 'text-primary bg-fitness-darkGray/30' 
-                         : 'text-muted-foreground hover:text-white hover:bg-fitness-darkGray/20'
+                       ? 'text-turquoise bg-turquoise/10 shadow-sm' 
+                         : 'text-muted-foreground hover:text-turquoise hover:bg-turquoise/5'
                     }`}
                   >
                     Admin

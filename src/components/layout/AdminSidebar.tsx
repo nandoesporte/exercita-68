@@ -206,7 +206,7 @@ const AdminSidebar = ({ onNavItemClick }: AdminSidebarProps = {}) => {
                 <Button
                   key={item.title}
                   variant="ghost"
-                  className={`flex items-center w-full justify-start py-3 px-3 rounded-lg hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sidebar-foreground text-sm font-medium transition-all duration-200 active:scale-[0.98] ${
+                  className={`flex items-center w-full justify-start py-3 px-3 rounded-lg hover:bg-turquoise/10 hover:text-turquoise hover:border-turquoise/30 hover:shadow-sm text-sidebar-foreground text-sm font-medium transition-all duration-200 active:scale-[0.98] ${
                     isExpanded ? "h-auto min-h-[44px]" : "justify-center h-12 w-12 mx-auto"
                   }`}
                   onClick={() => handleNavigation(item.to)}

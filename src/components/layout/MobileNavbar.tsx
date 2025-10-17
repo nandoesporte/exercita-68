@@ -51,13 +51,13 @@ const MobileNavbar = () => {
               key={item.path} 
               to={item.path}
               className={cn(
-                "flex flex-col items-center justify-center py-2 px-4 rounded-2xl transition-all duration-200",
+                "flex flex-col items-center justify-center py-2 px-4 rounded-2xl transition-all duration-200 active:scale-95",
                 isActive 
-                  ? "text-orange-500 bg-gray-800/50" 
-                  : "text-gray-200 hover:text-white"
+                  ? "text-turquoise bg-turquoise/10 glow-turquoise" 
+                  : "text-gray-200 hover:text-turquoise hover:bg-turquoise/5"
               )}
             >
-              <item.icon size={22} className={cn("mb-1", isActive ? "text-orange-500" : "text-gray-300")} />
+              <item.icon size={22} className={cn("mb-1", isActive ? "text-turquoise" : "text-gray-300")} />
               <span className="text-sm font-medium mt-0.5">{item.label}</span>
             </Link>
           );
