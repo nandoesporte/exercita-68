@@ -2,7 +2,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'app.lovable.ed6ff2f23934447facfe5011959465fb',
-  appName: 'exercita-68',
+  appName: 'ILIVI',
   webDir: 'dist',
   server: {
     androidScheme: 'https',

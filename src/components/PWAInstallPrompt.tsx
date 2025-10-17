@@ -89,10 +89,10 @@ const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ onClose }) => {
       exit={{ opacity: 0, y: 20 }}
       className="fixed bottom-4 left-4 right-4 z-50"
     >
-      <Card className="border border-primary/20 bg-black/95 backdrop-blur-sm">
+      <Card className="border border-turquoise/30 bg-card backdrop-blur-sm shadow-lg">
         <button 
           onClick={handleClose} 
-          className="absolute right-2 top-2 p-1 text-muted-foreground hover:text-foreground"
+          className="absolute right-2 top-2 p-1 text-muted-foreground hover:text-turquoise transition-colors"
         >
           <X size={18} />
         </button>
@@ -107,9 +107,9 @@ const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ onClose }) => {
               />
             </div>
             <div className="flex-1">
-              <h3 className="font-bold text-foreground">Instale o aplicativo</h3>
+              <h3 className="font-bold text-foreground">Instale o aplicativo ILIVI</h3>
               <p className="text-sm text-muted-foreground">
-                Acesse rapidamente e treine mesmo offline
+                Acesse rapidamente e use mesmo offline
               </p>
             </div>
           </div>
@@ -117,14 +117,15 @@ const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ onClose }) => {
           <div className="mt-4 flex gap-3">
             <Button 
               onClick={handleInstall}
-              className="flex-1 bg-primary hover:bg-primary/90"
+              variant="turquoise"
+              className="flex-1"
             >
               <Download className="mr-2 h-4 w-4" /> Instalar App
             </Button>
             <Button 
               onClick={handleClose}
               variant="outline" 
-              className="border-border text-muted-foreground hover:bg-accent"
+              className="border-border text-muted-foreground hover:text-turquoise hover:border-turquoise"
             >
               Agora não
             </Button>

@@ -2,11 +2,11 @@
 {
   "name": "ILIVI - Instituto Lipedema & Vida",
   "short_name": "ILIVI",
-  "description": "Instituto Lipedema & Vida - Seu companheiro personalizado para saúde, bem-estar e qualidade de vida",
+  "description": "Instituto Lipedema & Vida - Sua plataforma de saúde, bem-estar e qualidade de vida",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#7C3AED",
-  "theme_color": "#7C3AED",
+  "background_color": "#1a0f2e",
+  "theme_color": "#9333ea",
   "orientation": "portrait-primary",
   "icons": [
     {

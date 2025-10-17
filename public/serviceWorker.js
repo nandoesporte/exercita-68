@@ -1,11 +1,10 @@
 
-const CACHE_NAME = "exercita-pwa-v1";
+const CACHE_NAME = "ilivi-pwa-v1";
 const urlsToCache = [
   "/",
   "/index.html",
   "/manifest.json",
-  "/icons/icon-192x192.png",
-  "/icons/icon-512x512.png",
+  "/ilivi-logo.png",
 ];
 
 // Instalação do Service Worker
@@ -72,8 +71,8 @@ self.addEventListener('push', (event) => {
     const data = event.data.json();
     const options = {
       body: data.body,
-      icon: 'icons/icon-192x192.png',
-      badge: 'icons/icon-72x72.png',
+      icon: '/ilivi-logo.png',
+      badge: '/ilivi-logo.png',
       data: data.url
     };
     
