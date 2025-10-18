@@ -64,6 +64,8 @@ import Health from "@/pages/Health";
 import RunningPlans from "@/pages/RunningPlans";
 import Blog from "@/pages/Blog";
 import BlogPostDetail from "@/pages/BlogPostDetail";
+import BlogManagement from "@/pages/admin/BlogManagement";
+import BlogCategoryManagement from "@/pages/admin/BlogCategoryManagement";
 import SubscriptionManagement from "@/pages/admin/SubscriptionManagement";
 import HealthIntegrationManagement from "@/pages/admin/HealthIntegrationManagement";
 
@@ -95,8 +97,11 @@ const App = () => {
               <Route path="/appointments" element={<Appointments />} />
               
               <Route path="/running-plans" element={<RunningPlans />} />
+              
+              {/* Blog Routes */}
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogPostDetail />} />
+              
               <Route path="/account" element={<AccountInfo />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/workout-history" element={<WorkoutHistory />} />
@@ -147,6 +152,9 @@ const App = () => {
               <Route path="subscriptions" element={<SubscriptionManagement />} />
               {/* Health Integration Management - Super Admin only */}
               <Route path="health-integrations" element={<HealthIntegrationManagement />} />
+              {/* Blog Management - Super Admin only */}
+              <Route path="blog" element={<BlogManagement />} />
+              <Route path="blog-categories" element={<BlogCategoryManagement />} />
             </Route>
             
             {/* 404 */}

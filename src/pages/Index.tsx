@@ -21,6 +21,7 @@ import { useWorkoutHistory } from '@/hooks/useWorkoutHistory';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { HealthLoading } from '@/components/ui/health-loading';
+import LatestNewsSection from '@/components/blog/LatestNewsSection';
 
 const Index = () => {
   const { user, isAdmin } = useAuth();
@@ -266,6 +267,9 @@ const Index = () => {
           </CardContent>
         </Card>
       </section>
+      
+      {/* Últimas Notícias */}
+      <LatestNewsSection />
       
       {/* Minha Academia Seção */}
       <section className="mb-8">

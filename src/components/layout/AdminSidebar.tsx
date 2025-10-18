@@ -22,6 +22,7 @@ import {
   Wallet,
   HeartHandshake,
   History,
+  BookOpen,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -153,6 +154,12 @@ const AdminSidebar = ({ onNavItemClick }: AdminSidebarProps = {}) => {
       title: 'Integrações de Saúde',
       icon: <HeartHandshake className="h-4 w-4" />,
       to: '/admin/health-integrations'
+    }] : []),
+    // Only show Blog Management for Super Admins
+    ...(isSuperAdmin ? [{
+      title: 'Gerenciar Blog',
+      icon: <BookOpen className="h-4 w-4" />,
+      to: '/admin/blog'
     }] : []),
     // Show subscription management for all admins
     {
