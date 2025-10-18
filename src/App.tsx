@@ -62,6 +62,8 @@ import AdminWorkoutHistory from "@/pages/admin/AdminWorkoutHistory";
 import ProtectedAdminWorkoutHistory from "@/pages/admin/ProtectedAdminWorkoutHistory";
 import Health from "@/pages/Health";
 import RunningPlans from "@/pages/RunningPlans";
+import Blog from "@/pages/Blog";
+import BlogPostDetail from "@/pages/BlogPostDetail";
 import SubscriptionManagement from "@/pages/admin/SubscriptionManagement";
 import HealthIntegrationManagement from "@/pages/admin/HealthIntegrationManagement";
 
@@ -93,6 +95,8 @@ const App = () => {
               <Route path="/appointments" element={<Appointments />} />
               
               <Route path="/running-plans" element={<RunningPlans />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:slug" element={<BlogPostDetail />} />
               <Route path="/account" element={<AccountInfo />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/workout-history" element={<WorkoutHistory />} />

@@ -271,6 +271,162 @@ export type Database = {
           },
         ]
       }
+      blog_categories: {
+        Row: {
+          color: string | null
+          created_at: string
+          description: string | null
+          icon: string | null
+          id: string
+          name: string
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name: string
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name?: string
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      blog_posts: {
+        Row: {
+          admin_id: string | null
+          author_id: string | null
+          category_id: string | null
+          content: string
+          content_type: string
+          created_at: string
+          excerpt: string | null
+          featured_image: string | null
+          id: string
+          is_published: boolean | null
+          media_duration: number | null
+          media_url: string | null
+          published_at: string | null
+          reading_time: number | null
+          slug: string
+          tags: string[] | null
+          title: string
+          updated_at: string
+          views_count: number | null
+        }
+        Insert: {
+          admin_id?: string | null
+          author_id?: string | null
+          category_id?: string | null
+          content: string
+          content_type?: string
+          created_at?: string
+          excerpt?: string | null
+          featured_image?: string | null
+          id?: string
+          is_published?: boolean | null
+          media_duration?: number | null
+          media_url?: string | null
+          published_at?: string | null
+          reading_time?: number | null
+          slug: string
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+          views_count?: number | null
+        }
+        Update: {
+          admin_id?: string | null
+          author_id?: string | null
+          category_id?: string | null
+          content?: string
+          content_type?: string
+          created_at?: string
+          excerpt?: string | null
+          featured_image?: string | null
+          id?: string
+          is_published?: boolean | null
+          media_duration?: number | null
+          media_url?: string | null
+          published_at?: string | null
+          reading_time?: number | null
+          slug?: string
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+          views_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_posts_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "blog_posts_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "blog_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      blog_recommendations: {
+        Row: {
+          created_at: string
+          id: string
+          post_id: string
+          reason: string | null
+          score: number | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          post_id: string
+          reason?: string | null
+          score?: number | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          post_id?: string
+          reason?: string | null
+          score?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_recommendations_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "blog_posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "blog_recommendations_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       device_keys: {
         Row: {
           app_version: string | null
@@ -1225,6 +1381,60 @@ export type Database = {
         }
         Relationships: []
       }
+      user_blog_interactions: {
+        Row: {
+          created_at: string
+          id: string
+          is_read: boolean | null
+          is_saved: boolean | null
+          post_id: string
+          read_at: string | null
+          reading_progress: number | null
+          saved_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_read?: boolean | null
+          is_saved?: boolean | null
+          post_id: string
+          read_at?: string | null
+          reading_progress?: number | null
+          saved_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_read?: boolean | null
+          is_saved?: boolean | null
+          post_id?: string
+          read_at?: string | null
+          reading_progress?: number | null
+          saved_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_blog_interactions_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "blog_posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_blog_interactions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_gym_photos: {
         Row: {
           admin_id: string | null
@@ -1669,7 +1879,7 @@ export type Database = {
         Args:
           | { user_data: Json }
           | { user_email: string; user_metadata?: Json; user_password: string }
-        Returns: boolean
+        Returns: Json
       }
       admin_delete_pix_key: {
         Args: { p_pix_key_id: string }
