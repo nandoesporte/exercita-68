@@ -180,7 +180,7 @@ export default function BlogPostDetail() {
 
       {/* Content */}
       <div 
-        className="prose prose-invert max-w-none"
+        className="prose prose-invert max-w-none text-justify text-base leading-relaxed"
         dangerouslySetInnerHTML={{ __html: post.content }}
       />
 
