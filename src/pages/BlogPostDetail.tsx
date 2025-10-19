@@ -1,13 +1,15 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useBlogPost, useToggleSavePost, useMarkAsRead, useUserBlogInteractions } from '@/hooks/useBlogPosts';
+import { useBlogRecommendations } from '@/hooks/useBlogRecommendations';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ArrowLeft, Clock, Eye, Bookmark, BookmarkCheck, Share2 } from 'lucide-react';
+import { ArrowLeft, Clock, Eye, Bookmark, BookmarkCheck, Share2, Sparkles } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useEffect } from 'react';
 import { toast } from 'sonner';
+import { BlogPostCard } from '@/components/blog/BlogPostCard';
 
 export default function BlogPostDetail() {
   const { slug } = useParams<{ slug: string }>();
@@ -16,6 +18,7 @@ export default function BlogPostDetail() {
   const markAsRead = useMarkAsRead();
   const toggleSave = useToggleSavePost();
   const { data: interactions } = useUserBlogInteractions();
+  const { data: recommendedPosts = [] } = useBlogRecommendations(post?.id);
 
   const interaction = interactions?.find(i => i.post_id === post?.id);
   const isSaved = interaction?.is_saved || false;
@@ -180,7 +183,12 @@ export default function BlogPostDetail() {
 
       {/* Content */}
       <div 
-        className="prose prose-invert max-w-none text-justify text-base leading-relaxed"
+        className="prose prose-lg prose-invert max-w-none text-justify leading-relaxed
+                   prose-p:mb-6 prose-p:leading-8
+                   prose-headings:mb-4 prose-headings:mt-8
+                   prose-ul:my-6 prose-ol:my-6
+                   prose-li:my-2
+                   prose-img:rounded-lg prose-img:my-8"
         dangerouslySetInnerHTML={{ __html: post.content }}
       />
 
@@ -193,6 +201,24 @@ export default function BlogPostDetail() {
               <Badge key={tag} variant="secondary">
                 {tag}
               </Badge>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Recommended Posts */}
+      {recommendedPosts.length > 0 && (
+        <div className="pt-8 mt-8 border-t border-border space-y-6">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-6 h-6 text-turquoise" />
+            <h2 className="text-2xl font-bold">Recomendado para Você</h2>
+          </div>
+          <p className="text-muted-foreground">
+            Com base no seu histórico de leitura e interesses
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {recommendedPosts.map(recommendedPost => (
+              <BlogPostCard key={recommendedPost.id} post={recommendedPost} />
             ))}
           </div>
         </div>

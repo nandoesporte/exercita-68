@@ -64,6 +64,7 @@ import Health from "@/pages/Health";
 import RunningPlans from "@/pages/RunningPlans";
 import Blog from "@/pages/Blog";
 import BlogPostDetail from "@/pages/BlogPostDetail";
+import SavedPosts from "@/pages/SavedPosts";
 import BlogManagement from "@/pages/admin/BlogManagement";
 import BlogCategoryManagement from "@/pages/admin/BlogCategoryManagement";
 import SubscriptionManagement from "@/pages/admin/SubscriptionManagement";
@@ -101,6 +102,7 @@ const App = () => {
               {/* Blog Routes */}
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogPostDetail />} />
+              <Route path="/blog-saved" element={<SavedPosts />} />
               
               <Route path="/account" element={<AccountInfo />} />
               <Route path="/settings" element={<Settings />} />
