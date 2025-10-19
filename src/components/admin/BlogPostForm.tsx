@@ -88,6 +88,7 @@ const BlogPostForm: React.FC<BlogPostFormProps> = ({ onSubmit, isLoading, initia
 
     onSubmit({
       ...formData,
+      category_id: formData.category_id || null,
       tags: tagsArray,
       reading_time: Number(formData.reading_time),
     });
