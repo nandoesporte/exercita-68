@@ -222,6 +222,7 @@ export type Database = {
           description: string | null
           duration: number
           id: string
+          professional_id: string | null
           status: string
           title: string
           trainer_name: string
@@ -235,6 +236,7 @@ export type Database = {
           description?: string | null
           duration: number
           id?: string
+          professional_id?: string | null
           status?: string
           title: string
           trainer_name: string
@@ -248,6 +250,7 @@ export type Database = {
           description?: string | null
           duration?: number
           id?: string
+          professional_id?: string | null
           status?: string
           title?: string
           trainer_name?: string
@@ -260,6 +263,13 @@ export type Database = {
             columns: ["admin_id"]
             isOneToOne: false
             referencedRelation: "admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "appointments_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "healthcare_professionals"
             referencedColumns: ["id"]
           },
           {
@@ -874,6 +884,65 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      healthcare_professionals: {
+        Row: {
+          admin_id: string | null
+          created_at: string
+          credentials: string | null
+          description: string | null
+          email: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          phone: string | null
+          photo_url: string | null
+          specialty: string
+          sub_specialty: string | null
+          updated_at: string
+          whatsapp: string | null
+        }
+        Insert: {
+          admin_id?: string | null
+          created_at?: string
+          credentials?: string | null
+          description?: string | null
+          email?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          phone?: string | null
+          photo_url?: string | null
+          specialty: string
+          sub_specialty?: string | null
+          updated_at?: string
+          whatsapp?: string | null
+        }
+        Update: {
+          admin_id?: string | null
+          created_at?: string
+          credentials?: string | null
+          description?: string | null
+          email?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          phone?: string | null
+          photo_url?: string | null
+          specialty?: string
+          sub_specialty?: string | null
+          updated_at?: string
+          whatsapp?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "healthcare_professionals_admin_id_fkey"
+            columns: ["admin_id"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       kiwify_webhook_logs: {
         Row: {

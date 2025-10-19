@@ -131,6 +131,12 @@ const AdminSidebar = ({ onNavItemClick }: AdminSidebarProps = {}) => {
       icon: <CalendarRange className="h-4 w-4" />,
       to: '/admin/appointments'
     }] : []),
+    // Only show if user has appointments permission (healthcare professionals management)
+    ...(hasPermission('manage_appointments') ? [{
+      title: 'Profissionais de Saúde',
+      icon: <HeartHandshake className="h-4 w-4" />,
+      to: '/admin/healthcare-professionals'
+    }] : []),
     // Only show if user has payment methods permission
     ...(hasPermission('manage_payment_methods') ? [{
       title: 'Métodos de Pagamento',

@@ -25,6 +25,7 @@ import ProductDetail from "@/pages/ProductDetail";
 import Schedule from "@/pages/Schedule";
 import GymPhotos from "@/components/GymPhotos";
 import Appointments from "@/pages/Appointments";
+import AppointmentsNew from "@/pages/AppointmentsNew";
 
 // Profile related pages
 import AccountInfo from "@/pages/AccountInfo";
@@ -67,6 +68,7 @@ import BlogPostDetail from "@/pages/BlogPostDetail";
 import SavedPosts from "@/pages/SavedPosts";
 import BlogManagement from "@/pages/admin/BlogManagement";
 import BlogCategoryManagement from "@/pages/admin/BlogCategoryManagement";
+import HealthcareProfessionalManagement from "@/pages/admin/HealthcareProfessionalManagement";
 import SubscriptionManagement from "@/pages/admin/SubscriptionManagement";
 import HealthIntegrationManagement from "@/pages/admin/HealthIntegrationManagement";
 
@@ -95,7 +97,7 @@ const App = () => {
               <Route path="/store/:id" element={<ProductDetail />} />
               <Route path="/schedule" element={<Schedule />} />
               <Route path="/gym-photos" element={<GymPhotos />} />
-              <Route path="/appointments" element={<Appointments />} />
+              <Route path="/appointments" element={<AppointmentsNew />} />
               
               <Route path="/running-plans" element={<RunningPlans />} />
               
@@ -138,6 +140,7 @@ const App = () => {
               {/* Scheduling */}
               <Route path="schedule" element={<ProtectedScheduleManagement />} />
               <Route path="appointments" element={<ProtectedAppointmentManagement />} />
+              <Route path="healthcare-professionals" element={<HealthcareProfessionalManagement />} />
               {/* Payment */}
               <Route path="payment-methods" element={<ProtectedPaymentMethodManagement />} />
               {/* Users */}
