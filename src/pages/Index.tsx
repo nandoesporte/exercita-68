@@ -112,7 +112,7 @@ const Index = () => {
         <p className="text-xl text-muted-foreground">
           {hasAssignedWorkout 
             ? 'Seus planos personalizados estão prontos' 
-            : 'Agende uma consultoria para começar'}
+            : 'Agende uma consulta para começar'}
         </p>
         
         {/* Admin button - only visible for admin users on mobile */}
@@ -182,7 +182,7 @@ const Index = () => {
                   </div>
                   <h3 className="text-lg sm:text-xl font-bold mb-2 text-card-foreground">Você ainda não tem um treino personalizado</h3>
                   <p className="text-muted-foreground text-sm sm:text-base">
-                    Agende uma consultoria com nossos especialistas e receba um plano de treino personalizado para suas necessidades.
+                    Agende uma consulta com nossos especialistas e receba um plano de treino personalizado para suas necessidades.
                   </p>
                 </div>
                 
@@ -190,9 +190,9 @@ const Index = () => {
                   className="w-full mt-3 sm:mt-4 bg-primary hover:bg-primary/90 text-primary-foreground text-sm sm:text-lg font-semibold h-12 sm:h-14 rounded-xl"
                   asChild
                 >
-                  <Link to="/schedule">
+                  <Link to="/appointments">
                     <Calendar className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-                    Agendar Consultoria
+                    Agendar Consulta
                   </Link>
                 </Button>
               </div>
@@ -201,11 +201,11 @@ const Index = () => {
         )}
       </section>
       
-      {/* Nova Seção: Consultoria Online */}
+      {/* Nova Seção: Consulta Online */}
       <section className="mb-8">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold">Consultoria Online</h2>
-          <Link to="/schedule" className="text-primary text-sm">Ver detalhes</Link>
+          <h2 className="text-xl font-bold">Consulta Online</h2>
+          <Link to="/appointments" className="text-primary text-sm">Ver profissionais</Link>
         </div>
         
         <Card className="bg-gradient-to-r from-secondary to-card border-none overflow-hidden">
@@ -214,11 +214,11 @@ const Index = () => {
               <div className="p-6 flex flex-col justify-center space-y-4">
                 <div className="flex items-center gap-2 mb-1">
                   <MessageCircle className="h-5 w-5 text-primary" />
-                  <h3 className="text-xl font-bold text-card-foreground">Agende uma Consultoria Online</h3>
+                  <h3 className="text-xl font-bold text-card-foreground">Agende uma Consulta Online</h3>
                 </div>
                 
                 <p className="text-muted-foreground">
-                  Receba orientação personalizada para seus treinos e objetivos fitness diretamente de um personal trainer especializado.
+                  Receba orientação personalizada de nossos profissionais especializados em saúde e fitness.
                 </p>
                 
                 <ul className="space-y-2">
@@ -246,9 +246,9 @@ const Index = () => {
                   asChild 
                   className="mt-4 bg-primary hover:bg-primary/90 text-primary-foreground font-medium"
                 >
-                  <Link to="/schedule" className="flex items-center gap-2">
+                  <Link to="/appointments" className="flex items-center gap-2">
                     <Calendar className="h-5 w-5" />
-                    Agendar Consultoria
+                    Agendar Consulta
                   </Link>
                 </Button>
               </div>
