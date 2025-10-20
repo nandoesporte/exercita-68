@@ -62,6 +62,8 @@ export default function HealthcareProfessionalManagement() {
     email: '',
     phone: '',
     whatsapp: '',
+    experience: '',
+    services: [] as string[],
     is_active: true,
   });
 
@@ -76,6 +78,8 @@ export default function HealthcareProfessionalManagement() {
       email: '',
       phone: '',
       whatsapp: '',
+      experience: '',
+      services: [],
       is_active: true,
     });
     setEditingProfessional(null);
@@ -93,6 +97,8 @@ export default function HealthcareProfessionalManagement() {
       email: professional.email || '',
       phone: professional.phone || '',
       whatsapp: professional.whatsapp || '',
+      experience: professional.experience || '',
+      services: professional.services || [],
       is_active: professional.is_active,
     });
     setIsDialogOpen(true);
@@ -288,6 +294,34 @@ export default function HealthcareProfessionalManagement() {
                     onChange={(e) => setFormData(prev => ({ ...prev, whatsapp: e.target.value }))}
                     placeholder="(00) 00000-0000"
                   />
+                </div>
+
+                <div className="col-span-2">
+                  <Label htmlFor="experience">Experiência Profissional</Label>
+                  <Textarea
+                    id="experience"
+                    value={formData.experience}
+                    onChange={(e) => setFormData(prev => ({ ...prev, experience: e.target.value }))}
+                    placeholder="Descreva a experiência profissional, formação acadêmica, áreas de atuação..."
+                    rows={4}
+                  />
+                </div>
+
+                <div className="col-span-2">
+                  <Label htmlFor="services">Serviços Oferecidos</Label>
+                  <Textarea
+                    id="services"
+                    value={formData.services.join('\n')}
+                    onChange={(e) => setFormData(prev => ({ 
+                      ...prev, 
+                      services: e.target.value.split('\n').filter(s => s.trim()) 
+                    }))}
+                    placeholder="Digite um serviço por linha, ex:&#10;Consulta de Nutrição&#10;Avaliação Física&#10;Prescrição de Treino"
+                    rows={4}
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Digite um serviço por linha
+                  </p>
                 </div>
               </div>
 

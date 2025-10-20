@@ -26,6 +26,7 @@ import Schedule from "@/pages/Schedule";
 import GymPhotos from "@/components/GymPhotos";
 import Appointments from "@/pages/Appointments";
 import AppointmentsNew from "@/pages/AppointmentsNew";
+import ProfessionalProfile from "@/pages/ProfessionalProfile";
 
 // Profile related pages
 import AccountInfo from "@/pages/AccountInfo";
@@ -98,6 +99,7 @@ const App = () => {
               <Route path="/schedule" element={<Schedule />} />
               <Route path="/gym-photos" element={<GymPhotos />} />
               <Route path="/appointments" element={<AppointmentsNew />} />
+              <Route path="/professional/:id" element={<ProfessionalProfile />} />
               
               <Route path="/running-plans" element={<RunningPlans />} />
               

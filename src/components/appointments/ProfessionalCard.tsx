@@ -3,6 +3,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Link } from 'react-router-dom';
 import { 
   Stethoscope, 
   Apple, 
@@ -12,7 +13,8 @@ import {
   Activity,
   Phone,
   MessageCircle,
-  Mail
+  Mail,
+  Eye
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -122,19 +124,34 @@ export function ProfessionalCard({
         </div>
       </div>
 
-      {onSelect && (
-        <div className="mt-4">
+      <div className="mt-4 flex gap-2">
+        <Button 
+          asChild
+          variant="outline"
+          className="flex-1"
+        >
+          <Link to={`/professional/${professional.id}`}>
+            <Eye className="mr-2 h-4 w-4" />
+            Ver Perfil
+          </Link>
+        </Button>
+        
+        {onSelect && (
           <Button 
             className={cn(
-              "w-full",
+              "flex-1",
               selected && "bg-turquoise hover:bg-turquoise/90"
             )}
             variant={selected ? "default" : "outline"}
+            onClick={(e) => {
+              e.stopPropagation();
+              onSelect(professional);
+            }}
           >
-            {selected ? 'Selecionado' : 'Agendar Consulta'}
+            {selected ? 'Selecionado' : 'Agendar'}
           </Button>
-        </div>
-      )}
+        )}
+      </div>
     </Card>
   );
 }

@@ -9,6 +9,8 @@ export interface HealthcareProfessional {
   email: string | null;
   phone: string | null;
   whatsapp: string | null;
+  experience: string | null;
+  services: string[] | null;
   is_active: boolean;
   admin_id: string | null;
   created_at: string;

@@ -892,11 +892,13 @@ export type Database = {
           credentials: string | null
           description: string | null
           email: string | null
+          experience: string | null
           id: string
           is_active: boolean | null
           name: string
           phone: string | null
           photo_url: string | null
+          services: Json | null
           specialty: string
           sub_specialty: string | null
           updated_at: string
@@ -908,11 +910,13 @@ export type Database = {
           credentials?: string | null
           description?: string | null
           email?: string | null
+          experience?: string | null
           id?: string
           is_active?: boolean | null
           name: string
           phone?: string | null
           photo_url?: string | null
+          services?: Json | null
           specialty: string
           sub_specialty?: string | null
           updated_at?: string
@@ -924,11 +928,13 @@ export type Database = {
           credentials?: string | null
           description?: string | null
           email?: string | null
+          experience?: string | null
           id?: string
           is_active?: boolean | null
           name?: string
           phone?: string | null
           photo_url?: string | null
+          services?: Json | null
           specialty?: string
           sub_specialty?: string | null
           updated_at?: string
