@@ -1,12 +1,16 @@
 import { useState } from 'react';
 import { NutritionOnboarding } from '@/components/nutrition/NutritionOnboarding';
+import { TodayTab } from '@/components/nutrition/TodayTab';
+import { PlanTab } from '@/components/nutrition/PlanTab';
+import { RecipesTab } from '@/components/nutrition/RecipesTab';
+import { EducationTab } from '@/components/nutrition/EducationTab';
+import { NutritionAssistant } from '@/components/nutrition/NutritionAssistant';
 import { useNutritionProfile } from '@/hooks/useNutritionProfile';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, Apple, Calendar, BookOpen, Lightbulb, User, TrendingUp } from 'lucide-react';
+import { Loader2, Apple, Calendar, BookOpen, Lightbulb, User, TrendingUp, UtensilsCrossed } from 'lucide-react';
 import { GOAL_LABELS } from '@/types/nutrition';
 
 export default function Nutrition() {
@@ -97,117 +101,45 @@ export default function Nutrition() {
         </div>
 
         {/* Tabs Principais */}
-        <Tabs defaultValue="diary" className="space-y-4">
+        <Tabs defaultValue="today" className="space-y-4">
           <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="diary">
-              <Calendar className="h-4 w-4 mr-2" />
-              Diário
+            <TabsTrigger value="today">
+              <UtensilsCrossed className="h-4 w-4 mr-2" />
+              Hoje
             </TabsTrigger>
             <TabsTrigger value="plan">
-              <Apple className="h-4 w-4 mr-2" />
-              Plano Alimentar
+              <Calendar className="h-4 w-4 mr-2" />
+              Plano
             </TabsTrigger>
             <TabsTrigger value="recipes">
               <BookOpen className="h-4 w-4 mr-2" />
               Receitas
             </TabsTrigger>
-            <TabsTrigger value="tips">
+            <TabsTrigger value="education">
               <Lightbulb className="h-4 w-4 mr-2" />
-              Dicas
+              Educação
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="diary">
-            <Card>
-              <CardHeader>
-                <CardTitle>Diário Alimentar</CardTitle>
-                <CardDescription>Registre suas refeições diárias</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center py-12 text-muted-foreground">
-                  <Calendar className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>Funcionalidade de Diário Alimentar em desenvolvimento</p>
-                </div>
-              </CardContent>
-            </Card>
+          <TabsContent value="today">
+            <TodayTab />
           </TabsContent>
 
           <TabsContent value="plan">
-            <Card>
-              <CardHeader>
-                <CardTitle>Plano Alimentar Semanal</CardTitle>
-                <CardDescription>Seu plano personalizado de refeições</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center py-12 text-muted-foreground">
-                  <Apple className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>Funcionalidade de Plano Alimentar em desenvolvimento</p>
-                </div>
-              </CardContent>
-            </Card>
+            <PlanTab />
           </TabsContent>
 
           <TabsContent value="recipes">
-            <Card>
-              <CardHeader>
-                <CardTitle>Biblioteca de Receitas</CardTitle>
-                <CardDescription>Receitas saudáveis e personalizadas</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center py-12 text-muted-foreground">
-                  <BookOpen className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>Biblioteca de Receitas em desenvolvimento</p>
-                </div>
-              </CardContent>
-            </Card>
+            <RecipesTab />
           </TabsContent>
 
-          <TabsContent value="tips">
-            <Card>
-              <CardHeader>
-                <CardTitle>Dicas Nutricionais</CardTitle>
-                <CardDescription>Aprenda sobre nutrição e saúde</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center py-12 text-muted-foreground">
-                  <Lightbulb className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>Dicas Nutricionais em desenvolvimento</p>
-                </div>
-              </CardContent>
-            </Card>
+          <TabsContent value="education">
+            <EducationTab />
           </TabsContent>
         </Tabs>
 
-        {/* Distribuição de Macronutrientes */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Distribuição Diária de Macronutrientes</CardTitle>
-            <CardDescription>Meta recomendada para seu objetivo</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <div className="flex justify-between mb-2">
-                <span className="text-sm font-medium">Proteínas</span>
-                <span className="text-sm text-muted-foreground">{profile.daily_protein}g</span>
-              </div>
-              <Progress value={33} className="h-2" />
-            </div>
-            <div>
-              <div className="flex justify-between mb-2">
-                <span className="text-sm font-medium">Carboidratos</span>
-                <span className="text-sm text-muted-foreground">{profile.daily_carbs}g</span>
-              </div>
-              <Progress value={40} className="h-2" />
-            </div>
-            <div>
-              <div className="flex justify-between mb-2">
-                <span className="text-sm font-medium">Gorduras</span>
-                <span className="text-sm text-muted-foreground">{profile.daily_fats}g</span>
-              </div>
-              <Progress value={30} className="h-2" />
-            </div>
-          </CardContent>
-        </Card>
+        {/* Assistente Nutricional */}
+        <NutritionAssistant />
     </div>
   );
 }
