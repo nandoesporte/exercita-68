@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Search, Calendar } from 'lucide-react';
+import { Search, Calendar, Dumbbell } from 'lucide-react';
 import { WorkoutCard } from '@/components/ui/workout-card';
 import { useWorkoutCategories, useWorkoutsByDay, useRecommendedWorkoutsForUser } from '@/hooks/useWorkouts';
 import { Database } from '@/integrations/supabase/types';
@@ -102,41 +102,14 @@ const Workouts = () => {
   };
 
   return (
-    <div className="container h-full">
-      <section className="mobile-section h-full flex flex-col">
-        {/* Weekly Schedule Selection - Responsive Design */}
-        <div className="mb-6">
-          <div className="flex items-center mb-2">
-            <Calendar className="mr-2 h-4 w-4" />
-            <h2 className="font-medium">Programação Semanal</h2>
+    <div className="home-page">
+      <section className="mobile-section h-full flex flex-col px-4 md:px-6">
+        {/* Title */}
+        <div className="mb-6 pt-6">
+          <div className="flex items-center">
+            <Dumbbell className="mr-2 h-6 w-6 text-primary" />
+            <h1 className="text-2xl font-bold">Seus Treinos!</h1>
           </div>
-          
-          {isMobile ? (
-            /* Mobile View: Dropdown for days */
-            <Select defaultValue="all" onValueChange={handleDayChange}>
-              <SelectTrigger className="w-full bg-secondary text-foreground">
-                <SelectValue placeholder="Selecionar dia" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos os dias</SelectItem>
-                {weekdays.map((day) => (
-                  <SelectItem key={day.id} value={day.id}>{day.label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          ) : (
-            /* Desktop View: Tabs for days */
-            <Tabs defaultValue="all" onValueChange={handleDayChange} className="w-full">
-              <TabsList className="flex w-full">
-                <TabsTrigger value="all" className="flex-1">Todos</TabsTrigger>
-                {weekdays.map((day) => (
-                  <TabsTrigger key={day.id} value={day.id} className="flex-1">
-                    {day.label}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-            </Tabs>
-          )}
         </div>
       
         {/* Search */}
