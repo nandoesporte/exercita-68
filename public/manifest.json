@@ -5,8 +5,8 @@
   "description": "Instituto Lipedema & Vida - Sua plataforma de saúde, bem-estar e qualidade de vida",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#1a0f2e",
-  "theme_color": "#9333ea",
+  "background_color": "#0a0118",
+  "theme_color": "#7dd3c0",
   "orientation": "portrait-primary",
   "icons": [
     {
