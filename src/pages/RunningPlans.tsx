@@ -140,6 +140,29 @@ const RunningPlans = () => {
         </CardContent>
       </Card>
 
+      {/* Card de agendamento com Personal Trainer */}
+      <Card className="mb-6 border-primary/30 bg-gradient-to-r from-primary/5 to-turquoise/5">
+        <CardContent className="pt-6">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex-1 text-center sm:text-left">
+              <h3 className="text-lg font-bold mb-2">Quer um treino personalizado?</h3>
+              <p className="text-sm text-muted-foreground">
+                Agende com nosso <span className="font-semibold text-foreground">Personal Trainer - Mestre em Atividade Física e Saúde</span>
+              </p>
+            </div>
+            <Button 
+              asChild
+              className="bg-turquoise hover:bg-turquoise/90 flex-shrink-0"
+            >
+              <a href="/appointments">
+                <Calendar className="mr-2 h-4 w-4" />
+                Agendar Agora
+              </a>
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
         {/* Form Section */}
         <Card>
