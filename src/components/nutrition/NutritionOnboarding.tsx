@@ -71,6 +71,7 @@ export const NutritionOnboarding = ({ onComplete }: OnboardingProps) => {
         goal: formData.goal,
       });
 
+      // Mapear os dados retornados pela IA para os campos do banco
       await createProfile.mutateAsync({
         weight: parseFloat(formData.weight),
         height: parseFloat(formData.height),
@@ -80,7 +81,12 @@ export const NutritionOnboarding = ({ onComplete }: OnboardingProps) => {
         restrictions: formData.restrictions,
         goal: formData.goal,
         activity_level: formData.activityLevel,
-        ...metrics,
+        bmi: metrics.imc,
+        bmr: metrics.tmb,
+        daily_calories: metrics.calorias_alvo,
+        daily_protein: metrics.macros.proteina.gramas,
+        daily_carbs: metrics.macros.carboidrato.gramas,
+        daily_fats: metrics.macros.gordura.gramas,
       });
 
       toast.success('Perfil criado com sucesso!');
