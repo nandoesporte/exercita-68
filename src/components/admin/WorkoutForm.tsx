@@ -36,7 +36,11 @@ const createFormSchema = (isEditing: boolean = false) => z.object({
   level: z.enum(['beginner', 'intermediate', 'advanced', 'all_levels']),
   category_id: z.string().optional().nullable(),
   calories: z.coerce.number().optional().nullable(),
-  user_id: isEditing ? z.string().optional() : z.string().min(1, { message: "É obrigatório selecionar um aluno." }),
+  user_id: isEditing 
+    ? z.string().optional() 
+    : z.union([z.string().min(1), z.null()]).refine((val) => val !== undefined, {
+        message: "É obrigatório selecionar um aluno ou 'Todos os Usuários'."
+      }),
   days_of_week: z.array(z.string()).optional(),
 });
 
@@ -77,7 +81,7 @@ const WorkoutForm = ({
       level: "all_levels",
       category_id: null,
       calories: null,
-      user_id: "",
+      user_id: undefined,
       days_of_week: [],
     },
   });
@@ -293,8 +297,11 @@ const WorkoutForm = ({
               <FormItem>
                 <FormLabel>Atribuir ao Aluno</FormLabel>
                 <Select 
-                  onValueChange={field.onChange} 
-                  value={field.value || undefined}
+                  onValueChange={(value) => {
+                    // Se "ALL_USERS" for selecionado, define null, caso contrário define o ID
+                    field.onChange(value === "ALL_USERS" ? null : value);
+                  }}
+                  value={field.value === null ? "ALL_USERS" : (field.value || "")}
                 >
                   <FormControl>
                     <SelectTrigger>
@@ -302,6 +309,9 @@ const WorkoutForm = ({
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
+                    <SelectItem value="ALL_USERS" className="font-semibold text-primary">
+                      🌟 Todos os Usuários
+                    </SelectItem>
                     {users.map((user) => (
                       <SelectItem key={user.id} value={user.id}>
                         {`${user.first_name || ''} ${user.last_name || ''}`.trim() || user.id}
@@ -310,7 +320,10 @@ const WorkoutForm = ({
                   </SelectContent>
                 </Select>
                 <FormDescription>
-                  Este treino será atribuído ao aluno selecionado
+                  {field.value === null 
+                    ? "Este treino será visível para todos os usuários do sistema"
+                    : "Este treino será atribuído ao aluno selecionado"
+                  }
                 </FormDescription>
                 <FormMessage />
               </FormItem>
