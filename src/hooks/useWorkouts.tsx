@@ -307,11 +307,11 @@ export function useRecommendedWorkoutsForUser(userId: string | undefined) {
       
       console.log(`Fetching recommended workouts for user: ${userId}`);
       
-      // Busque apenas recomendações específicas para este usuário (não globais)
+      // Busque recomendações específicas para este usuário E recomendações globais (user_id IS NULL)
       const { data: userRecommendations, error: recError } = await supabase
         .from('workout_recommendations')
         .select('workout_id')
-        .eq('user_id', userId);
+        .or(`user_id.eq.${userId},user_id.is.null`);
       
       if (recError) {
         console.error("Erro ao buscar recomendações de treinos:", recError);
