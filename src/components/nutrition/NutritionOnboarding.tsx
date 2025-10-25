@@ -85,6 +85,15 @@ export const NutritionOnboarding = ({ onComplete }: OnboardingProps) => {
 
       // Gerar plano de refeições padrão
       try {
+        // Verificar se há sessão ativa
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (!session) {
+          console.error('Nenhuma sessão ativa encontrada');
+          toast.error('Perfil salvo, mas é necessário estar autenticado para gerar o plano');
+          return;
+        }
+
         const { data: mealPlanData, error: mealPlanError } = await supabase.functions.invoke(
           'generate-meal-plan',
           {
@@ -112,10 +121,13 @@ export const NutritionOnboarding = ({ onComplete }: OnboardingProps) => {
 
         if (mealPlanError) {
           console.error('Erro ao gerar plano:', mealPlanError);
-          toast.error('Perfil criado, mas houve erro ao gerar o plano de refeições');
+          toast.error('Perfil salvo mas houve um erro ao criar plano nutricional');
+        } else {
+          toast.success('Plano nutricional criado com sucesso!');
         }
       } catch (planError) {
         console.error('Erro ao gerar plano:', planError);
+        toast.error('Perfil salvo mas houve um erro ao criar plano nutricional');
       }
 
       onComplete();

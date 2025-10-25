@@ -47,14 +47,17 @@ serve(async (req) => {
     // Verify user authentication
     const { data: { user }, error: authError } = await authClient.auth.getUser();
     
+    const authHeader = req.headers.get('Authorization');
     console.log('Auth check:', { 
       hasUser: !!user, 
       userId: user?.id, 
       authError: authError?.message,
-      hasAuthHeader: !!req.headers.get('Authorization')
+      hasAuthHeader: !!authHeader,
+      authHeaderPrefix: authHeader?.substring(0, 20) + '...',
     });
     
     if (!user || authError) {
+      console.error('Authentication failed:', authError);
       throw new Error('Usuário não autenticado');
     }
 
