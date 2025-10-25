@@ -136,31 +136,26 @@ export function ProfessionalCard({
           </Link>
         </Button>
         
-        {onSelect && (
-          <Button 
-            className={cn(
-              "flex-1",
-              selected && "bg-turquoise hover:bg-turquoise/90"
-            )}
-            variant={selected ? "default" : "outline"}
-            onClick={(e) => {
-              e.stopPropagation();
-              
-              // Se tiver WhatsApp, abrir o app
-              if (professional.whatsapp) {
-                const phoneNumber = professional.whatsapp.replace(/\D/g, '');
-                const message = encodeURIComponent(`Olá! Gostaria de agendar uma consulta com ${professional.name}.`);
-                const whatsappUrl = `https://wa.me/55${phoneNumber}?text=${message}`;
-                window.open(whatsappUrl, '_blank');
-              } else {
-                // Se não tiver WhatsApp, apenas seleciona o profissional
-                onSelect(professional);
-              }
-            }}
-          >
-            {selected ? 'Selecionado' : 'Agendar'}
-          </Button>
-        )}
+        <Button 
+          className="flex-1 bg-turquoise hover:bg-turquoise/90"
+          onClick={(e) => {
+            e.stopPropagation();
+            
+            // Se tiver WhatsApp, abrir o app
+            if (professional.whatsapp) {
+              const phoneNumber = professional.whatsapp.replace(/\D/g, '');
+              const message = encodeURIComponent(`Olá! Gostaria de agendar uma consulta com ${professional.name}.`);
+              const whatsappUrl = `https://wa.me/55${phoneNumber}?text=${message}`;
+              window.open(whatsappUrl, '_blank');
+            } else {
+              // Se não tiver WhatsApp, apenas chama o onSelect se existir
+              onSelect?.(professional);
+            }
+          }}
+        >
+          <MessageCircle className="mr-2 h-4 w-4" />
+          Agendar
+        </Button>
       </div>
     </Card>
   );

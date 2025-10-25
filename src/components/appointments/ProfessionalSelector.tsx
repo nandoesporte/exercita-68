@@ -9,7 +9,7 @@ import { Search, Users } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface ProfessionalSelectorProps {
-  onSelect: (professional: HealthcareProfessional) => void;
+  onSelect?: (professional: HealthcareProfessional) => void;
   selectedProfessionalId?: string;
 }
 
