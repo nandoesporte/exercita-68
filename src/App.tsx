@@ -72,6 +72,7 @@ import BlogCategoryManagement from "@/pages/admin/BlogCategoryManagement";
 import HealthcareProfessionalManagement from "@/pages/admin/HealthcareProfessionalManagement";
 import SubscriptionManagement from "@/pages/admin/SubscriptionManagement";
 import HealthIntegrationManagement from "@/pages/admin/HealthIntegrationManagement";
+import Nutrition from "@/pages/Nutrition";
 
 const App = () => {
   return (
@@ -102,6 +103,7 @@ const App = () => {
               <Route path="/professional/:id" element={<ProfessionalProfile />} />
               
               <Route path="/running-plans" element={<RunningPlans />} />
+              <Route path="/nutrition" element={<Nutrition />} />
               
               {/* Blog Routes */}
               <Route path="/blog" element={<Blog />} />

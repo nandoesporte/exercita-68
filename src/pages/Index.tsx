@@ -4,7 +4,7 @@ import { useProfile } from '@/hooks/useProfile';
 import { useInstantProfile } from '@/hooks/useInstantProfile';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { Dumbbell, Clock, Activity, MapPin, ChevronRight, Camera, ShoppingBag, Settings, Calendar, MessageCircle } from 'lucide-react';
+import { Dumbbell, Clock, Activity, MapPin, ChevronRight, Camera, ShoppingBag, Settings, Calendar, MessageCircle, Salad } from 'lucide-react';
 import { Card, CardContent } from "@/components/ui/card";
 import { useRecommendedWorkoutsForUser } from '@/hooks/useWorkouts';
 import { 
@@ -201,7 +201,27 @@ const Index = () => {
         )}
       </section>
       
-      {/* Nova Seção: Consulta Online */}
+      {/* Acesso Rápido */}
+      <section className="mb-8">
+        <h2 className="text-xl font-bold mb-4">Acesso Rápido</h2>
+        
+        <div className="grid grid-cols-2 gap-4">
+          <Link to="/workouts">
+            <Button variant="outline" size="lg" className="w-full h-24 flex-col gap-2 group">
+              <Dumbbell className="h-8 w-8 group-hover:scale-110 transition-transform text-primary" />
+              <span className="text-sm">Treinos</span>
+            </Button>
+          </Link>
+          <Link to="/nutrition">
+            <Button variant="outline" size="lg" className="w-full h-24 flex-col gap-2 group">
+              <Salad className="h-8 w-8 group-hover:scale-110 transition-transform text-primary" />
+              <span className="text-sm">Nutrição</span>
+            </Button>
+          </Link>
+        </div>
+      </section>
+      
+      {/* Últimas Notícias */}
       <section className="mb-8">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">Consulta Online</h2>
@@ -270,6 +290,26 @@ const Index = () => {
       
       {/* Últimas Notícias */}
       <LatestNewsSection />
+      
+      {/* Acesso Rápido */}
+      <section className="mb-8">
+        <h2 className="text-xl font-bold mb-4">Acesso Rápido</h2>
+        
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          <Link to="/workouts">
+            <Button variant="outline" size="lg" className="w-full h-24 flex-col gap-2 group">
+              <Dumbbell className="h-8 w-8 group-hover:scale-110 transition-transform text-primary" />
+              <span className="text-sm">Treinos</span>
+            </Button>
+          </Link>
+          <Link to="/nutrition">
+            <Button variant="outline" size="lg" className="w-full h-24 flex-col gap-2 group">
+              <Salad className="h-8 w-8 group-hover:scale-110 transition-transform text-primary" />
+              <span className="text-sm">Nutrição</span>
+            </Button>
+          </Link>
+        </div>
+      </section>
       
       {/* Minha Academia Seção */}
       <section className="mb-8">

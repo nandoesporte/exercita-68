@@ -20,7 +20,7 @@ export type Database = {
           admin_user_id: string | null
           created_at: string | null
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           new_values: Json | null
           old_values: Json | null
           record_id: string | null
@@ -32,7 +32,7 @@ export type Database = {
           admin_user_id?: string | null
           created_at?: string | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           new_values?: Json | null
           old_values?: Json | null
           record_id?: string | null
@@ -44,7 +44,7 @@ export type Database = {
           admin_user_id?: string | null
           created_at?: string | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           new_values?: Json | null
           old_values?: Json | null
           record_id?: string | null
@@ -584,6 +584,68 @@ export type Database = {
           },
         ]
       }
+      food_diary_entries: {
+        Row: {
+          calories: number | null
+          carbs: number | null
+          created_at: string | null
+          description: string | null
+          entry_date: string
+          fats: number | null
+          food_name: string
+          id: string
+          meal_type: string
+          notes: string | null
+          photo_url: string | null
+          protein: number | null
+          quantity: string | null
+          recipe_id: string | null
+          user_id: string
+        }
+        Insert: {
+          calories?: number | null
+          carbs?: number | null
+          created_at?: string | null
+          description?: string | null
+          entry_date: string
+          fats?: number | null
+          food_name: string
+          id?: string
+          meal_type: string
+          notes?: string | null
+          photo_url?: string | null
+          protein?: number | null
+          quantity?: string | null
+          recipe_id?: string | null
+          user_id: string
+        }
+        Update: {
+          calories?: number | null
+          carbs?: number | null
+          created_at?: string | null
+          description?: string | null
+          entry_date?: string
+          fats?: number | null
+          food_name?: string
+          id?: string
+          meal_type?: string
+          notes?: string | null
+          photo_url?: string | null
+          protein?: number | null
+          quantity?: string | null
+          recipe_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "food_diary_entries_recipe_id_fkey"
+            columns: ["recipe_id"]
+            isOneToOne: false
+            referencedRelation: "recipes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       gym_photo_analysis: {
         Row: {
           analysis_date: string
@@ -861,7 +923,7 @@ export type Database = {
           connection_id: string
           created_at: string
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           user_agent: string | null
           user_id: string
         }
@@ -870,7 +932,7 @@ export type Database = {
           connection_id: string
           created_at?: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           user_agent?: string | null
           user_id: string
         }
@@ -879,7 +941,7 @@ export type Database = {
           connection_id?: string
           created_at?: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           user_agent?: string | null
           user_id?: string
         }
@@ -990,6 +1052,218 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      meal_plan_items: {
+        Row: {
+          calories: number | null
+          carbs: number | null
+          created_at: string | null
+          custom_meal: string | null
+          day_of_week: string
+          fats: number | null
+          id: string
+          meal_plan_id: string
+          meal_type: string
+          notes: string | null
+          order_position: number | null
+          portion_size: string | null
+          protein: number | null
+          recipe_id: string | null
+        }
+        Insert: {
+          calories?: number | null
+          carbs?: number | null
+          created_at?: string | null
+          custom_meal?: string | null
+          day_of_week: string
+          fats?: number | null
+          id?: string
+          meal_plan_id: string
+          meal_type: string
+          notes?: string | null
+          order_position?: number | null
+          portion_size?: string | null
+          protein?: number | null
+          recipe_id?: string | null
+        }
+        Update: {
+          calories?: number | null
+          carbs?: number | null
+          created_at?: string | null
+          custom_meal?: string | null
+          day_of_week?: string
+          fats?: number | null
+          id?: string
+          meal_plan_id?: string
+          meal_type?: string
+          notes?: string | null
+          order_position?: number | null
+          portion_size?: string | null
+          protein?: number | null
+          recipe_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meal_plan_items_meal_plan_id_fkey"
+            columns: ["meal_plan_id"]
+            isOneToOne: false
+            referencedRelation: "meal_plans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "meal_plan_items_recipe_id_fkey"
+            columns: ["recipe_id"]
+            isOneToOne: false
+            referencedRelation: "recipes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      meal_plans: {
+        Row: {
+          created_at: string | null
+          created_by_admin: string | null
+          end_date: string
+          id: string
+          is_active: boolean | null
+          name: string
+          nutrition_profile_id: string | null
+          start_date: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          created_by_admin?: string | null
+          end_date: string
+          id?: string
+          is_active?: boolean | null
+          name: string
+          nutrition_profile_id?: string | null
+          start_date: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          created_by_admin?: string | null
+          end_date?: string
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          nutrition_profile_id?: string | null
+          start_date?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meal_plans_nutrition_profile_id_fkey"
+            columns: ["nutrition_profile_id"]
+            isOneToOne: false
+            referencedRelation: "nutrition_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      nutrition_profiles: {
+        Row: {
+          activity_level: string
+          age: number
+          allergies: string[] | null
+          bmi: number | null
+          bmr: number | null
+          created_at: string | null
+          daily_calories: number | null
+          daily_carbs: number | null
+          daily_fats: number | null
+          daily_protein: number | null
+          gender: string
+          goal: string
+          height: number
+          id: string
+          restrictions: string[] | null
+          updated_at: string | null
+          user_id: string
+          weight: number
+        }
+        Insert: {
+          activity_level: string
+          age: number
+          allergies?: string[] | null
+          bmi?: number | null
+          bmr?: number | null
+          created_at?: string | null
+          daily_calories?: number | null
+          daily_carbs?: number | null
+          daily_fats?: number | null
+          daily_protein?: number | null
+          gender: string
+          goal: string
+          height: number
+          id?: string
+          restrictions?: string[] | null
+          updated_at?: string | null
+          user_id: string
+          weight: number
+        }
+        Update: {
+          activity_level?: string
+          age?: number
+          allergies?: string[] | null
+          bmi?: number | null
+          bmr?: number | null
+          created_at?: string | null
+          daily_calories?: number | null
+          daily_carbs?: number | null
+          daily_fats?: number | null
+          daily_protein?: number | null
+          gender?: string
+          goal?: string
+          height?: number
+          id?: string
+          restrictions?: string[] | null
+          updated_at?: string | null
+          user_id?: string
+          weight?: number
+        }
+        Relationships: []
+      }
+      nutrition_tips: {
+        Row: {
+          admin_id: string | null
+          category: string
+          content: string
+          created_at: string | null
+          id: string
+          is_published: boolean | null
+          tags: string[] | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          admin_id?: string | null
+          category: string
+          content: string
+          created_at?: string | null
+          id?: string
+          is_published?: boolean | null
+          tags?: string[] | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          admin_id?: string | null
+          category?: string
+          content?: string
+          created_at?: string | null
+          id?: string
+          is_published?: boolean | null
+          tags?: string[] | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       order_items: {
         Row: {
@@ -1356,6 +1630,72 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      recipes: {
+        Row: {
+          admin_id: string | null
+          calories_per_serving: number | null
+          carbs_per_serving: number | null
+          cook_time: number | null
+          created_at: string | null
+          description: string | null
+          difficulty: string | null
+          fats_per_serving: number | null
+          id: string
+          image_url: string | null
+          ingredients: string[]
+          instructions: string
+          is_published: boolean | null
+          name: string
+          prep_time: number | null
+          protein_per_serving: number | null
+          servings: number | null
+          tags: string[] | null
+          updated_at: string | null
+        }
+        Insert: {
+          admin_id?: string | null
+          calories_per_serving?: number | null
+          carbs_per_serving?: number | null
+          cook_time?: number | null
+          created_at?: string | null
+          description?: string | null
+          difficulty?: string | null
+          fats_per_serving?: number | null
+          id?: string
+          image_url?: string | null
+          ingredients: string[]
+          instructions: string
+          is_published?: boolean | null
+          name: string
+          prep_time?: number | null
+          protein_per_serving?: number | null
+          servings?: number | null
+          tags?: string[] | null
+          updated_at?: string | null
+        }
+        Update: {
+          admin_id?: string | null
+          calories_per_serving?: number | null
+          carbs_per_serving?: number | null
+          cook_time?: number | null
+          created_at?: string | null
+          description?: string | null
+          difficulty?: string | null
+          fats_per_serving?: number | null
+          id?: string
+          image_url?: string | null
+          ingredients?: string[]
+          instructions?: string
+          is_published?: boolean | null
+          name?: string
+          prep_time?: number | null
+          protein_per_serving?: number | null
+          servings?: number | null
+          tags?: string[] | null
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       running_plans: {
         Row: {
@@ -1950,24 +2290,22 @@ export type Database = {
         }
         Returns: Json
       }
-      admin_create_user: {
-        Args:
-          | { user_data: Json }
-          | { user_email: string; user_metadata?: Json; user_password: string }
-        Returns: Json
-      }
-      admin_delete_pix_key: {
-        Args: { p_pix_key_id: string }
-        Returns: Json
-      }
+      admin_create_user:
+        | {
+            Args: {
+              user_email: string
+              user_metadata?: Json
+              user_password: string
+            }
+            Returns: Json
+          }
+        | { Args: { user_data: Json }; Returns: boolean }
+      admin_delete_pix_key: { Args: { p_pix_key_id: string }; Returns: Json }
       admin_delete_user: {
         Args: { target_user_id: string }
         Returns: undefined
       }
-      admin_enable_rls: {
-        Args: { p_table_name: string }
-        Returns: Json
-      }
+      admin_enable_rls: { Args: { p_table_name: string }; Returns: Json }
       admin_save_payment_settings: {
         Args: {
           p_accept_card: boolean
@@ -1999,30 +2337,15 @@ export type Database = {
         Args: { p_password: string; p_username: string }
         Returns: Json
       }
-      debug_get_all_users: {
-        Args: Record<PropertyKey, never>
-        Returns: Json
-      }
-      get_all_users: {
-        Args: Record<PropertyKey, never>
-        Returns: Json
-      }
+      debug_get_all_users: { Args: never; Returns: Json }
+      get_all_users: { Args: never; Returns: Json }
       get_encrypted_health_token: {
         Args: { p_connection_id: string; p_token_type: string }
         Returns: string
       }
-      get_tables_without_rls: {
-        Args: Record<PropertyKey, never>
-        Returns: Json
-      }
-      is_admin: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
-      is_super_admin: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
+      get_tables_without_rls: { Args: never; Returns: Json }
+      is_admin: { Args: never; Returns: boolean }
+      is_super_admin: { Args: never; Returns: boolean }
       revoke_health_tokens: {
         Args: { p_connection_id: string }
         Returns: boolean
