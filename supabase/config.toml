@@ -42,3 +42,6 @@ verify_jwt = false
 
 [functions.search-food]
 verify_jwt = false
+
+[functions.generate-meal-plan]
+verify_jwt = true
