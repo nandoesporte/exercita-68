@@ -87,7 +87,7 @@ export const useNutritionProfile = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['nutrition-profile'] });
-      toast.success('Perfil salvo com sucesso!');
+      // Toast removido daqui - será mostrado no componente
     },
     onError: (error) => {
       toast.error('Erro ao criar perfil: ' + error.message);

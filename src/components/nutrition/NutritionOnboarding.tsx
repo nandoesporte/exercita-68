@@ -83,6 +83,8 @@ export const NutritionOnboarding = ({ onComplete }: OnboardingProps) => {
         ...metrics,
       });
 
+      toast.success('Perfil criado com sucesso!');
+
       // Gerar plano de refeições padrão
       try {
         // Verificar se há sessão ativa
@@ -91,6 +93,7 @@ export const NutritionOnboarding = ({ onComplete }: OnboardingProps) => {
         if (!session) {
           console.error('Nenhuma sessão ativa encontrada');
           toast.error('Perfil salvo, mas é necessário estar autenticado para gerar o plano');
+          onComplete();
           return;
         }
 
@@ -130,7 +133,10 @@ export const NutritionOnboarding = ({ onComplete }: OnboardingProps) => {
         toast.error('Perfil salvo mas houve um erro ao criar plano nutricional');
       }
 
-      onComplete();
+      // Aguardar um pouco para garantir que o React Query atualizou
+      setTimeout(() => {
+        onComplete();
+      }, 500);
     } catch (error) {
       console.error('Erro ao criar perfil:', error);
       toast.error('Erro ao criar perfil nutricional');
