@@ -230,7 +230,7 @@ const Index = () => {
       <section className="mb-8">
         <h2 className="text-xl font-bold mb-4">Acesso Rápido</h2>
         
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-3 gap-3">
           <Link to="/workouts">
             <Button variant="outline" size="lg" className="w-full h-24 flex-col gap-2 group">
               <Dumbbell className="h-8 w-8 group-hover:scale-110 transition-transform text-primary" />
@@ -241,6 +241,12 @@ const Index = () => {
             <Button variant="outline" size="lg" className="w-full h-24 flex-col gap-2 group">
               <Salad className="h-8 w-8 group-hover:scale-110 transition-transform text-primary" />
               <span className="text-sm">Nutrição</span>
+            </Button>
+          </Link>
+          <Link to="/running-plans">
+            <Button variant="outline" size="lg" className="w-full h-24 flex-col gap-2 group">
+              <Activity className="h-8 w-8 group-hover:scale-110 transition-transform text-primary" />
+              <span className="text-sm">Corrida</span>
             </Button>
           </Link>
         </div>
@@ -320,7 +326,7 @@ const Index = () => {
       <section className="mb-8">
         <h2 className="text-xl font-bold mb-4">Acesso Rápido</h2>
         
-        <div className="grid grid-cols-2 gap-4 mb-6">
+        <div className="grid grid-cols-3 gap-3 mb-6">
           <Link to="/workouts">
             <Button variant="outline" size="lg" className="w-full h-24 flex-col gap-2 group">
               <Dumbbell className="h-8 w-8 group-hover:scale-110 transition-transform text-primary" />
@@ -331,6 +337,12 @@ const Index = () => {
             <Button variant="outline" size="lg" className="w-full h-24 flex-col gap-2 group">
               <Salad className="h-8 w-8 group-hover:scale-110 transition-transform text-primary" />
               <span className="text-sm">Nutrição</span>
+            </Button>
+          </Link>
+          <Link to="/running-plans">
+            <Button variant="outline" size="lg" className="w-full h-24 flex-col gap-2 group">
+              <Activity className="h-8 w-8 group-hover:scale-110 transition-transform text-primary" />
+              <span className="text-sm">Corrida</span>
             </Button>
           </Link>
         </div>
