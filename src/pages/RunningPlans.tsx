@@ -111,9 +111,34 @@ const RunningPlans = () => {
       <div className="mb-8 text-center">
         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-4">Treinos de Corrida</h1>
         <p className="text-base sm:text-lg text-muted-foreground px-2">
-          Gere planos de corrida e caminhada personalizados com inteligência artificial
+          Gere planos de corrida e caminhada personalizados para Lipedema com inteligência artificial
         </p>
       </div>
+
+      {/* Mensagem informativa sobre Lipedema */}
+      <Card className="mb-6 border-turquoise/30 bg-turquoise/5">
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2 text-turquoise">
+            <Target className="h-5 w-5" />
+            Importante: Exercícios para Lipedema
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2 text-sm">
+          <p className="font-medium">
+            Para pessoas com Lipedema, recomendamos exercícios de baixo impacto:
+          </p>
+          <ul className="space-y-1 ml-4 list-disc text-muted-foreground">
+            <li>Caminhada em ritmo leve a moderado</li>
+            <li>Trote muito leve e controlado</li>
+            <li>Evitar corridas de alta intensidade ou impacto</li>
+            <li>Priorizar duração e constância ao invés de intensidade</li>
+            <li>Sempre respeitar os limites do seu corpo</li>
+          </ul>
+          <p className="text-xs text-muted-foreground italic mt-3">
+            Nossos planos são gerados considerando essas recomendações. Consulte sempre seu médico antes de iniciar qualquer programa de exercícios.
+          </p>
+        </CardContent>
+      </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
         {/* Form Section */}

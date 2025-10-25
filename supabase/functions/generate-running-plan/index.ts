@@ -39,7 +39,7 @@ serve(async (req) => {
     }
 
     // Create prompt for OpenAI
-    const prompt = `Crie um plano de corrida/caminhada personalizado para:
+    const prompt = `Crie um plano de corrida/caminhada personalizado para pessoas com Lipedema:
 - Idade: ${age} anos
 - Peso: ${weight} kg
 - Nível de condicionamento: ${fitness_level}
@@ -48,20 +48,27 @@ serve(async (req) => {
 
 O plano deve ter duração de 4 semanas, ser progressivo e seguro. 
 
+⚠️ CRÍTICO: Este plano é para pessoas com LIPEDEMA. Priorize exercícios de BAIXO IMPACTO:
+- PREFIRA: Caminhada em ritmo leve a moderado
+- LIMITE: Trote muito leve e controlado (apenas para níveis intermediário/avançado)
+- EVITE: Corridas de alta intensidade ou alto impacto
+- FOCO: Duração e constância ao invés de intensidade máxima
+
 IMPORTANTE: Retorne APENAS um array JSON válido no seguinte formato, sem texto adicional:
 [
   { "semana": 1, "dia": "Segunda-feira", "atividade": "Caminhada leve", "duracao_min": 30, "intensidade": "Leve" },
   { "semana": 1, "dia": "Quarta-feira", "atividade": "Caminhada moderada", "duracao_min": 35, "intensidade": "Moderada" },
-  { "semana": 1, "dia": "Sexta-feira", "atividade": "Caminhada leve", "duracao_min": 30, "intensidade": "Leve" }
+  { "semana": 1, "dia": "Sexta-feira", "atividade": "Caminhada leve com alongamento", "duracao_min": 30, "intensidade": "Leve" }
 ]
 
 Considere:
-- Para iniciantes: começar com caminhada e introduzir corrida gradualmente
-- Para intermediários: combinar caminhada e corrida
-- Para avançados: mais foco em corrida e intervalos
-- Intensidades: "Leve", "Moderada", "Intensa"
-- Inclua 3 dias de treino por semana com dias de descanso intercalados
-- Cada semana deve ter progressão adequada`;
+- Para iniciantes: APENAS caminhada leve a moderada, sem corrida
+- Para intermediários: caminhada com possibilidade de trote MUITO leve em intervalos curtos
+- Para avançados: caminhada em ritmo mais acelerado, trote leve controlado (máximo intensidade "Moderada")
+- Intensidades: Use principalmente "Leve" e "Moderada". Evite "Intensa"
+- Inclua 3-4 dias de treino por semana com dias de descanso intercalados
+- Cada semana deve ter progressão gradual e segura, focando em duração antes de intensidade
+- Inclua variações como caminhada em diferentes terrenos, caminhada com alongamento, etc.`;
 
     console.log('Calling OpenAI API...');
     
@@ -77,7 +84,7 @@ Considere:
         messages: [
           { 
             role: 'system', 
-            content: 'Você é um especialista em treinamento físico. Responda sempre com um JSON válido contendo um plano de corrida/caminhada estruturado.' 
+            content: 'Você é um especialista em treinamento físico especializado em exercícios de baixo impacto para pessoas com Lipedema. Priorize sempre a segurança e bem-estar, focando em caminhada e exercícios leves. Responda sempre com um JSON válido contendo um plano de corrida/caminhada estruturado e seguro para Lipedema.' 
           },
           { role: 'user', content: prompt }
         ],
