@@ -27,3 +27,15 @@ verify_jwt = true
 
 [functions.save-running-plan]
 verify_jwt = true
+
+[functions.nutrition-profile]
+verify_jwt = true
+
+[functions.nutrition-diary]
+verify_jwt = true
+
+[functions.nutrition-recipes]
+verify_jwt = true
+
+[functions.nutrition-assessment]
+verify_jwt = false
