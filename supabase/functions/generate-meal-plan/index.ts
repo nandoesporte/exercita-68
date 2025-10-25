@@ -73,21 +73,11 @@ serve(async (req) => {
 
     console.log(`Encontradas ${recipes?.length || 0} receitas disponíveis`);
 
-    // Prepare prompt for OpenAI
-    const systemPrompt = `Você é um nutricionista especializado em criar planos alimentares personalizados.
-Crie um plano semanal (7 dias) com ${refeicoes_por_dia} refeições por dia.
+    // Prepare prompt for OpenAI using the specified format
+    const userPrompt = `Gere um plano alimentar semanal para um usuário com ${calorias_alvo} kcal/dia e macros ${macros.proteina.gramas}g proteina, ${macros.carboidrato.gramas}g carb, ${macros.gordura.gramas}g gordura. Respeite restrições: ${restricoes.join(', ') || 'nenhuma'}. Para cada dia, liste refeições: nome, prato, porção, calorias aproximadas e link para receita (se não houver, sugerir modo_preparo curto).
+Retornar em JSON com chave 'semana' contendo 7 objetos.
 
-REGRAS IMPORTANTES:
-- Calorias diárias: ${calorias_alvo} kcal (±5% = ${Math.round(calorias_alvo * 0.95)}-${Math.round(calorias_alvo * 1.05)} kcal)
-- Proteína diária: ${macros.proteina.gramas}g (±10% = ${Math.round(macros.proteina.gramas * 0.9)}-${Math.round(macros.proteina.gramas * 1.1)}g)
-- Carboidrato diário: ${macros.carboidrato.gramas}g (±10% = ${Math.round(macros.carboidrato.gramas * 0.9)}-${Math.round(macros.carboidrato.gramas * 1.1)}g)
-- Gordura diária: ${macros.gordura.gramas}g (±10% = ${Math.round(macros.gordura.gramas * 0.9)}-${Math.round(macros.gordura.gramas * 1.1)}g)
-- Não repetir a mesma receita mais de 2x na semana
-- Variar os tipos de refeição e ingredientes
-${restricoes.length > 0 ? `- Restrições alimentares: ${restricoes.join(', ')}` : ''}
-${preferencias.length > 0 ? `- Preferências: ${preferencias.join(', ')}` : ''}`;
-
-    const userPrompt = `Perfil do usuário:
+Perfil do usuário:
 - Sexo: ${user_profile.sexo === 'M' ? 'Masculino' : 'Feminino'}
 - Idade: ${user_profile.idade} anos
 - Peso: ${user_profile.peso_kg} kg
@@ -95,10 +85,8 @@ ${preferencias.length > 0 ? `- Preferências: ${preferencias.join(', ')}` : ''}`
 - Atividade física: ${user_profile.atividade_fisica}
 - Objetivo: ${user_profile.objetivo}
 
-Receitas disponíveis no banco de dados:
-${recipes?.slice(0, 50).map(r => `- ${r.name} (${r.calories_per_serving}kcal, P:${r.protein_per_serving}g, C:${r.carbs_per_serving}g, G:${r.fat_per_serving}g) - Tags: ${r.tags?.join(', ') || 'nenhuma'}`).join('\n')}
-
-Gere um plano alimentar semanal completo e balanceado.`;
+Receitas disponíveis no banco de dados (use quando possível):
+${recipes?.slice(0, 50).map(r => `- ID: ${r.id}, ${r.name} (${r.calories_per_serving}kcal, P:${r.protein_per_serving}g, C:${r.carbs_per_serving}g, G:${r.fat_per_serving}g) - Tags: ${r.tags?.join(', ') || 'nenhuma'}`).join('\n')}`;
 
     const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
     if (!openAIApiKey) {
@@ -115,7 +103,7 @@ Gere um plano alimentar semanal completo e balanceado.`;
       body: JSON.stringify({
         model: 'gpt-4o-mini',
         messages: [
-          { role: 'system', content: systemPrompt },
+          { role: 'system', content: 'Você é um nutricionista especializado. Crie planos semanais balanceados, respeitando as metas de calorias e macros (±5% calorias, ±10% macros). Não repita receitas mais de 2x na semana.' },
           { role: 'user', content: userPrompt }
         ],
         tools: [{

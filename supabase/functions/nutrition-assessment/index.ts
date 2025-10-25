@@ -1,3 +1,4 @@
+import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const corsHeaders = {
@@ -110,6 +111,50 @@ serve(async (req) => {
       const macros = calculateMacros(calorias_alvo);
       const classificacao_imc = getBMIClassification(imc);
 
+      // Use OpenAI to generate personalized assessment
+      const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
+      let aiAssessment = null;
+
+      if (openAIApiKey) {
+        try {
+          const userPrompt = `Usuário: ${body.peso} kg, ${body.altura} cm, ${body.idade} anos, sexo ${body.sexo}, atividade ${body.atividade}, objetivo ${body.objetivo || 'manutenção'}, restrições ${body.restricoes || 'nenhuma'}. 
+Gere:
+1) Resumo curto (1-2 frases) sobre estado atual (IMC, interpretação).
+2) TMB calculada e calorias alvo.
+3) Macro targets em kcal e gramas.
+4) 3 dicas práticas e rápidas (máx 35 palavras cada).
+Formato JSON: { "resumo": "...", "imc": ${imc}, "tmb": ${tmb}, "calorias_alvo": ${calorias_alvo}, "macros": {"proteinas_g": ${macros.proteinas_g}, "carboidratos_g": ${macros.carboidratos_g}, "gorduras_g": ${macros.gorduras_g}}, "dicas":["dica1", "dica2", "dica3"]}`;
+
+          const openAIResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${openAIApiKey}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              model: 'gpt-4o-mini',
+              messages: [
+                { role: 'system', content: 'Você é um nutricionista especializado. Retorne apenas JSON válido.' },
+                { role: 'user', content: userPrompt }
+              ],
+              temperature: 0.7,
+            }),
+          });
+
+          if (openAIResponse.ok) {
+            const openAIData = await openAIResponse.json();
+            const content = openAIData.choices[0].message.content;
+            // Extract JSON from response
+            const jsonMatch = content.match(/\{[\s\S]*\}/);
+            if (jsonMatch) {
+              aiAssessment = JSON.parse(jsonMatch[0]);
+            }
+          }
+        } catch (error) {
+          console.error('Error calling OpenAI:', error);
+        }
+      }
+
       const assessment = {
         imc: {
           valor: imc,
@@ -140,8 +185,8 @@ serve(async (req) => {
             percentual: 45
           }
         },
-        recomendacoes: [
-          'Consulte um nutricionista para um plano personalizado',
+        resumo: aiAssessment?.resumo || `IMC ${imc} (${classificacao_imc}). Calorias diárias recomendadas: ${calorias_alvo} kcal.`,
+        dicas: aiAssessment?.dicas || [
           'Mantenha uma hidratação adequada (2-3 litros de água por dia)',
           'Pratique atividade física regularmente',
           'Evite alimentos ultraprocessados'
