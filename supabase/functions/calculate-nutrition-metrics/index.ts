@@ -7,82 +7,118 @@ const corsHeaders = {
 };
 
 interface NutritionInput {
-  weight: number;
-  height: number;
-  age: number;
-  gender: 'masculino' | 'feminino' | 'outro';
-  activityLevel: 'sedentario' | 'leve' | 'moderado' | 'intenso' | 'muito_intenso';
-  goal: 'perder_peso' | 'ganhar_massa' | 'manter_peso' | 'saude_geral';
+  peso_kg: number;
+  altura_cm: number;
+  idade: number;
+  sexo: 'M' | 'F';
+  atividade_fisica: 'sedentarismo' | 'leve' | 'moderada' | 'alta';
+  objetivo?: 'perda_peso' | 'manutencao' | 'ganho_massa';
 }
 
-function calculateBMI(weight: number, heightInCm: number): number {
-  const heightInM = heightInCm / 100;
-  return weight / (heightInM * heightInM);
+/**
+ * Calculates BMI
+ * Formula: IMC = peso_kg / (altura_m)^2
+ */
+function calcularIMC(peso_kg: number, altura_cm: number): number {
+  const altura_m = altura_cm / 100;
+  return Math.round((peso_kg / (altura_m * altura_m)) * 10) / 10;
 }
 
-function calculateBMR(weight: number, heightInCm: number, age: number, gender: string): number {
-  // Fórmula de Harris-Benedict revisada
-  if (gender === 'masculino') {
-    return 88.362 + (13.397 * weight) + (4.799 * heightInCm) - (5.677 * age);
+/**
+ * Calculate TMB using Mifflin-St Jeor equation
+ * Men: TMB = 10*peso + 6.25*altura_cm - 5*idade + 5
+ * Women: TMB = 10*peso + 6.25*altura_cm - 5*idade - 161
+ */
+function calcularTMB(peso_kg: number, altura_cm: number, idade: number, sexo: string): number {
+  if (sexo === 'M') {
+    return Math.round((10 * peso_kg) + (6.25 * altura_cm) - (5 * idade) + 5);
   } else {
-    return 447.593 + (9.247 * weight) + (3.098 * heightInCm) - (4.330 * age);
+    return Math.round((10 * peso_kg) + (6.25 * altura_cm) - (5 * idade) - 161);
   }
 }
 
-function getActivityMultiplier(activityLevel: string): number {
-  const multipliers: Record<string, number> = {
-    sedentario: 1.2,
-    leve: 1.375,
-    moderado: 1.55,
-    intenso: 1.725,
-    muito_intenso: 1.9
+/**
+ * Get activity factor
+ */
+function getFatorAtividade(atividade_fisica: string): number {
+  const fatores: Record<string, number> = {
+    'sedentarismo': 1.2,
+    'leve': 1.375,
+    'moderada': 1.55,
+    'alta': 1.725
   };
-  return multipliers[activityLevel] || 1.2;
+  return fatores[atividade_fisica] || 1.2;
 }
 
-function calculateDailyCalories(bmr: number, activityLevel: string, goal: string): number {
-  const tdee = bmr * getActivityMultiplier(activityLevel);
-  
-  // Ajustar calorias baseado no objetivo
-  switch (goal) {
-    case 'perder_peso':
-      return tdee - 500; // Déficit de 500 calorias
-    case 'ganhar_massa':
-      return tdee + 300; // Superávit de 300 calorias
-    case 'manter_peso':
-    case 'saude_geral':
-    default:
-      return tdee;
+/**
+ * Calculate target calories based on goal
+ * perda_peso: -500 kcal (or -15% if < 2000kcal)
+ * ganho_massa: +300 kcal
+ * manutencao: same as maintenance
+ */
+function calcularCaloriasAlvo(calorias_manutencao: number, objetivo: string): number {
+  if (objetivo === 'perda_peso') {
+    if (calorias_manutencao < 2000) {
+      return Math.round(calorias_manutencao * 0.85);
+    } else {
+      return calorias_manutencao - 500;
+    }
+  } else if (objetivo === 'ganho_massa') {
+    return calorias_manutencao + 300;
+  } else {
+    return calorias_manutencao;
   }
 }
 
-function calculateMacros(dailyCalories: number, goal: string) {
-  let proteinPercent, carbsPercent, fatsPercent;
+/**
+ * Calculate macronutrients
+ * perda_peso: P 30% / C 35% / G 35%
+ * ganho_massa: P 25% / C 50% / G 25%
+ * manutencao: P 20% / C 50% / G 30%
+ */
+function calcularMacros(calorias_alvo: number, objetivo: string) {
+  let protein_percent: number, carb_percent: number, fat_percent: number;
   
-  switch (goal) {
-    case 'perder_peso':
-      proteinPercent = 0.35;
-      carbsPercent = 0.35;
-      fatsPercent = 0.30;
-      break;
-    case 'ganhar_massa':
-      proteinPercent = 0.30;
-      carbsPercent = 0.45;
-      fatsPercent = 0.25;
-      break;
-    case 'manter_peso':
-    case 'saude_geral':
-    default:
-      proteinPercent = 0.30;
-      carbsPercent = 0.40;
-      fatsPercent = 0.30;
-      break;
+  if (objetivo === 'perda_peso') {
+    protein_percent = 0.30;
+    carb_percent = 0.35;
+    fat_percent = 0.35;
+  } else if (objetivo === 'ganho_massa') {
+    protein_percent = 0.25;
+    carb_percent = 0.50;
+    fat_percent = 0.25;
+  } else {
+    protein_percent = 0.20;
+    carb_percent = 0.50;
+    fat_percent = 0.30;
   }
+
+  // Convert to grams: proteina_g = (calorias*P%)/4
+  const proteina_g = Math.round((calorias_alvo * protein_percent) / 4);
+  const carboidrato_g = Math.round((calorias_alvo * carb_percent) / 4);
+  const gordura_g = Math.round((calorias_alvo * fat_percent) / 9);
+
+  // Calculate kcal
+  const proteina_kcal = Math.round(proteina_g * 4);
+  const carboidrato_kcal = Math.round(carboidrato_g * 4);
+  const gordura_kcal = Math.round(gordura_g * 9);
   
   return {
-    protein: (dailyCalories * proteinPercent) / 4, // 4 cal/g
-    carbs: (dailyCalories * carbsPercent) / 4, // 4 cal/g
-    fats: (dailyCalories * fatsPercent) / 9 // 9 cal/g
+    proteina: {
+      gramas: proteina_g,
+      kcal: proteina_kcal,
+      percentual: Math.round(protein_percent * 100)
+    },
+    carboidrato: {
+      gramas: carboidrato_g,
+      kcal: carboidrato_kcal,
+      percentual: Math.round(carb_percent * 100)
+    },
+    gordura: {
+      gramas: gordura_g,
+      kcal: gordura_kcal,
+      percentual: Math.round(fat_percent * 100)
+    }
   };
 }
 
@@ -112,19 +148,34 @@ serve(async (req) => {
 
     const input: NutritionInput = await req.json();
 
-    // Calcular métricas
-    const bmi = calculateBMI(input.weight, input.height);
-    const bmr = calculateBMR(input.weight, input.height, input.age, input.gender);
-    const dailyCalories = calculateDailyCalories(bmr, input.activityLevel, input.goal);
-    const macros = calculateMacros(dailyCalories, input.goal);
+    // Validate required fields
+    if (!input.peso_kg || !input.altura_cm || !input.idade || !input.sexo || !input.atividade_fisica) {
+      throw new Error('Campos obrigatórios faltando: peso_kg, altura_cm, idade, sexo, atividade_fisica');
+    }
+
+    const objetivo = input.objetivo || 'manutencao';
+
+    // Calculate IMC
+    const imc = calcularIMC(input.peso_kg, input.altura_cm);
+
+    // Calculate TMB
+    const tmb = calcularTMB(input.peso_kg, input.altura_cm, input.idade, input.sexo);
+
+    // Calculate maintenance calories
+    const fator_atividade = getFatorAtividade(input.atividade_fisica);
+    const calorias_manutencao = Math.round(tmb * fator_atividade);
+
+    // Calculate target calories based on goal
+    const calorias_alvo = calcularCaloriasAlvo(calorias_manutencao, objetivo);
+
+    // Calculate macros
+    const macros = calcularMacros(calorias_alvo, objetivo);
 
     const result = {
-      bmi: Math.round(bmi * 10) / 10,
-      bmr: Math.round(bmr),
-      dailyCalories: Math.round(dailyCalories),
-      dailyProtein: Math.round(macros.protein),
-      dailyCarbs: Math.round(macros.carbs),
-      dailyFats: Math.round(macros.fats)
+      imc,
+      tmb,
+      calorias_alvo,
+      macros
     };
 
     console.log('Nutrition metrics calculated:', result);
