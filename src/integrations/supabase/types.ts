@@ -479,6 +479,45 @@ export type Database = {
         }
         Relationships: []
       }
+      diario_alimentar: {
+        Row: {
+          alimentos: Json
+          anotacao: string | null
+          created_at: string | null
+          data: string
+          entry_id: string
+          foto_url: string | null
+          hora: string
+          refeicao_tipo: string
+          total_calorias: number
+          user_id: string
+        }
+        Insert: {
+          alimentos?: Json
+          anotacao?: string | null
+          created_at?: string | null
+          data: string
+          entry_id?: string
+          foto_url?: string | null
+          hora: string
+          refeicao_tipo: string
+          total_calorias?: number
+          user_id: string
+        }
+        Update: {
+          alimentos?: Json
+          anotacao?: string | null
+          created_at?: string | null
+          data?: string
+          entry_id?: string
+          foto_url?: string | null
+          hora?: string
+          refeicao_tipo?: string
+          total_calorias?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       equipment_based_workouts: {
         Row: {
           admin_id: string | null
