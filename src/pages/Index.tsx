@@ -134,6 +134,73 @@ const Index = () => {
         )}
       </section>
       
+      {/* Consulta Online */}
+      <section className="mb-8">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold">Consulta Online</h2>
+          <Link to="/appointments" className="text-primary text-sm">Ver profissionais</Link>
+        </div>
+        
+        <Card className="bg-gradient-to-r from-secondary to-card border-none overflow-hidden">
+          <CardContent className="p-0">
+            <div className="grid grid-cols-1 md:grid-cols-2">
+              <div className="p-6 flex flex-col justify-center space-y-4">
+                <div className="flex items-center gap-2 mb-1">
+                  <MessageCircle className="h-5 w-5 text-primary" />
+                  <h3 className="text-xl font-bold text-card-foreground">Agende uma consulta online ou presencial</h3>
+                </div>
+                
+                <p className="text-muted-foreground">
+                  Receba orientação personalizada de nossos profissionais especializados em saúde e fitness.
+                </p>
+                
+                <ul className="space-y-2">
+                  <li className="flex items-start gap-2">
+                    <div className="mt-1 bg-primary/20 p-1 rounded-full">
+                      <Activity className="h-4 w-4 text-primary" />
+                    </div>
+                    <span className="text-sm text-muted-foreground">Avaliação detalhada do seu perfil e objetivos</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <div className="mt-1 bg-primary/20 p-1 rounded-full">
+                      <Calendar className="h-4 w-4 text-primary" />
+                    </div>
+                    <span className="text-sm text-muted-foreground">Escolha o dia e horário que melhor se adapta à sua agenda</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <div className="mt-1 bg-primary/20 p-1 rounded-full">
+                      <Dumbbell className="h-4 w-4 text-primary" />
+                    </div>
+                    <span className="text-sm text-muted-foreground">Receba um plano de treino personalizado</span>
+                  </li>
+                </ul>
+                
+                <Button 
+                  asChild 
+                  className="mt-4 bg-primary hover:bg-primary/90 text-primary-foreground font-medium"
+                >
+                  <Link to="/appointments" className="flex items-center gap-2">
+                    <Calendar className="h-5 w-5" />
+                    Agendar Consulta
+                  </Link>
+                </Button>
+              </div>
+              
+              <div className="bg-secondary/50 hidden md:block">
+                <div className="h-full w-full relative">
+                  <img 
+                    src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?q=80&w=800&auto=format&fit=crop" 
+                    alt="Consultoria online" 
+                    className="w-full h-full object-cover opacity-70"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-r from-secondary/80 to-transparent"></div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
+      
       {/* Card Principal de Treino ou Botão Agendar Consultoria */}
       <section className="mb-8">
         {hasAssignedWorkout ? (
@@ -259,106 +326,7 @@ const Index = () => {
       </section>
       
       {/* Últimas Notícias */}
-      <section className="mb-8">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold">Consulta Online</h2>
-          <Link to="/appointments" className="text-primary text-sm">Ver profissionais</Link>
-        </div>
-        
-        <Card className="bg-gradient-to-r from-secondary to-card border-none overflow-hidden">
-          <CardContent className="p-0">
-            <div className="grid grid-cols-1 md:grid-cols-2">
-              <div className="p-6 flex flex-col justify-center space-y-4">
-                <div className="flex items-center gap-2 mb-1">
-                  <MessageCircle className="h-5 w-5 text-primary" />
-                  <h3 className="text-xl font-bold text-card-foreground">Agende uma Consulta Online</h3>
-                </div>
-                
-                <p className="text-muted-foreground">
-                  Receba orientação personalizada de nossos profissionais especializados em saúde e fitness.
-                </p>
-                
-                <ul className="space-y-2">
-                  <li className="flex items-start gap-2">
-                    <div className="mt-1 bg-primary/20 p-1 rounded-full">
-                      <Activity className="h-4 w-4 text-primary" />
-                    </div>
-                    <span className="text-sm text-muted-foreground">Avaliação detalhada do seu perfil e objetivos</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="mt-1 bg-primary/20 p-1 rounded-full">
-                      <Calendar className="h-4 w-4 text-primary" />
-                    </div>
-                    <span className="text-sm text-muted-foreground">Escolha o dia e horário que melhor se adapta à sua agenda</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="mt-1 bg-primary/20 p-1 rounded-full">
-                      <Dumbbell className="h-4 w-4 text-primary" />
-                    </div>
-                    <span className="text-sm text-muted-foreground">Receba um plano de treino personalizado</span>
-                  </li>
-                </ul>
-                
-                <Button 
-                  asChild 
-                  className="mt-4 bg-primary hover:bg-primary/90 text-primary-foreground font-medium"
-                >
-                  <Link to="/appointments" className="flex items-center gap-2">
-                    <Calendar className="h-5 w-5" />
-                    Agendar Consulta
-                  </Link>
-                </Button>
-              </div>
-              
-              <div className="bg-secondary/50 hidden md:block">
-                <div className="h-full w-full relative">
-                  <img 
-                    src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?q=80&w=800&auto=format&fit=crop" 
-                    alt="Consultoria online" 
-                    className="w-full h-full object-cover opacity-70"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-r from-secondary/80 to-transparent"></div>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </section>
-      
-      {/* Últimas Notícias */}
       <LatestNewsSection />
-      
-      {/* Acesso Rápido */}
-      <section className="mb-8">
-        <h2 className="text-xl font-bold mb-4">Acesso Rápido</h2>
-        
-        <div className="grid grid-cols-2 gap-3 mb-6">
-          <Link to="/workouts">
-            <Button variant="outline" size="lg" className="w-full h-24 flex-col gap-2 group">
-              <Dumbbell className="h-8 w-8 group-hover:scale-110 transition-transform text-primary" />
-              <span className="text-sm">Treinos</span>
-            </Button>
-          </Link>
-          <Link to="/nutrition">
-            <Button variant="outline" size="lg" className="w-full h-24 flex-col gap-2 group">
-              <Salad className="h-8 w-8 group-hover:scale-110 transition-transform text-primary" />
-              <span className="text-sm">Nutrição</span>
-            </Button>
-          </Link>
-          <Link to="/running-plans">
-            <Button variant="outline" size="lg" className="w-full h-24 flex-col gap-2 group">
-              <Activity className="h-8 w-8 group-hover:scale-110 transition-transform text-primary" />
-              <span className="text-sm">Corrida</span>
-            </Button>
-          </Link>
-          <Link to="/store">
-            <Button variant="outline" size="lg" className="w-full h-24 flex-col gap-2 group">
-              <ShoppingBag className="h-8 w-8 group-hover:scale-110 transition-transform text-primary" />
-              <span className="text-sm">Loja</span>
-            </Button>
-          </Link>
-        </div>
-      </section>
       
       {/* Minha Academia Seção */}
       <section className="mb-8">
