@@ -9,6 +9,8 @@ import { useNutritionProfile } from '@/hooks/useNutritionProfile';
 import { GOAL_LABELS, ACTIVITY_LABELS, Goal, ActivityLevel, Gender } from '@/types/nutrition';
 import { Loader2, ChevronLeft, ChevronRight, User, Target, Activity } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 interface OnboardingProps {
   onComplete: () => void;
@@ -81,9 +83,45 @@ export const NutritionOnboarding = ({ onComplete }: OnboardingProps) => {
         ...metrics,
       });
 
+      // Gerar plano de refeições padrão
+      try {
+        const { data: mealPlanData, error: mealPlanError } = await supabase.functions.invoke(
+          'generate-meal-plan',
+          {
+            body: {
+              user_profile: {
+                peso_kg: parseFloat(formData.weight),
+                altura_cm: parseFloat(formData.height),
+                idade: parseInt(formData.age),
+                sexo: formData.gender === 'masculino' ? 'M' : 'F',
+                atividade_fisica: formData.activityLevel,
+                objetivo: formData.goal,
+              },
+              calorias_alvo: metrics.calorias_alvo,
+              macros: {
+                proteina: { gramas: metrics.macros.proteina.gramas, percentual: metrics.macros.proteina.percentual },
+                carboidrato: { gramas: metrics.macros.carboidrato.gramas, percentual: metrics.macros.carboidrato.percentual },
+                gordura: { gramas: metrics.macros.gordura.gramas, percentual: metrics.macros.gordura.percentual },
+              },
+              restricoes: formData.restrictions,
+              preferencias: [],
+              refeicoes_por_dia: 4,
+            },
+          }
+        );
+
+        if (mealPlanError) {
+          console.error('Erro ao gerar plano:', mealPlanError);
+          toast.error('Perfil criado, mas houve erro ao gerar o plano de refeições');
+        }
+      } catch (planError) {
+        console.error('Erro ao gerar plano:', planError);
+      }
+
       onComplete();
     } catch (error) {
       console.error('Erro ao criar perfil:', error);
+      toast.error('Erro ao criar perfil nutricional');
     }
   };
 
