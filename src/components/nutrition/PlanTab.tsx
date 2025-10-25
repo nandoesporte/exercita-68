@@ -74,10 +74,10 @@ export function PlanTab() {
             <div>
               <CardTitle className="flex items-center gap-2">
                 <Calendar className="w-5 h-5 text-primary" />
-                Plano Semanal
+                Modelo de Plano personalizado para Lipedema
               </CardTitle>
               <p className="text-sm text-muted-foreground mt-1">
-                Seu plano personalizado de refeições
+                Para um Plano Personalizado Agende conosco
               </p>
             </div>
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
