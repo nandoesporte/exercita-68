@@ -93,9 +93,19 @@ serve(async (req) => {
 
     console.log(`Encontradas ${recipes?.length || 0} receitas disponíveis`);
 
-    // Prepare prompt for OpenAI using the specified format
-    const userPrompt = `Gere um plano alimentar semanal para um usuário com ${calorias_alvo} kcal/dia e macros ${macros.proteina.gramas}g proteina, ${macros.carboidrato.gramas}g carb, ${macros.gordura.gramas}g gordura. Respeite restrições: ${restricoes.join(', ') || 'nenhuma'}. Para cada dia, liste refeições: nome, prato, porção, calorias aproximadas e link para receita (se não houver, sugerir modo_preparo curto).
-Retornar em JSON com chave 'semana' contendo 7 objetos.
+    // Prepare prompt for OpenAI with Lipedema-specific recommendations
+    const userPrompt = `Gere um plano alimentar semanal FOCADO EM LIPEDEMA para um usuário com ${calorias_alvo} kcal/dia e macros ${macros.proteina.gramas}g proteina, ${macros.carboidrato.gramas}g carb, ${macros.gordura.gramas}g gordura.
+
+**DIRETRIZES ESSENCIAIS PARA LIPEDEMA:**
+- Priorizar alimentos anti-inflamatórios (peixes ricos em ômega-3, frutas vermelhas, vegetais folhosos, cúrcuma, gengibre)
+- Evitar alimentos pró-inflamatórios (açúcar refinado, farinhas brancas, alimentos ultraprocessados, frituras)
+- Preferir carboidratos de baixo índice glicêmico (batata-doce, aveia, quinoa, leguminosas)
+- Incluir gorduras boas (abacate, azeite, oleaginosas, peixes)
+- Reduzir sódio para diminuir retenção de líquidos
+- Incluir alimentos diuréticos naturais (melancia, pepino, chá verde, abacaxi)
+- Priorizar proteínas magras e de qualidade
+
+Restrições adicionais: ${restricoes.join(', ') || 'nenhuma'}
 
 Perfil do usuário:
 - Sexo: ${user_profile.sexo === 'M' ? 'Masculino' : 'Feminino'}
@@ -105,8 +115,10 @@ Perfil do usuário:
 - Atividade física: ${user_profile.atividade_fisica}
 - Objetivo: ${user_profile.objetivo}
 
-Receitas disponíveis no banco de dados (use quando possível):
-${recipes?.slice(0, 50).map(r => `- ID: ${r.id}, ${r.name} (${r.calories_per_serving}kcal, P:${r.protein_per_serving}g, C:${r.carbs_per_serving}g, G:${r.fat_per_serving}g) - Tags: ${r.tags?.join(', ') || 'nenhuma'}`).join('\n')}`;
+Receitas disponíveis no banco de dados (priorize as que seguem as diretrizes do Lipedema):
+${recipes?.slice(0, 50).map(r => `- ID: ${r.id}, ${r.name} (${r.calories_per_serving}kcal, P:${r.protein_per_serving}g, C:${r.carbs_per_serving}g, G:${r.fat_per_serving}g) - Tags: ${r.tags?.join(', ') || 'nenhuma'}`).join('\n')}
+
+IMPORTANTE: Cada refeição deve seguir os princípios anti-inflamatórios e de baixo índice glicêmico específicos para o manejo do Lipedema.`;
 
     const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
     if (!openAIApiKey) {
@@ -123,7 +135,7 @@ ${recipes?.slice(0, 50).map(r => `- ID: ${r.id}, ${r.name} (${r.calories_per_ser
       body: JSON.stringify({
         model: 'gpt-4o-mini',
         messages: [
-          { role: 'system', content: 'Você é um nutricionista especializado. Crie planos semanais balanceados, respeitando as metas de calorias e macros (±5% calorias, ±10% macros). Não repita receitas mais de 2x na semana.' },
+          { role: 'system', content: 'Você é um nutricionista especializado em LIPEDEMA. Crie planos semanais balanceados seguindo princípios anti-inflamatórios e de baixo índice glicêmico, essenciais para o manejo do Lipedema. Priorize alimentos ricos em ômega-3, antioxidantes, e com propriedades diuréticas naturais. Evite alimentos pró-inflamatórios, açúcares refinados e sódio em excesso. Respeite as metas de calorias e macros (±5% calorias, ±10% macros). Não repita receitas mais de 2x na semana. Cada refeição deve contribuir para redução da inflamação e retenção de líquidos.' },
           { role: 'user', content: userPrompt }
         ],
         tools: [{
