@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,8 +7,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, Users, Apple, TrendingUp, Settings } from 'lucide-react';
+import { Loader2, Users, Apple, TrendingUp, Settings, Pencil, Trash2 } from 'lucide-react';
 import { GOAL_LABELS, ACTIVITY_LABELS, Goal, ActivityLevel, Gender } from '@/types/nutrition';
 import { toast } from 'sonner';
 
@@ -38,8 +39,11 @@ interface NutritionProfile {
 }
 
 export default function NutritionPlanManagement() {
+  const queryClient = useQueryClient();
   const [selectedUser, setSelectedUser] = useState<string>('');
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editingProfile, setEditingProfile] = useState<NutritionProfile | null>(null);
   const [formData, setFormData] = useState({
     weight: '',
     height: '',
@@ -91,6 +95,100 @@ export default function NutritionPlanManagement() {
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: async (profileId: string) => {
+      const { error } = await supabase
+        .from('nutrition_profiles')
+        .delete()
+        .eq('id', profileId);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['nutrition-profiles-admin'] });
+      toast.success('Plano nutricional excluído com sucesso!');
+    },
+    onError: (error: any) => {
+      toast.error('Erro ao excluir plano: ' + error.message);
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: async ({ id, data }: { id: string; data: any }) => {
+      const { error } = await supabase
+        .from('nutrition_profiles')
+        .update(data)
+        .eq('id', id);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['nutrition-profiles-admin'] });
+      toast.success('Plano nutricional atualizado com sucesso!');
+      setEditDialogOpen(false);
+      setEditingProfile(null);
+    },
+    onError: (error: any) => {
+      toast.error('Erro ao atualizar plano: ' + error.message);
+    },
+  });
+
+  const handleEdit = (profile: NutritionProfile & { user?: User }) => {
+    setEditingProfile(profile);
+    setFormData({
+      weight: profile.weight.toString(),
+      height: profile.height.toString(),
+      age: profile.age.toString(),
+      gender: profile.gender,
+      goal: profile.goal,
+      activityLevel: profile.activity_level,
+    });
+    setEditDialogOpen(true);
+  };
+
+  const handleUpdateProfile = async () => {
+    if (!editingProfile) return;
+
+    try {
+      // Calculate new metrics
+      const { data: metrics, error: metricsError } = await supabase.functions.invoke(
+        'calculate-nutrition-metrics',
+        {
+          body: {
+            weight: parseFloat(formData.weight),
+            height: parseFloat(formData.height),
+            age: parseInt(formData.age),
+            gender: formData.gender,
+            activityLevel: formData.activityLevel,
+            goal: formData.goal,
+          },
+        }
+      );
+
+      if (metricsError) throw metricsError;
+
+      await updateMutation.mutateAsync({
+        id: editingProfile.id,
+        data: {
+          weight: parseFloat(formData.weight),
+          height: parseFloat(formData.height),
+          age: parseInt(formData.age),
+          gender: formData.gender,
+          goal: formData.goal,
+          activity_level: formData.activityLevel,
+          bmi: metrics.bmi,
+          bmr: metrics.bmr,
+          daily_calories: metrics.daily_calories,
+          daily_protein: metrics.daily_protein,
+          daily_carbs: metrics.daily_carbs,
+          daily_fats: metrics.daily_fats,
+        },
+      });
+    } catch (error: any) {
+      toast.error('Erro ao atualizar: ' + error.message);
+    }
+  };
+
   const handleCreateProfile = async () => {
     if (!selectedUser) {
       toast.error('Selecione um usuário');
@@ -98,6 +196,8 @@ export default function NutritionPlanManagement() {
     }
 
     try {
+      toast.loading('Criando plano nutricional...');
+
       // Calculate metrics
       const { data: metrics, error: metricsError } = await supabase.functions.invoke(
         'calculate-nutrition-metrics',
@@ -116,7 +216,7 @@ export default function NutritionPlanManagement() {
       if (metricsError) throw metricsError;
 
       // Create profile
-      const { error: profileError } = await supabase
+      const { data: newProfile, error: profileError } = await supabase
         .from('nutrition_profiles')
         .insert([{
           user_id: selectedUser,
@@ -132,11 +232,45 @@ export default function NutritionPlanManagement() {
           daily_protein: metrics.daily_protein,
           daily_carbs: metrics.daily_carbs,
           daily_fats: metrics.daily_fats,
-        }]);
+        }])
+        .select()
+        .single();
 
       if (profileError) throw profileError;
 
-      toast.success('Plano nutricional criado com sucesso!');
+      // Generate default meal plan
+      const { data: mealPlanData, error: mealPlanError } = await supabase.functions.invoke(
+        'generate-meal-plan',
+        {
+          body: {
+            user_profile: {
+              peso_kg: parseFloat(formData.weight),
+              altura_cm: parseFloat(formData.height),
+              idade: parseInt(formData.age),
+              sexo: formData.gender === 'masculino' ? 'M' : 'F',
+              atividade_fisica: formData.activityLevel,
+              objetivo: formData.goal,
+            },
+            calorias_alvo: metrics.daily_calories,
+            macros: {
+              proteina: { gramas: metrics.daily_protein, percentual: 30 },
+              carboidrato: { gramas: metrics.daily_carbs, percentual: 40 },
+              gordura: { gramas: metrics.daily_fats, percentual: 30 },
+            },
+            restricoes: [],
+            preferencias: [],
+            refeicoes_por_dia: 4,
+          },
+        }
+      );
+
+      if (!mealPlanError && mealPlanData?.success) {
+        toast.success('Plano nutricional e modelo padrão criados com sucesso!');
+      } else {
+        toast.success('Plano nutricional criado! (Modelo padrão pendente)');
+      }
+
+      queryClient.invalidateQueries({ queryKey: ['nutrition-profiles-admin'] });
       setDialogOpen(false);
       setSelectedUser('');
       setFormData({
@@ -149,6 +283,8 @@ export default function NutritionPlanManagement() {
       });
     } catch (error: any) {
       toast.error('Erro ao criar plano: ' + error.message);
+    } finally {
+      toast.dismiss();
     }
   };
 
@@ -359,6 +495,43 @@ export default function NutritionPlanManagement() {
                       <span className="font-medium">{profile.daily_fats}g</span>
                     </div>
                   </div>
+
+                  <div className="flex gap-2 pt-3 border-t">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => handleEdit(profile)}
+                    >
+                      <Pencil className="h-4 w-4 mr-2" />
+                      Editar
+                    </Button>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="outline" size="sm" className="flex-1 text-destructive hover:text-destructive">
+                          <Trash2 className="h-4 w-4 mr-2" />
+                          Excluir
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Tem certeza que deseja excluir este plano nutricional? Esta ação não pode ser desfeita.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => deleteMutation.mutate(profile.id)}
+                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                          >
+                            Excluir
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
                 </CardContent>
               </Card>
             );
@@ -379,6 +552,123 @@ export default function NutritionPlanManagement() {
           </Card>
         )}
       </div>
+
+      {/* Edit Dialog */}
+      <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Editar Plano Nutricional</DialogTitle>
+            <DialogDescription>
+              Atualize as informações do perfil nutricional do aluno
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-6">
+            {/* Dados Básicos */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="edit-weight">Peso (kg)</Label>
+                <Input
+                  id="edit-weight"
+                  type="number"
+                  value={formData.weight}
+                  onChange={(e) => setFormData({ ...formData, weight: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-height">Altura (cm)</Label>
+                <Input
+                  id="edit-height"
+                  type="number"
+                  value={formData.height}
+                  onChange={(e) => setFormData({ ...formData, height: e.target.value })}
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="edit-age">Idade</Label>
+                <Input
+                  id="edit-age"
+                  type="number"
+                  value={formData.age}
+                  onChange={(e) => setFormData({ ...formData, age: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-gender">Sexo</Label>
+                <Select value={formData.gender} onValueChange={(value) => setFormData({ ...formData, gender: value as Gender })}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="masculino">Masculino</SelectItem>
+                    <SelectItem value="feminino">Feminino</SelectItem>
+                    <SelectItem value="outro">Outro</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div>
+              <Label>Objetivo</Label>
+              <Select value={formData.goal} onValueChange={(value) => setFormData({ ...formData, goal: value as Goal })}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(GOAL_LABELS).map(([key, label]) => (
+                    <SelectItem key={key} value={key}>
+                      {label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <Label>Nível de Atividade Física</Label>
+              <Select
+                value={formData.activityLevel}
+                onValueChange={(value) => setFormData({ ...formData, activityLevel: value as ActivityLevel })}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(ACTIVITY_LABELS).map(([key, label]) => (
+                    <SelectItem key={key} value={key}>
+                      {label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={() => {
+                  setEditDialogOpen(false);
+                  setEditingProfile(null);
+                }}
+              >
+                Cancelar
+              </Button>
+              <Button
+                onClick={handleUpdateProfile}
+                disabled={updateMutation.isPending}
+                className="flex-1"
+              >
+                {updateMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                Salvar Alterações
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
