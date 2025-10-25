@@ -133,10 +133,8 @@ export const NutritionOnboarding = ({ onComplete }: OnboardingProps) => {
         toast.error('Perfil salvo mas houve um erro ao criar plano nutricional');
       }
 
-      // Aguardar um pouco para garantir que o React Query atualizou
-      setTimeout(() => {
-        onComplete();
-      }, 500);
+      // Chamar onComplete para indicar que o processo foi concluído
+      onComplete();
     } catch (error) {
       console.error('Erro ao criar perfil:', error);
       toast.error('Erro ao criar perfil nutricional');

@@ -17,6 +17,7 @@ import { GOAL_LABELS } from '@/types/nutrition';
 export default function Nutrition() {
   const { profile, isLoading } = useNutritionProfile();
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [onboardingCompleted, setOnboardingCompleted] = useState(false);
 
   if (isLoading) {
     return (
@@ -26,8 +27,16 @@ export default function Nutrition() {
     );
   }
 
-  if (!profile || showOnboarding) {
-    return <NutritionOnboarding onComplete={() => setShowOnboarding(false)} />;
+  // Mostrar onboarding apenas se não houver perfil E o onboarding não foi completado nesta sessão
+  if ((!profile && !onboardingCompleted) || showOnboarding) {
+    return (
+      <NutritionOnboarding 
+        onComplete={() => {
+          setShowOnboarding(false);
+          setOnboardingCompleted(true);
+        }} 
+      />
+    );
   }
 
   const getBMICategory = (bmi: number) => {
