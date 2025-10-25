@@ -73,6 +73,7 @@ import HealthcareProfessionalManagement from "@/pages/admin/HealthcareProfession
 import SubscriptionManagement from "@/pages/admin/SubscriptionManagement";
 import HealthIntegrationManagement from "@/pages/admin/HealthIntegrationManagement";
 import Nutrition from "@/pages/Nutrition";
+import NutritionPlanManagement from "@/pages/admin/NutritionPlanManagement";
 
 const App = () => {
   return (
@@ -164,6 +165,8 @@ const App = () => {
               {/* Blog Management - Super Admin only */}
               <Route path="blog" element={<BlogManagement />} />
               <Route path="blog-categories" element={<BlogCategoryManagement />} />
+              {/* Nutrition Plans */}
+              <Route path="nutrition-plans" element={<NutritionPlanManagement />} />
             </Route>
             
             {/* 404 */}

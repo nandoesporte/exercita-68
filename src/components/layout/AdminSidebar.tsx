@@ -23,6 +23,7 @@ import {
   HeartHandshake,
   History,
   BookOpen,
+  Apple,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -136,6 +137,12 @@ const AdminSidebar = ({ onNavItemClick }: AdminSidebarProps = {}) => {
       title: 'Profissionais de Saúde',
       icon: <HeartHandshake className="h-4 w-4" />,
       to: '/admin/healthcare-professionals'
+    }] : []),
+    // Only show if user has appointments permission
+    ...(hasPermission('manage_appointments') || isAdmin ? [{
+      title: 'Planos Nutricionais',
+      icon: <Apple className="h-4 w-4" />,
+      to: '/admin/nutrition-plans'
     }] : []),
     // Only show if user has payment methods permission
     ...(hasPermission('manage_payment_methods') ? [{

@@ -2,8 +2,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronDown, Calendar, UtensilsCrossed, Settings } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { ChevronDown, Calendar, UtensilsCrossed, Settings, Loader2 } from "lucide-react";
 import { useState } from "react";
+import { useMealPlanGenerator } from "@/hooks/useMealPlanGenerator";
+import { useNutritionProfile } from "@/hooks/useNutritionProfile";
+import { toast } from "sonner";
 
 const WEEK_DAYS = [
   { day: "Segunda", meals: 4, calories: 2100 },
@@ -24,6 +28,42 @@ const SAMPLE_MEALS = [
 
 export function PlanTab() {
   const [openDay, setOpenDay] = useState<string | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const generateMealPlan = useMealPlanGenerator();
+  const { profile } = useNutritionProfile();
+
+  const handleGeneratePlan = async () => {
+    if (!profile) {
+      toast.error('Configure seu perfil nutricional primeiro');
+      return;
+    }
+
+    try {
+      await generateMealPlan.mutateAsync({
+        user_profile: {
+          peso_kg: profile.weight,
+          altura_cm: profile.height,
+          idade: profile.age,
+          sexo: profile.gender === 'masculino' ? 'M' : 'F',
+          atividade_fisica: profile.activity_level,
+          objetivo: profile.goal,
+        },
+        calorias_alvo: profile.daily_calories || 2000,
+        macros: {
+          proteina: { gramas: profile.daily_protein || 150, percentual: 30 },
+          carboidrato: { gramas: profile.daily_carbs || 200, percentual: 40 },
+          gordura: { gramas: profile.daily_fats || 60, percentual: 30 },
+        },
+        restricoes: profile.restrictions || [],
+        preferencias: [],
+        refeicoes_por_dia: 4,
+      });
+      toast.success('Plano nutricional gerado com sucesso!');
+      setDialogOpen(false);
+    } catch (error) {
+      toast.error('Erro ao gerar plano nutricional');
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -40,10 +80,40 @@ export function PlanTab() {
                 Seu plano personalizado de refeições
               </p>
             </div>
-            <Button variant="outline" size="sm">
-              <Settings className="w-4 h-4 mr-2" />
-              Personalizar
-            </Button>
+            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" size="sm">
+                  <Settings className="w-4 h-4 mr-2" />
+                  Personalizar
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Gerar Plano Nutricional Personalizado</DialogTitle>
+                  <DialogDescription>
+                    Vamos criar um plano semanal de refeições baseado no seu perfil e objetivos nutricionais.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4">
+                  {profile && (
+                    <div className="bg-muted p-4 rounded-lg space-y-2">
+                      <p className="text-sm"><strong>Meta Diária:</strong> {profile.daily_calories} calorias</p>
+                      <p className="text-sm"><strong>Proteína:</strong> {profile.daily_protein}g</p>
+                      <p className="text-sm"><strong>Carboidratos:</strong> {profile.daily_carbs}g</p>
+                      <p className="text-sm"><strong>Gorduras:</strong> {profile.daily_fats}g</p>
+                    </div>
+                  )}
+                  <Button
+                    onClick={handleGeneratePlan}
+                    disabled={generateMealPlan.isPending || !profile}
+                    className="w-full"
+                  >
+                    {generateMealPlan.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                    Gerar Plano Semanal
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
         </CardHeader>
       </Card>
