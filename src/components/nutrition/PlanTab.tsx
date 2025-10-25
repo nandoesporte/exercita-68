@@ -34,7 +34,7 @@ export function PlanTab() {
           <div className="flex flex-col gap-3">
             <CardTitle className="flex items-center gap-2">
               <Calendar className="w-5 h-5 text-primary" />
-              Modelo de Plano personalizado para Lipedema
+              Este plano foi gerado por nossa inteligência artificial especializada em Lipedema
             </CardTitle>
             <p className="text-sm text-muted-foreground">
               Para um Plano Personalizado Agende conosco
