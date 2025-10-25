@@ -304,7 +304,7 @@ export function useAdminWorkouts() {
     queryFn: async () => {
       let query = supabase
         .from('profiles')
-        .select('id, first_name, last_name, admin_id, avatar_url, birthdate, created_at, fitness_goal, gender, height, instance_id, is_admin, updated_at, weight')
+        .select('id, first_name, last_name, admin_id, avatar_url, birthdate, created_at, fitness_goal, gender, height, instance_id, is_admin, nutritionist_request_sent, updated_at, weight')
         .order('first_name');
 
       // Filter by admin_id if not super admin
