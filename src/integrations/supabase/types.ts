@@ -1724,6 +1724,57 @@ export type Database = {
           },
         ]
       }
+      receitas: {
+        Row: {
+          calorias_por_porcao: number | null
+          created_at: string | null
+          criado_por: string
+          descricao_curta: string | null
+          imagem_url: string | null
+          ingredientes: Json
+          macros_por_porcao: Json | null
+          modo_preparo: string
+          nivel_dificuldade: string | null
+          receita_id: string
+          rendimento: number
+          tags: string[] | null
+          tempo_minutos: number
+          titulo: string
+        }
+        Insert: {
+          calorias_por_porcao?: number | null
+          created_at?: string | null
+          criado_por?: string
+          descricao_curta?: string | null
+          imagem_url?: string | null
+          ingredientes?: Json
+          macros_por_porcao?: Json | null
+          modo_preparo: string
+          nivel_dificuldade?: string | null
+          receita_id?: string
+          rendimento?: number
+          tags?: string[] | null
+          tempo_minutos: number
+          titulo: string
+        }
+        Update: {
+          calorias_por_porcao?: number | null
+          created_at?: string | null
+          criado_por?: string
+          descricao_curta?: string | null
+          imagem_url?: string | null
+          ingredientes?: Json
+          macros_por_porcao?: Json | null
+          modo_preparo?: string
+          nivel_dificuldade?: string | null
+          receita_id?: string
+          rendimento?: number
+          tags?: string[] | null
+          tempo_minutos?: number
+          titulo?: string
+        }
+        Relationships: []
+      }
       recipes: {
         Row: {
           admin_id: string | null
