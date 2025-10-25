@@ -145,7 +145,17 @@ export function ProfessionalCard({
             variant={selected ? "default" : "outline"}
             onClick={(e) => {
               e.stopPropagation();
-              onSelect(professional);
+              
+              // Se tiver WhatsApp, abrir o app
+              if (professional.whatsapp) {
+                const phoneNumber = professional.whatsapp.replace(/\D/g, '');
+                const message = encodeURIComponent(`Olá! Gostaria de agendar uma consulta com ${professional.name}.`);
+                const whatsappUrl = `https://wa.me/55${phoneNumber}?text=${message}`;
+                window.open(whatsappUrl, '_blank');
+              } else {
+                // Se não tiver WhatsApp, apenas seleciona o profissional
+                onSelect(professional);
+              }
             }}
           >
             {selected ? 'Selecionado' : 'Agendar'}
