@@ -685,6 +685,33 @@ export type Database = {
           },
         ]
       }
+      food_search_cache: {
+        Row: {
+          created_at: string
+          expires_at: string
+          id: string
+          results: Json
+          search_term: string
+          source: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          results: Json
+          search_term: string
+          source: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          results?: Json
+          search_term?: string
+          source?: string
+        }
+        Relationships: []
+      }
       gym_photo_analysis: {
         Row: {
           analysis_date: string
@@ -2473,6 +2500,7 @@ export type Database = {
         }
         Returns: Json
       }
+      clean_expired_food_cache: { Args: never; Returns: undefined }
       clone_workout_for_user: {
         Args: { target_user_id: string; workout_id: string }
         Returns: boolean

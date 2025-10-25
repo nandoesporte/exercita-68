@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, Search } from "lucide-react";
-import { Command, CommandEmpty, CommandGroup, CommandItem, CommandList } from "@/components/ui/command";
+import { Command, CommandGroup, CommandItem, CommandList } from "@/components/ui/command";
+import { supabase } from "@/integrations/supabase/client";
 
 interface FoodItem {
   id: string;
@@ -11,7 +12,7 @@ interface FoodItem {
   protein?: number;
   carbs?: number;
   fats?: number;
-  source: "local" | "openfoodfacts";
+  source: "local" | "openfoodfacts" | "edamam";
   serving_size?: string;
 }
 
@@ -21,18 +22,11 @@ interface FoodSearchInputProps {
   onChange: (value: string) => void;
 }
 
-const LOCAL_FOODS: FoodItem[] = [
-  { id: "1", name: "Frango Grelhado", calories: 165, protein: 31, carbs: 0, fats: 3.6, source: "local", serving_size: "100g" },
-  { id: "2", name: "Arroz Branco", calories: 130, protein: 2.7, carbs: 28, fats: 0.3, source: "local", serving_size: "100g" },
-  { id: "3", name: "Feijão Preto", calories: 132, protein: 8.9, carbs: 23, fats: 0.5, source: "local", serving_size: "100g" },
-  { id: "4", name: "Batata Doce", calories: 86, protein: 1.6, carbs: 20, fats: 0.1, source: "local", serving_size: "100g" },
-  { id: "5", name: "Ovo Cozido", calories: 155, protein: 13, carbs: 1.1, fats: 11, source: "local", serving_size: "1 unidade" },
-  { id: "6", name: "Banana", calories: 89, protein: 1.1, carbs: 23, fats: 0.3, source: "local", serving_size: "1 unidade" },
-  { id: "7", name: "Aveia", calories: 389, protein: 16.9, carbs: 66, fats: 6.9, source: "local", serving_size: "100g" },
-  { id: "8", name: "Peito de Peru", calories: 111, protein: 24, carbs: 0.7, fats: 1, source: "local", serving_size: "100g" },
-  { id: "9", name: "Iogurte Grego Natural", calories: 59, protein: 10, carbs: 3.6, fats: 0.4, source: "local", serving_size: "100g" },
-  { id: "10", name: "Salmão", calories: 208, protein: 20, carbs: 0, fats: 13, source: "local", serving_size: "100g" },
-];
+const SOURCE_LABELS: Record<string, string> = {
+  local: "Base",
+  openfoodfacts: "OFF",
+  edamam: "Edamam",
+};
 
 export function FoodSearchInput({ onSelect, value, onChange }: FoodSearchInputProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,25 +34,31 @@ export function FoodSearchInput({ onSelect, value, onChange }: FoodSearchInputPr
   const [isSearching, setIsSearching] = useState(false);
   const searchTimeoutRef = useRef<NodeJS.Timeout>();
 
-  const searchOpenFoodFacts = async (query: string): Promise<FoodItem[]> => {
+  const searchFood = async (query: string): Promise<FoodItem[]> => {
     try {
-      const response = await fetch(
-        `https://br.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1&page_size=5`
-      );
-      const data = await response.json();
+      console.log(`Searching foods for: ${query}`);
+      
+      const { data, error } = await supabase.functions.invoke('search-food', {
+        body: { q: query },
+      });
 
-      return (data.products || []).map((product: any) => ({
-        id: product.code || Math.random().toString(),
-        name: product.product_name_pt || product.product_name || "Produto sem nome",
-        calories: Math.round(product.nutriments?.["energy-kcal_100g"] || 0),
-        protein: product.nutriments?.proteins_100g || 0,
-        carbs: product.nutriments?.carbohydrates_100g || 0,
-        fats: product.nutriments?.fat_100g || 0,
-        source: "openfoodfacts" as const,
-        serving_size: "100g",
-      })).filter((item: FoodItem) => item.calories > 0);
+      if (error) {
+        console.error("Error calling search-food function:", error);
+        // Fallback to empty if function fails
+        return [];
+      }
+
+      // Check if we got a fallback response (error but with local data)
+      if (data?.fallback) {
+        console.log("Using fallback data from function");
+        return data.results || [];
+      }
+
+      console.log(`Found ${data?.count || 0} results (cached: ${data?.cached || false})`);
+      return data?.results || [];
     } catch (error) {
-      console.error("Erro ao buscar no Open Food Facts:", error);
+      console.error("Network error searching food:", error);
+      // Return empty on network errors
       return [];
     }
   };
@@ -78,19 +78,10 @@ export function FoodSearchInput({ onSelect, value, onChange }: FoodSearchInputPr
       clearTimeout(searchTimeoutRef.current);
     }
 
-    // Search local foods first
-    const localResults = LOCAL_FOODS.filter((food) =>
-      food.name.toLowerCase().includes(value.toLowerCase())
-    );
-
-    setSuggestions(localResults);
-
-    // Debounced search on Open Food Facts
+    // Debounced search using the edge function
     searchTimeoutRef.current = setTimeout(async () => {
-      if (value.length >= 3) {
-        const externalResults = await searchOpenFoodFacts(value);
-        setSuggestions([...localResults, ...externalResults]);
-      }
+      const results = await searchFood(value);
+      setSuggestions(results);
       setIsSearching(false);
     }, 500);
 
@@ -148,7 +139,7 @@ export function FoodSearchInput({ onSelect, value, onChange }: FoodSearchInputPr
                         )}
                       </div>
                       <Badge variant="outline" className="ml-2 text-xs">
-                        {food.source === "local" ? "Base" : "OFF"}
+                        {SOURCE_LABELS[food.source] || food.source}
                       </Badge>
                     </div>
                   </CommandItem>

@@ -39,3 +39,6 @@ verify_jwt = true
 
 [functions.nutrition-assessment]
 verify_jwt = false
+
+[functions.search-food]
+verify_jwt = false
