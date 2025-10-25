@@ -1166,6 +1166,60 @@ export type Database = {
           },
         ]
       }
+      nutricao_users: {
+        Row: {
+          alergias: string[] | null
+          altura_cm: number
+          atividade_fisica: string
+          created_at: string | null
+          data_nascimento: string
+          id: string
+          imc: number | null
+          macronutrientes: Json | null
+          objetivo: string
+          peso_kg: number
+          restricoes: string[] | null
+          sexo: string
+          tmb: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          alergias?: string[] | null
+          altura_cm: number
+          atividade_fisica: string
+          created_at?: string | null
+          data_nascimento: string
+          id?: string
+          imc?: number | null
+          macronutrientes?: Json | null
+          objetivo: string
+          peso_kg: number
+          restricoes?: string[] | null
+          sexo: string
+          tmb?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          alergias?: string[] | null
+          altura_cm?: number
+          atividade_fisica?: string
+          created_at?: string | null
+          data_nascimento?: string
+          id?: string
+          imc?: number | null
+          macronutrientes?: Json | null
+          objetivo?: string
+          peso_kg?: number
+          restricoes?: string[] | null
+          sexo?: string
+          tmb?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       nutrition_profiles: {
         Row: {
           activity_level: string
