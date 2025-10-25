@@ -33,27 +33,28 @@ serve(async (req) => {
   }
 
   try {
-    // Client for auth verification
+    // Extract JWT token from Authorization header
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      throw new Error('Authorization header missing');
+    }
+    
+    const token = authHeader.replace('Bearer ', '');
+    
+    // Create client for auth verification
     const authClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
-      {
-        global: {
-          headers: { Authorization: req.headers.get('Authorization')! },
-        },
-      }
+      Deno.env.get('SUPABASE_ANON_KEY') ?? ''
     );
 
-    // Verify user authentication
-    const { data: { user }, error: authError } = await authClient.auth.getUser();
+    // Verify user authentication by passing token directly
+    const { data: { user }, error: authError } = await authClient.auth.getUser(token);
     
-    const authHeader = req.headers.get('Authorization');
     console.log('Auth check:', { 
       hasUser: !!user, 
       userId: user?.id, 
       authError: authError?.message,
       hasAuthHeader: !!authHeader,
-      authHeaderPrefix: authHeader?.substring(0, 20) + '...',
     });
     
     if (!user || authError) {
