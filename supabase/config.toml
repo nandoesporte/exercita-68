@@ -51,3 +51,6 @@ verify_jwt = true
 
 [functions.nutrition-assistant]
 verify_jwt = true
+
+[functions.request-nutritionist]
+verify_jwt = true

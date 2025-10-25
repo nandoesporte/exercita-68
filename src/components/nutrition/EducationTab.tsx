@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { BookOpen, Video, TrendingUp, Heart, Dumbbell, Brain } from "lucide-react";
+import { RequestNutritionistCard } from "./RequestNutritionistCard";
 
 const ARTICLES = [
   {
@@ -82,6 +83,9 @@ export function EducationTab() {
           </p>
         </CardHeader>
       </Card>
+
+      {/* Card de Solicitação de Nutricionista */}
+      <RequestNutritionistCard />
 
       {/* Lista de Artigos/Vídeos */}
       <div className="grid gap-4 md:grid-cols-2">

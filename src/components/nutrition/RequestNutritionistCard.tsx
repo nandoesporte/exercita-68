@@ -18,7 +18,7 @@ export const RequestNutritionistCard = () => {
     requestNutritionist();
   };
 
-  if (profile?.nutritionist_request_sent) {
+  if ((profile as any)?.nutritionist_request_sent) {
     return (
       <Card className="border-green-200 bg-green-50">
         <CardHeader>

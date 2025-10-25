@@ -5,6 +5,7 @@ import { PlanTab } from '@/components/nutrition/PlanTab';
 import { RecipesTab } from '@/components/nutrition/RecipesTab';
 import { EducationTab } from '@/components/nutrition/EducationTab';
 import { NutritionAssistant } from '@/components/nutrition/NutritionAssistant';
+import { RequestNutritionistCard } from '@/components/nutrition/RequestNutritionistCard';
 import { useNutritionProfile } from '@/hooks/useNutritionProfile';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';

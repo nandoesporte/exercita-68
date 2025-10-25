@@ -1385,6 +1385,51 @@ export type Database = {
         }
         Relationships: []
       }
+      nutritionist_requests: {
+        Row: {
+          completed_at: string | null
+          contacted_at: string | null
+          created_at: string
+          diary_summary: Json | null
+          id: string
+          notes: string | null
+          nutrition_data: Json | null
+          profile_data: Json | null
+          scheduled_at: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          contacted_at?: string | null
+          created_at?: string
+          diary_summary?: Json | null
+          id?: string
+          notes?: string | null
+          nutrition_data?: Json | null
+          profile_data?: Json | null
+          scheduled_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          contacted_at?: string | null
+          created_at?: string
+          diary_summary?: Json | null
+          id?: string
+          notes?: string | null
+          nutrition_data?: Json | null
+          profile_data?: Json | null
+          scheduled_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       order_items: {
         Row: {
           created_at: string | null
@@ -1706,6 +1751,7 @@ export type Database = {
           instance_id: string | null
           is_admin: boolean | null
           last_name: string | null
+          nutritionist_request_sent: boolean | null
           updated_at: string | null
           weight: number | null
         }
@@ -1722,6 +1768,7 @@ export type Database = {
           instance_id?: string | null
           is_admin?: boolean | null
           last_name?: string | null
+          nutritionist_request_sent?: boolean | null
           updated_at?: string | null
           weight?: number | null
         }
@@ -1738,6 +1785,7 @@ export type Database = {
           instance_id?: string | null
           is_admin?: boolean | null
           last_name?: string | null
+          nutritionist_request_sent?: boolean | null
           updated_at?: string | null
           weight?: number | null
         }
