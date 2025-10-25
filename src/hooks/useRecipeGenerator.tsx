@@ -53,11 +53,11 @@ export const useRecipeGenerator = () => {
       return data.recipe;
     },
     onSuccess: () => {
-      toast.success('Receita gerada com sucesso!');
+      toast.success('Receita criada com sucesso!');
     },
     onError: (error: Error) => {
       console.error('Erro ao gerar receita:', error);
-      toast.error('Erro ao gerar receita: ' + error.message);
+      toast.error('Não foi possível gerar a receita. Verifique sua conexão e tente novamente.');
     },
   });
 };

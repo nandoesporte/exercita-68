@@ -30,12 +30,12 @@ export const useNutritionistRequest = () => {
       return data;
     },
     onSuccess: (data) => {
-      toast.success(data.message || 'Solicitação enviada com sucesso!');
+      toast.success('Solicitação enviada! Logo você receberá um retorno.');
       queryClient.invalidateQueries({ queryKey: ['profile'] });
     },
     onError: (error: Error) => {
       console.error('Erro na solicitação:', error);
-      toast.error('Erro ao enviar solicitação: ' + error.message);
+      toast.error('Não foi possível enviar. Verifique sua conexão e tente novamente.');
     },
   });
 };

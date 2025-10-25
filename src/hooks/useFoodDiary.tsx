@@ -56,10 +56,10 @@ export const useFoodDiary = (date?: Date) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['food-diary', dateStr] });
-      toast.success('Refeição registrada com sucesso!');
+      toast.success('Registrado! Seus nutrientes foram atualizados.');
     },
     onError: (error) => {
-      toast.error('Erro ao registrar refeição: ' + error.message);
+      toast.error('Não foi possível salvar. Verifique sua conexão e tente novamente.');
     },
   });
 
@@ -74,10 +74,10 @@ export const useFoodDiary = (date?: Date) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['food-diary', dateStr] });
-      toast.success('Registro removido com sucesso!');
+      toast.success('Removido com sucesso!');
     },
     onError: (error) => {
-      toast.error('Erro ao remover registro: ' + error.message);
+      toast.error('Não foi possível remover. Verifique sua conexão e tente novamente.');
     },
   });
 

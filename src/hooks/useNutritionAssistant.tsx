@@ -73,7 +73,7 @@ export const useNutritionAssistant = () => {
     },
     onError: (error: Error) => {
       console.error('Erro no chat:', error);
-      toast.error('Erro ao enviar mensagem: ' + error.message);
+      toast.error('Não foi possível enviar. Verifique sua conexão e tente novamente.');
       
       // Remove the failed user message
       setMessages(prev => prev.slice(0, -1));

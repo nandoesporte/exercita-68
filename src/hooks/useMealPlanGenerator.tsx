@@ -90,11 +90,11 @@ export const useMealPlanGenerator = () => {
       return data;
     },
     onSuccess: () => {
-      toast.success('Plano semanal gerado com sucesso!');
+      toast.success('Plano criado com sucesso!');
     },
     onError: (error: Error) => {
       console.error('Erro ao gerar plano:', error);
-      toast.error('Erro ao gerar plano semanal: ' + error.message);
+      toast.error('Não foi possível gerar o plano. Verifique sua conexão e tente novamente.');
     },
   });
 };

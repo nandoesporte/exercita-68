@@ -143,7 +143,7 @@ export function NutritionAssistant() {
               </Button>
             </div>
             <p className="text-xs text-muted-foreground mt-2 text-center">
-              Este é um assistente virtual. Para casos clínicos, consulte um nutricionista.
+              As recomendações são sugestões gerais — consulte um nutricionista para condições médicas.
             </p>
           </div>
         </SheetContent>
