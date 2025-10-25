@@ -5,8 +5,9 @@ import { HealthcareProfessional, SPECIALTIES } from '@/types/healthcare';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Search, Users } from 'lucide-react';
+import { Search, Users, Heart, Stethoscope, Baby, Activity, Pill, Brain, Scissors, Apple, Dumbbell } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Card } from '@/components/ui/card';
 
 interface ProfessionalSelectorProps {
   onSelect?: (professional: HealthcareProfessional) => void;
@@ -40,15 +41,44 @@ export function ProfessionalSelector({
     );
   }
 
+  const specialtyIcons = [
+    { name: 'Cirurgia Vascular', icon: Heart, filter: 'médico' },
+    { name: 'Endocrinologia', icon: Stethoscope, filter: 'médico' },
+    { name: 'Ginecologia', icon: Baby, filter: 'médico' },
+    { name: 'Fisioterapia', icon: Activity, filter: 'fisioterapeuta' },
+    { name: 'Farmácia', icon: Pill, filter: 'farmacêutico' },
+    { name: 'Psiquiatria', icon: Brain, filter: 'psicólogo' },
+    { name: 'Cirurgia Plástica', icon: Scissors, filter: 'médico' },
+    { name: 'Nutrição', icon: Apple, filter: 'nutricionista' },
+    { name: 'Personal Trainer', icon: Dumbbell, filter: 'personal trainer' },
+  ];
+
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <Users className="w-6 h-6 text-turquoise" />
-        <div>
-          <h2 className="text-2xl font-bold">Selecione um Profissional</h2>
-          <p className="text-muted-foreground">
-            Escolha o profissional ideal para sua necessidade
-          </p>
+      <div className="text-center">
+        <h2 className="text-2xl md:text-3xl font-bold mb-4">Agende uma consulta online ou presencial</h2>
+        
+        {/* Grid de Especialidades */}
+        <div className="grid grid-cols-3 md:grid-cols-5 gap-3 md:gap-4 max-w-4xl mx-auto mb-8">
+          {specialtyIcons.map((specialty) => {
+            const IconComponent = specialty.icon;
+            return (
+              <Card
+                key={specialty.name}
+                className="p-4 hover:shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer group border-2 hover:border-turquoise"
+                onClick={() => setSelectedSpecialty(specialty.filter)}
+              >
+                <div className="flex flex-col items-center gap-2">
+                  <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-turquoise/10 flex items-center justify-center group-hover:bg-turquoise/20 transition-colors">
+                    <IconComponent className="w-6 h-6 md:w-8 md:h-8 text-turquoise" />
+                  </div>
+                  <span className="text-xs md:text-sm font-medium text-center leading-tight">
+                    {specialty.name}
+                  </span>
+                </div>
+              </Card>
+            );
+          })}
         </div>
       </div>
 
