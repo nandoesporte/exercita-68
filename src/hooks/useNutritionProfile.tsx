@@ -33,7 +33,21 @@ export const useNutritionProfile = () => {
       goal: string;
     }) => {
       const { data, error } = await supabase.functions.invoke('calculate-nutrition-metrics', {
-        body: input,
+        body: {
+          peso_kg: input.weight,
+          altura_cm: input.height,
+          idade: input.age,
+          sexo: input.gender === 'masculino' ? 'M' : 'F',
+          atividade_fisica: 
+            input.activityLevel === 'sedentario' ? 'sedentarismo' :
+            input.activityLevel === 'moderado' ? 'moderada' :
+            input.activityLevel === 'intenso' || input.activityLevel === 'muito_intenso' ? 'alta' :
+            'leve',
+          objetivo: 
+            input.goal === 'perder_peso' ? 'perda_peso' :
+            input.goal === 'ganhar_massa' ? 'ganho_massa' :
+            'manutencao',
+        },
       });
 
       if (error) throw error;
