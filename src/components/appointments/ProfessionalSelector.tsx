@@ -93,18 +93,6 @@ export function ProfessionalSelector({
         />
       </div>
 
-      {/* Specialty Tabs */}
-      <Tabs value={selectedSpecialty} onValueChange={setSelectedSpecialty}>
-        <TabsList className="grid w-full grid-cols-4 lg:grid-cols-7">
-          <TabsTrigger value="all">Todos</TabsTrigger>
-          {SPECIALTIES.map(specialty => (
-            <TabsTrigger key={specialty.value} value={specialty.value}>
-              {specialty.label}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-      </Tabs>
-
       {/* Professionals List */}
       {filteredProfessionals.length === 0 ? (
         <Alert>
