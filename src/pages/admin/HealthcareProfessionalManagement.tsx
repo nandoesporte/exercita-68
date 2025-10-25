@@ -40,12 +40,15 @@ import { ProfessionalCard } from '@/components/appointments/ProfessionalCard';
 import { Plus, Pencil, Trash2, Users, Upload } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { ImageCropDialog } from '@/components/profile/ImageCropDialog';
 
 export default function HealthcareProfessionalManagement() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingProfessional, setEditingProfessional] = useState<HealthcareProfessional | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [cropDialogOpen, setCropDialogOpen] = useState(false);
+  const [imageToCrop, setImageToCrop] = useState<string>('');
 
   const { data: professionals = [], isLoading } = useAdminHealthcareProfessionals();
   const createProfessional = useCreateHealthcareProfessional();
@@ -104,19 +107,34 @@ export default function HealthcareProfessionalManagement() {
     setIsDialogOpen(true);
   };
 
-  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast.error('Por favor, selecione uma imagem válida');
+      return;
+    }
+
+    // Create preview URL for cropping
+    const reader = new FileReader();
+    reader.onload = () => {
+      setImageToCrop(reader.result as string);
+      setCropDialogOpen(true);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleCroppedImage = async (croppedBlob: Blob) => {
     setIsUploading(true);
     try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Math.random()}.${fileExt}`;
+      const fileName = `${Math.random()}.jpg`;
       const filePath = `${fileName}`;
 
       const { error: uploadError } = await supabase.storage
         .from('trainer_photos')
-        .upload(filePath, file);
+        .upload(filePath, croppedBlob);
 
       if (uploadError) throw uploadError;
 
@@ -249,11 +267,11 @@ export default function HealthcareProfessionalManagement() {
 
                 <div className="col-span-2">
                   <Label>Foto do Profissional</Label>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 items-center">
                     <Input
                       type="file"
                       accept="image/*"
-                      onChange={handlePhotoUpload}
+                      onChange={handlePhotoSelect}
                       disabled={isUploading}
                     />
                     {formData.photo_url && (
@@ -264,6 +282,9 @@ export default function HealthcareProfessionalManagement() {
                       />
                     )}
                   </div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Você poderá ajustar e recortar a imagem após selecioná-la
+                  </p>
                 </div>
 
                 <div>
@@ -392,6 +413,15 @@ export default function HealthcareProfessionalManagement() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <ImageCropDialog
+        open={cropDialogOpen}
+        onOpenChange={setCropDialogOpen}
+        imageSrc={imageToCrop}
+        onCropComplete={handleCroppedImage}
+        aspectRatio={1}
+        cropShape="rect"
+      />
     </div>
   );
 }
