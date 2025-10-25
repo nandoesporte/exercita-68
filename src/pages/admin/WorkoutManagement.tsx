@@ -6,6 +6,8 @@ import {
 import { useAdminWorkouts } from '@/hooks/useAdminWorkouts';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -87,7 +89,14 @@ const WorkoutManagement = () => {
             accessorKey: "title",
             header: "Título",
             cell: ({ row }: { row: { original: any } }) => (
-              <span className="font-medium">{row.original.title}</span>
+              <div className="flex items-center gap-2">
+                <span className="font-medium">{row.original.title}</span>
+                {row.original.is_featured && (
+                  <span className="bg-primary/20 text-primary text-xs px-2 py-0.5 rounded-full font-semibold">
+                    Destaque
+                  </span>
+                )}
+              </div>
             )
           },
           {
@@ -110,6 +119,33 @@ const WorkoutManagement = () => {
             hideOnMobile: true,
             cell: ({ row }: { row: { original: any } }) => (
               <span>{row.original.category?.name || 'Sem categoria'}</span>
+            )
+          },
+          {
+            accessorKey: "featured",
+            header: "Destaque",
+            hideOnMobile: true,
+            cell: ({ row }: { row: { original: any } }) => (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={async () => {
+                  const { error } = await supabase
+                    .from('workouts')
+                    .update({ is_featured: !row.original.is_featured })
+                    .eq('id', row.original.id);
+                  
+                  if (!error) {
+                    toast.success(row.original.is_featured ? 'Removido dos destaques' : 'Adicionado aos destaques');
+                    window.location.reload();
+                  } else {
+                    toast.error('Erro ao atualizar');
+                  }
+                }}
+                className={row.original.is_featured ? 'bg-primary text-primary-foreground' : ''}
+              >
+                {row.original.is_featured ? 'Remover' : 'Destacar'}
+              </Button>
             )
           },
           {

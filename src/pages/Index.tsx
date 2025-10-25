@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { Dumbbell, Clock, Activity, MapPin, ChevronRight, Camera, ShoppingBag, Settings, Calendar, MessageCircle, Salad } from 'lucide-react';
 import { Card, CardContent } from "@/components/ui/card";
 import { useRecommendedWorkoutsForUser } from '@/hooks/useWorkouts';
+import { useFeaturedWorkouts } from '@/hooks/useFeaturedWorkouts';
 import { 
   Carousel,
   CarouselContent,
@@ -31,6 +32,7 @@ const Index = () => {
   const { data: userWorkouts, isLoading } = useRecommendedWorkoutsForUser(userId);
   const { data: workoutHistory } = useWorkoutHistory();
   const { featuredProducts, isLoadingFeaturedProducts } = useStore();
+  const { data: featuredWorkouts, isLoading: isLoadingFeatured } = useFeaturedWorkouts();
   
   // Use instant profile for immediate display, fallback to regular profile
   const displayProfile = instantProfile || profile;
@@ -78,7 +80,7 @@ const Index = () => {
   };
 
   // Show loading state while data is being fetched
-  if (isLoading || isLoadingFeaturedProducts || !displayProfile) {
+  if (isLoading || isLoadingFeaturedProducts || isLoadingFeatured || !displayProfile) {
     return <HealthLoading message="Sincronizando seus dados de saúde..." />;
   }
   
@@ -172,32 +174,55 @@ const Index = () => {
             </div>
           </div>
         ) : (
-          // Card para agendar consultoria - exibido quando não há treinos atribuídos
-           <Card className="bg-secondary border-none">
-            <CardContent className="p-4 sm:p-6 space-y-4 sm:space-y-6">
-              <div className="bg-card p-4 sm:p-6 rounded-md text-center">
-                <div className="mb-4 sm:mb-6">
-                  <div className="mx-auto bg-secondary/50 w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mb-3 sm:mb-4">
-                    <Calendar size={28} className="text-primary sm:w-9 sm:h-9" />
-                  </div>
-                  <h3 className="text-lg sm:text-xl font-bold mb-2 text-card-foreground">Você ainda não tem um treino personalizado</h3>
-                  <p className="text-muted-foreground text-sm sm:text-base">
-                    Agende uma consulta com nossos especialistas e receba um plano de treino personalizado para suas necessidades.
-                  </p>
-                </div>
-                
-                <Button 
-                  className="w-full mt-3 sm:mt-4 bg-primary hover:bg-primary/90 text-primary-foreground text-sm sm:text-lg font-semibold h-12 sm:h-14 rounded-xl"
-                  asChild
-                >
-                  <Link to="/appointments">
-                    <Calendar className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-                    Agendar Consulta
-                  </Link>
-                </Button>
+          // Galeria de treinos em destaque - exibido quando não há treinos atribuídos
+          <div>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold">Treinos Disponíveis</h2>
+            </div>
+            
+            {featuredWorkouts && featuredWorkouts.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {featuredWorkouts.map((workout) => (
+                  <WorkoutCard 
+                    key={workout.id}
+                    id={workout.id}
+                    title={workout.title}
+                    image={workout.image_url || "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=1470&auto=format&fit=crop"}
+                    duration={`${workout.duration} min`}
+                    level={workout.level === 'beginner' ? 'Iniciante' : workout.level === 'intermediate' ? 'Intermediário' : 'Avançado'}
+                    calories={workout.calories}
+                    daysOfWeek={workout.days_of_week}
+                  />
+                ))}
               </div>
-            </CardContent>
-          </Card>
+            ) : (
+              <Card className="bg-secondary border-none">
+                <CardContent className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+                  <div className="bg-card p-4 sm:p-6 rounded-md text-center">
+                    <div className="mb-4 sm:mb-6">
+                      <div className="mx-auto bg-secondary/50 w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mb-3 sm:mb-4">
+                        <Calendar size={28} className="text-primary sm:w-9 sm:h-9" />
+                      </div>
+                      <h3 className="text-lg sm:text-xl font-bold mb-2 text-card-foreground">Você ainda não tem um treino personalizado</h3>
+                      <p className="text-muted-foreground text-sm sm:text-base">
+                        Agende uma consulta com nossos especialistas e receba um plano de treino personalizado para suas necessidades.
+                      </p>
+                    </div>
+                    
+                    <Button 
+                      className="w-full mt-3 sm:mt-4 bg-primary hover:bg-primary/90 text-primary-foreground text-sm sm:text-lg font-semibold h-12 sm:h-14 rounded-xl"
+                      asChild
+                    >
+                      <Link to="/appointments">
+                        <Calendar className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+                        Agendar Consulta
+                      </Link>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
         )}
       </section>
       
