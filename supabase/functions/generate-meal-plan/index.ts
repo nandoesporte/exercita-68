@@ -33,7 +33,8 @@ serve(async (req) => {
   }
 
   try {
-    const supabaseClient = createClient(
+    // Client for auth verification
+    const authClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_ANON_KEY') ?? '',
       {
@@ -43,10 +44,25 @@ serve(async (req) => {
       }
     );
 
-    const { data: { user } } = await supabaseClient.auth.getUser();
-    if (!user) {
+    // Verify user authentication
+    const { data: { user }, error: authError } = await authClient.auth.getUser();
+    
+    console.log('Auth check:', { 
+      hasUser: !!user, 
+      userId: user?.id, 
+      authError: authError?.message,
+      hasAuthHeader: !!req.headers.get('Authorization')
+    });
+    
+    if (!user || authError) {
       throw new Error('Usuário não autenticado');
     }
+
+    // Client for database operations with service role
+    const supabaseClient = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+    );
 
     const requestData: MealPlanRequest = await req.json();
     const {
