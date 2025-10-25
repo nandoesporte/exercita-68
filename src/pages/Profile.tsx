@@ -11,6 +11,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import PaymentTabs from '@/components/profile/PaymentTabs';
+import { AvatarEditor } from '@/components/profile/AvatarEditor';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -20,6 +21,8 @@ const Profile = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isImageHovered, setIsImageHovered] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [isEditorOpen, setIsEditorOpen] = useState(false);
   
   // Get admin name - only run once when profile.admin_id is available
   const { data: adminData, isLoading: isLoadingAdmin } = useQuery({
@@ -89,20 +92,50 @@ const Profile = () => {
     // Reset error state when uploading new image
     setImageError(false);
     
+    // Read file as data URL and open editor
+    const reader = new FileReader();
+    reader.onload = () => {
+      setSelectedImage(reader.result as string);
+      setIsEditorOpen(true);
+    };
+    reader.readAsDataURL(file);
+    
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const handleSaveCroppedImage = async (croppedBlob: Blob) => {
     try {
-      console.log('Starting profile image upload');
-      // Upload the image
-      await uploadProfileImage(file);
+      console.log('Salvando imagem recortada');
       
-      // Let's wait before refreshing to ensure the image is processed
-      console.log('Upload successful, refreshing profile data');
+      // Converte blob para File
+      const croppedFile = new File([croppedBlob], 'avatar.jpg', { type: 'image/jpeg' });
+      
+      // Faz upload da imagem
+      await uploadProfileImage(croppedFile);
+      
+      // Fecha o editor
+      setIsEditorOpen(false);
+      setSelectedImage(null);
+      
+      // Aguarda e atualiza o perfil
+      console.log('Upload bem-sucedido, atualizando perfil');
       setTimeout(() => {
         refreshProfile();
       }, 1000);
+      
+      toast.success('Foto atualizada com sucesso!');
     } catch (error) {
       console.error('Erro ao fazer upload:', error);
-      toast("Erro ao fazer upload da imagem. Tente novamente.");
+      toast.error('Erro ao fazer upload da imagem. Tente novamente.');
     }
+  };
+
+  const handleCancelEditor = () => {
+    setIsEditorOpen(false);
+    setSelectedImage(null);
   };
   
   const handleImageLoadError = () => {
@@ -278,6 +311,16 @@ const Profile = () => {
           </button>
         </div>
       </section>
+
+      {/* Avatar Editor Dialog */}
+      {selectedImage && (
+        <AvatarEditor
+          image={selectedImage}
+          onSave={handleSaveCroppedImage}
+          onCancel={handleCancelEditor}
+          isOpen={isEditorOpen}
+        />
+      )}
     </main>
   );
 };
