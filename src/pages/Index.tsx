@@ -4,7 +4,7 @@ import { useProfile } from '@/hooks/useProfile';
 import { useInstantProfile } from '@/hooks/useInstantProfile';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { Dumbbell, Clock, Activity, MapPin, ChevronRight, Camera, ShoppingBag, Settings, Calendar, MessageCircle, Salad } from 'lucide-react';
+import { Dumbbell, Clock, Activity, MapPin, ChevronRight, Camera, ShoppingBag, Settings, Calendar, MessageCircle, Salad, Heart, Stethoscope, Baby, Pill, Brain, Scissors, Apple } from 'lucide-react';
 import { Card, CardContent } from "@/components/ui/card";
 import { useRecommendedWorkoutsForUser } from '@/hooks/useWorkouts';
 import { useFeaturedWorkouts } from '@/hooks/useFeaturedWorkouts';
@@ -154,26 +154,98 @@ const Index = () => {
                   Receba orientação personalizada de nossos profissionais especializados em saúde e fitness.
                 </p>
                 
-                <ul className="space-y-2">
-                  <li className="flex items-start gap-2">
+                <div className="space-y-3">
+                  <div className="flex items-start gap-2">
                     <div className="mt-1 bg-primary/20 p-1 rounded-full">
                       <Activity className="h-4 w-4 text-primary" />
                     </div>
                     <span className="text-sm text-muted-foreground">Avaliação detalhada do seu perfil e objetivos</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="mt-1 bg-primary/20 p-1 rounded-full">
-                      <Calendar className="h-4 w-4 text-primary" />
-                    </div>
-                    <span className="text-sm text-muted-foreground">Escolha o dia e horário que melhor se adapta à sua agenda</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="mt-1 bg-primary/20 p-1 rounded-full">
-                      <Dumbbell className="h-4 w-4 text-primary" />
-                    </div>
-                    <span className="text-sm text-muted-foreground">Receba um plano de treino personalizado</span>
-                  </li>
-                </ul>
+                  </div>
+                  
+                  {/* Grade de ícones de especialidades */}
+                  <div className="grid grid-cols-3 gap-2 py-2">
+                    <Card className="p-2 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer group border hover:border-turquoise">
+                      <Link to="/appointments" className="flex flex-col items-center gap-1">
+                        <div className="w-8 h-8 rounded-full bg-turquoise/10 flex items-center justify-center group-hover:bg-turquoise/20 transition-colors">
+                          <Heart className="w-4 h-4 text-turquoise" />
+                        </div>
+                        <span className="text-[10px] font-medium text-center leading-tight">Cirurgia Vascular</span>
+                      </Link>
+                    </Card>
+                    
+                    <Card className="p-2 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer group border hover:border-turquoise">
+                      <Link to="/appointments" className="flex flex-col items-center gap-1">
+                        <div className="w-8 h-8 rounded-full bg-turquoise/10 flex items-center justify-center group-hover:bg-turquoise/20 transition-colors">
+                          <Stethoscope className="w-4 h-4 text-turquoise" />
+                        </div>
+                        <span className="text-[10px] font-medium text-center leading-tight">Endocrinologia</span>
+                      </Link>
+                    </Card>
+                    
+                    <Card className="p-2 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer group border hover:border-turquoise">
+                      <Link to="/appointments" className="flex flex-col items-center gap-1">
+                        <div className="w-8 h-8 rounded-full bg-turquoise/10 flex items-center justify-center group-hover:bg-turquoise/20 transition-colors">
+                          <Baby className="w-4 h-4 text-turquoise" />
+                        </div>
+                        <span className="text-[10px] font-medium text-center leading-tight">Ginecologia</span>
+                      </Link>
+                    </Card>
+                    
+                    <Card className="p-2 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer group border hover:border-turquoise">
+                      <Link to="/appointments" className="flex flex-col items-center gap-1">
+                        <div className="w-8 h-8 rounded-full bg-turquoise/10 flex items-center justify-center group-hover:bg-turquoise/20 transition-colors">
+                          <Activity className="w-4 h-4 text-turquoise" />
+                        </div>
+                        <span className="text-[10px] font-medium text-center leading-tight">Fisioterapia</span>
+                      </Link>
+                    </Card>
+                    
+                    <Card className="p-2 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer group border hover:border-turquoise">
+                      <Link to="/appointments" className="flex flex-col items-center gap-1">
+                        <div className="w-8 h-8 rounded-full bg-turquoise/10 flex items-center justify-center group-hover:bg-turquoise/20 transition-colors">
+                          <Pill className="w-4 h-4 text-turquoise" />
+                        </div>
+                        <span className="text-[10px] font-medium text-center leading-tight">Farmácia</span>
+                      </Link>
+                    </Card>
+                    
+                    <Card className="p-2 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer group border hover:border-turquoise">
+                      <Link to="/appointments" className="flex flex-col items-center gap-1">
+                        <div className="w-8 h-8 rounded-full bg-turquoise/10 flex items-center justify-center group-hover:bg-turquoise/20 transition-colors">
+                          <Brain className="w-4 h-4 text-turquoise" />
+                        </div>
+                        <span className="text-[10px] font-medium text-center leading-tight">Psiquiatria</span>
+                      </Link>
+                    </Card>
+                    
+                    <Card className="p-2 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer group border hover:border-turquoise">
+                      <Link to="/appointments" className="flex flex-col items-center gap-1">
+                        <div className="w-8 h-8 rounded-full bg-turquoise/10 flex items-center justify-center group-hover:bg-turquoise/20 transition-colors">
+                          <Scissors className="w-4 h-4 text-turquoise" />
+                        </div>
+                        <span className="text-[10px] font-medium text-center leading-tight">Cirurgia Plástica</span>
+                      </Link>
+                    </Card>
+                    
+                    <Card className="p-2 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer group border hover:border-turquoise">
+                      <Link to="/appointments" className="flex flex-col items-center gap-1">
+                        <div className="w-8 h-8 rounded-full bg-turquoise/10 flex items-center justify-center group-hover:bg-turquoise/20 transition-colors">
+                          <Apple className="w-4 h-4 text-turquoise" />
+                        </div>
+                        <span className="text-[10px] font-medium text-center leading-tight">Nutrição</span>
+                      </Link>
+                    </Card>
+                    
+                    <Card className="p-2 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer group border hover:border-turquoise">
+                      <Link to="/appointments" className="flex flex-col items-center gap-1">
+                        <div className="w-8 h-8 rounded-full bg-turquoise/10 flex items-center justify-center group-hover:bg-turquoise/20 transition-colors">
+                          <Dumbbell className="w-4 h-4 text-turquoise" />
+                        </div>
+                        <span className="text-[10px] font-medium text-center leading-tight">Personal Trainer</span>
+                      </Link>
+                    </Card>
+                  </div>
+                </div>
                 
                 <Button 
                   asChild 
