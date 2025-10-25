@@ -1,16 +1,18 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Plus, Coffee, Sun, Moon, Apple } from "lucide-react";
+import { Plus, Coffee, Sun, Moon, Apple, Camera, X } from "lucide-react";
 import { useFoodDiary } from "@/hooks/useFoodDiary";
 import { useNutritionProfile } from "@/hooks/useNutritionProfile";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { FoodSearchInput } from "./FoodSearchInput";
 import { toast } from "sonner";
 import { MealType } from "@/types/nutrition";
+import { supabase } from "@/integrations/supabase/client";
 
 const MEAL_TYPES = [
   { value: "cafe" as const, label: "Café da Manhã", icon: Coffee },
@@ -33,7 +35,12 @@ export function TodayTab() {
     carbs: "",
     fats: "",
     quantity: "",
+    unit: "g",
   });
+
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const todayEntries = entries || [];
   const totalCalories = todayEntries.reduce((sum, entry) => sum + (entry.calories || 0), 0);
@@ -51,6 +58,48 @@ export function TodayTab() {
   const carbsProgress = Math.min((totalCarbs / targetCarbs) * 100, 100);
   const fatsProgress = Math.min((totalFats / targetFats) * 100, 100);
 
+  const handlePhotoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setPhotoFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPhotoPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removePhoto = () => {
+    setPhotoFile(null);
+    setPhotoPreview(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const uploadPhoto = async (file: File): Promise<string | null> => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Não autenticado");
+
+      const fileExt = file.name.split(".").pop();
+      const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("food-photos")
+        .upload(fileName, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data } = supabase.storage.from("food-photos").getPublicUrl(fileName);
+      return data.publicUrl;
+    } catch (error) {
+      console.error("Erro ao fazer upload da foto:", error);
+      return null;
+    }
+  };
+
   const handleSubmit = async () => {
     if (!selectedMealType || !formData.food_name || !formData.calories) {
       toast.error("Preencha os campos obrigatórios");
@@ -58,6 +107,13 @@ export function TodayTab() {
     }
 
     try {
+      let photoUrl = null;
+      if (photoFile) {
+        photoUrl = await uploadPhoto(photoFile);
+      }
+
+      const quantityStr = formData.quantity ? `${formData.quantity}${formData.unit}` : null;
+
       await addEntry.mutateAsync({
         meal_type: selectedMealType,
         food_name: formData.food_name,
@@ -65,13 +121,28 @@ export function TodayTab() {
         protein: formData.protein ? parseFloat(formData.protein) : null,
         carbs: formData.carbs ? parseFloat(formData.carbs) : null,
         fats: formData.fats ? parseFloat(formData.fats) : null,
-        quantity: formData.quantity || null,
+        quantity: quantityStr,
+        photo_url: photoUrl,
       });
+
+      // Analytics event
+      try {
+        if (typeof window !== "undefined" && (window as any).gtag) {
+          (window as any).gtag("event", "food_diary_entry", {
+            meal_type: selectedMealType,
+            calories: parseFloat(formData.calories),
+            has_photo: !!photoUrl,
+          });
+        }
+      } catch (e) {
+        console.error("Analytics error:", e);
+      }
 
       toast.success("Refeição registrada com sucesso!");
       setIsDialogOpen(false);
-      setFormData({ food_name: "", calories: "", protein: "", carbs: "", fats: "", quantity: "" });
+      setFormData({ food_name: "", calories: "", protein: "", carbs: "", fats: "", quantity: "", unit: "g" });
       setSelectedMealType("");
+      removePhoto();
     } catch (error) {
       toast.error("Erro ao registrar refeição");
     }
@@ -193,10 +264,21 @@ export function TodayTab() {
 
             <div className="space-y-2">
               <Label>Nome do Alimento *</Label>
-              <Input
-                placeholder="Ex: Frango grelhado"
+              <FoodSearchInput
                 value={formData.food_name}
-                onChange={(e) => setFormData({ ...formData, food_name: e.target.value })}
+                onChange={(value) => setFormData({ ...formData, food_name: value })}
+                onSelect={(food) => {
+                  setFormData({
+                    ...formData,
+                    food_name: food.name,
+                    calories: food.calories.toString(),
+                    protein: food.protein?.toString() || "",
+                    carbs: food.carbs?.toString() || "",
+                    fats: food.fats?.toString() || "",
+                    quantity: "100",
+                    unit: "g",
+                  });
+                }}
               />
             </div>
 
@@ -212,11 +294,30 @@ export function TodayTab() {
               </div>
               <div className="space-y-2">
                 <Label>Quantidade</Label>
-                <Input
-                  placeholder="150g"
-                  value={formData.quantity}
-                  onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
-                />
+                <div className="flex gap-2">
+                  <Input
+                    type="number"
+                    placeholder="150"
+                    value={formData.quantity}
+                    onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
+                    className="flex-1"
+                  />
+                  <Select
+                    value={formData.unit}
+                    onValueChange={(value) => setFormData({ ...formData, unit: value })}
+                  >
+                    <SelectTrigger className="w-20">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="g">g</SelectItem>
+                      <SelectItem value="ml">ml</SelectItem>
+                      <SelectItem value="un">un</SelectItem>
+                      <SelectItem value="col">col</SelectItem>
+                      <SelectItem value="xic">xic</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             </div>
 
@@ -248,6 +349,46 @@ export function TodayTab() {
                   onChange={(e) => setFormData({ ...formData, fats: e.target.value })}
                 />
               </div>
+            </div>
+
+            {/* Upload de Foto */}
+            <div className="space-y-3">
+              <Label>Foto da Refeição (opcional)</Label>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handlePhotoSelect}
+                className="hidden"
+              />
+              {photoPreview ? (
+                <div className="relative">
+                  <img
+                    src={photoPreview}
+                    alt="Preview"
+                    className="w-full h-48 object-cover rounded-lg border"
+                  />
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="sm"
+                    className="absolute top-2 right-2"
+                    onClick={removePhoto}
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+              ) : (
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full h-24 border-dashed"
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  <Camera className="w-6 h-6 mr-2" />
+                  Adicionar Foto
+                </Button>
+              )}
             </div>
 
             <Button onClick={handleSubmit} className="w-full" disabled={addEntry.isPending}>
