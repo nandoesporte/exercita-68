@@ -155,12 +155,19 @@ export default function NutritionPlanManagement() {
         'calculate-nutrition-metrics',
         {
           body: {
-            weight: parseFloat(formData.weight),
-            height: parseFloat(formData.height),
-            age: parseInt(formData.age),
-            gender: formData.gender,
-            activityLevel: formData.activityLevel,
-            goal: formData.goal,
+            peso_kg: parseFloat(formData.weight),
+            altura_cm: parseFloat(formData.height),
+            idade: parseInt(formData.age),
+            sexo: formData.gender === 'masculino' ? 'M' : 'F',
+            atividade_fisica: 
+              formData.activityLevel === 'sedentario' ? 'sedentarismo' :
+              formData.activityLevel === 'moderado' ? 'moderada' :
+              formData.activityLevel === 'intenso' || formData.activityLevel === 'muito_intenso' ? 'alta' :
+              'leve',
+            objetivo: 
+              formData.goal === 'perder_peso' ? 'perda_peso' :
+              formData.goal === 'ganhar_massa' ? 'ganho_massa' :
+              'manutencao',
           },
         }
       );
@@ -203,12 +210,19 @@ export default function NutritionPlanManagement() {
         'calculate-nutrition-metrics',
         {
           body: {
-            weight: parseFloat(formData.weight),
-            height: parseFloat(formData.height),
-            age: parseInt(formData.age),
-            gender: formData.gender,
-            activityLevel: formData.activityLevel,
-            goal: formData.goal,
+            peso_kg: parseFloat(formData.weight),
+            altura_cm: parseFloat(formData.height),
+            idade: parseInt(formData.age),
+            sexo: formData.gender === 'masculino' ? 'M' : 'F',
+            atividade_fisica: 
+              formData.activityLevel === 'sedentario' ? 'sedentarismo' :
+              formData.activityLevel === 'moderado' ? 'moderada' :
+              formData.activityLevel === 'intenso' || formData.activityLevel === 'muito_intenso' ? 'alta' :
+              'leve',
+            objetivo: 
+              formData.goal === 'perder_peso' ? 'perda_peso' :
+              formData.goal === 'ganhar_massa' ? 'ganho_massa' :
+              'manutencao',
           },
         }
       );
