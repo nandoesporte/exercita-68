@@ -163,85 +163,85 @@ const Index = () => {
                   </div>
                   
                   {/* Grade de ícones de especialidades */}
-                  <div className="grid grid-cols-3 gap-2 py-2">
-                    <Card className="p-2 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer group border hover:border-turquoise">
-                      <Link to="/appointments" className="flex flex-col items-center gap-1">
-                        <div className="w-8 h-8 rounded-full bg-turquoise/10 flex items-center justify-center group-hover:bg-turquoise/20 transition-colors">
-                          <Heart className="w-4 h-4 text-turquoise" />
+                  <div className="grid grid-cols-3 gap-3 py-2">
+                    <Card className="p-3 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer group border hover:border-turquoise">
+                      <Link to="/appointments" className="flex flex-col items-center gap-2">
+                        <div className="w-16 h-16 md:w-18 md:h-18 rounded-full bg-turquoise/10 flex items-center justify-center group-hover:bg-turquoise/20 transition-colors">
+                          <Heart className="w-8 h-8 md:w-9 md:h-9 text-turquoise" />
                         </div>
-                        <span className="text-[10px] font-medium text-center leading-tight">Cirurgia Vascular</span>
+                        <span className="text-xs font-medium text-center leading-tight">Cirurgia Vascular</span>
                       </Link>
                     </Card>
                     
-                    <Card className="p-2 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer group border hover:border-turquoise">
-                      <Link to="/appointments" className="flex flex-col items-center gap-1">
-                        <div className="w-8 h-8 rounded-full bg-turquoise/10 flex items-center justify-center group-hover:bg-turquoise/20 transition-colors">
-                          <Stethoscope className="w-4 h-4 text-turquoise" />
+                    <Card className="p-3 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer group border hover:border-turquoise">
+                      <Link to="/appointments" className="flex flex-col items-center gap-2">
+                        <div className="w-16 h-16 md:w-18 md:h-18 rounded-full bg-turquoise/10 flex items-center justify-center group-hover:bg-turquoise/20 transition-colors">
+                          <Stethoscope className="w-8 h-8 md:w-9 md:h-9 text-turquoise" />
                         </div>
-                        <span className="text-[10px] font-medium text-center leading-tight">Endocrinologia</span>
+                        <span className="text-xs font-medium text-center leading-tight">Endocrinologia</span>
                       </Link>
                     </Card>
                     
-                    <Card className="p-2 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer group border hover:border-turquoise">
-                      <Link to="/appointments" className="flex flex-col items-center gap-1">
-                        <div className="w-8 h-8 rounded-full bg-turquoise/10 flex items-center justify-center group-hover:bg-turquoise/20 transition-colors">
-                          <Baby className="w-4 h-4 text-turquoise" />
+                    <Card className="p-3 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer group border hover:border-turquoise">
+                      <Link to="/appointments" className="flex flex-col items-center gap-2">
+                        <div className="w-16 h-16 md:w-18 md:h-18 rounded-full bg-turquoise/10 flex items-center justify-center group-hover:bg-turquoise/20 transition-colors">
+                          <Baby className="w-8 h-8 md:w-9 md:h-9 text-turquoise" />
                         </div>
-                        <span className="text-[10px] font-medium text-center leading-tight">Ginecologia</span>
+                        <span className="text-xs font-medium text-center leading-tight">Ginecologia</span>
                       </Link>
                     </Card>
                     
-                    <Card className="p-2 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer group border hover:border-turquoise">
-                      <Link to="/appointments" className="flex flex-col items-center gap-1">
-                        <div className="w-8 h-8 rounded-full bg-turquoise/10 flex items-center justify-center group-hover:bg-turquoise/20 transition-colors">
-                          <Activity className="w-4 h-4 text-turquoise" />
+                    <Card className="p-3 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer group border hover:border-turquoise">
+                      <Link to="/appointments" className="flex flex-col items-center gap-2">
+                        <div className="w-16 h-16 md:w-18 md:h-18 rounded-full bg-turquoise/10 flex items-center justify-center group-hover:bg-turquoise/20 transition-colors">
+                          <Activity className="w-8 h-8 md:w-9 md:h-9 text-turquoise" />
                         </div>
-                        <span className="text-[10px] font-medium text-center leading-tight">Fisioterapia</span>
+                        <span className="text-xs font-medium text-center leading-tight">Fisioterapia</span>
                       </Link>
                     </Card>
                     
-                    <Card className="p-2 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer group border hover:border-turquoise">
-                      <Link to="/appointments" className="flex flex-col items-center gap-1">
-                        <div className="w-8 h-8 rounded-full bg-turquoise/10 flex items-center justify-center group-hover:bg-turquoise/20 transition-colors">
-                          <Pill className="w-4 h-4 text-turquoise" />
+                    <Card className="p-3 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer group border hover:border-turquoise">
+                      <Link to="/appointments" className="flex flex-col items-center gap-2">
+                        <div className="w-16 h-16 md:w-18 md:h-18 rounded-full bg-turquoise/10 flex items-center justify-center group-hover:bg-turquoise/20 transition-colors">
+                          <Pill className="w-8 h-8 md:w-9 md:h-9 text-turquoise" />
                         </div>
-                        <span className="text-[10px] font-medium text-center leading-tight">Farmácia</span>
+                        <span className="text-xs font-medium text-center leading-tight">Farmácia</span>
                       </Link>
                     </Card>
                     
-                    <Card className="p-2 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer group border hover:border-turquoise">
-                      <Link to="/appointments" className="flex flex-col items-center gap-1">
-                        <div className="w-8 h-8 rounded-full bg-turquoise/10 flex items-center justify-center group-hover:bg-turquoise/20 transition-colors">
-                          <Brain className="w-4 h-4 text-turquoise" />
+                    <Card className="p-3 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer group border hover:border-turquoise">
+                      <Link to="/appointments" className="flex flex-col items-center gap-2">
+                        <div className="w-16 h-16 md:w-18 md:h-18 rounded-full bg-turquoise/10 flex items-center justify-center group-hover:bg-turquoise/20 transition-colors">
+                          <Brain className="w-8 h-8 md:w-9 md:h-9 text-turquoise" />
                         </div>
-                        <span className="text-[10px] font-medium text-center leading-tight">Psiquiatria</span>
+                        <span className="text-xs font-medium text-center leading-tight">Psiquiatria</span>
                       </Link>
                     </Card>
                     
-                    <Card className="p-2 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer group border hover:border-turquoise">
-                      <Link to="/appointments" className="flex flex-col items-center gap-1">
-                        <div className="w-8 h-8 rounded-full bg-turquoise/10 flex items-center justify-center group-hover:bg-turquoise/20 transition-colors">
-                          <Scissors className="w-4 h-4 text-turquoise" />
+                    <Card className="p-3 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer group border hover:border-turquoise">
+                      <Link to="/appointments" className="flex flex-col items-center gap-2">
+                        <div className="w-16 h-16 md:w-18 md:h-18 rounded-full bg-turquoise/10 flex items-center justify-center group-hover:bg-turquoise/20 transition-colors">
+                          <Scissors className="w-8 h-8 md:w-9 md:h-9 text-turquoise" />
                         </div>
-                        <span className="text-[10px] font-medium text-center leading-tight">Cirurgia Plástica</span>
+                        <span className="text-xs font-medium text-center leading-tight">Cirurgia Plástica</span>
                       </Link>
                     </Card>
                     
-                    <Card className="p-2 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer group border hover:border-turquoise">
-                      <Link to="/appointments" className="flex flex-col items-center gap-1">
-                        <div className="w-8 h-8 rounded-full bg-turquoise/10 flex items-center justify-center group-hover:bg-turquoise/20 transition-colors">
-                          <Apple className="w-4 h-4 text-turquoise" />
+                    <Card className="p-3 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer group border hover:border-turquoise">
+                      <Link to="/appointments" className="flex flex-col items-center gap-2">
+                        <div className="w-16 h-16 md:w-18 md:h-18 rounded-full bg-turquoise/10 flex items-center justify-center group-hover:bg-turquoise/20 transition-colors">
+                          <Apple className="w-8 h-8 md:w-9 md:h-9 text-turquoise" />
                         </div>
-                        <span className="text-[10px] font-medium text-center leading-tight">Nutrição</span>
+                        <span className="text-xs font-medium text-center leading-tight">Nutrição</span>
                       </Link>
                     </Card>
                     
-                    <Card className="p-2 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer group border hover:border-turquoise">
-                      <Link to="/appointments" className="flex flex-col items-center gap-1">
-                        <div className="w-8 h-8 rounded-full bg-turquoise/10 flex items-center justify-center group-hover:bg-turquoise/20 transition-colors">
-                          <Dumbbell className="w-4 h-4 text-turquoise" />
+                    <Card className="p-3 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer group border hover:border-turquoise">
+                      <Link to="/appointments" className="flex flex-col items-center gap-2">
+                        <div className="w-16 h-16 md:w-18 md:h-18 rounded-full bg-turquoise/10 flex items-center justify-center group-hover:bg-turquoise/20 transition-colors">
+                          <Dumbbell className="w-8 h-8 md:w-9 md:h-9 text-turquoise" />
                         </div>
-                        <span className="text-[10px] font-medium text-center leading-tight">Personal Trainer</span>
+                        <span className="text-xs font-medium text-center leading-tight">Personal Trainer</span>
                       </Link>
                     </Card>
                   </div>
