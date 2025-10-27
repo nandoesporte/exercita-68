@@ -114,6 +114,7 @@ export function useAdminWorkouts() {
           .insert({
             title: formData.title,
             description: formData.description || null,
+            image_url: formData.image_url || null,
             duration: formData.duration,
             level: formData.level,
             category_id: formData.category_id || null,
@@ -207,6 +208,7 @@ export function useAdminWorkouts() {
         .update({
           title: workoutData.title,
           description: workoutData.description || null,
+          image_url: workoutData.image_url || null,
           duration: workoutData.duration,
           level: workoutData.level,
           category_id: workoutData.category_id || null,
