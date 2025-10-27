@@ -65,12 +65,12 @@ export function ProfessionalSelector({
             return (
               <Card
                 key={specialty.name}
-                className="p-4 hover:shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer group border-2 hover:border-turquoise"
+                className="p-3 md:p-4 hover:shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer group border-2 hover:border-turquoise"
                 onClick={() => setSelectedSpecialty(specialty.filter)}
               >
                 <div className="flex flex-col items-center gap-2">
-                  <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-turquoise/10 flex items-center justify-center group-hover:bg-turquoise/20 transition-colors">
-                    <IconComponent className="w-6 h-6 md:w-8 md:h-8 text-turquoise" />
+                  <div className="w-16 h-16 md:w-18 md:h-18 rounded-full bg-turquoise/10 flex items-center justify-center group-hover:bg-turquoise/20 transition-colors">
+                    <IconComponent className="w-8 h-8 md:w-9 md:h-9 text-turquoise" />
                   </div>
                   <span className="text-xs md:text-sm font-medium text-center leading-tight">
                     {specialty.name}
