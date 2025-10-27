@@ -17,6 +17,7 @@ export type WorkoutFormData = {
   level: Database['public']['Enums']['workout_level'];
   category_id?: string | null;
   calories?: number | null;
+  image_url?: string | null;
   user_id?: string | null; 
   days_of_week?: string[] | null;
 };

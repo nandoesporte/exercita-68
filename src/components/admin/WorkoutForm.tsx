@@ -1,11 +1,13 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { Loader2 } from 'lucide-react';
+import { Loader2, Upload, X } from 'lucide-react';
 import { WorkoutFormData } from '@/hooks/useAdminWorkouts';
 import { Database } from '@/integrations/supabase/types';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 import {
   Form,
@@ -36,6 +38,7 @@ const createFormSchema = (isEditing: boolean = false) => z.object({
   level: z.enum(['beginner', 'intermediate', 'advanced', 'all_levels']),
   category_id: z.string().optional().nullable(),
   calories: z.coerce.number().optional().nullable(),
+  image_url: z.string().optional().nullable(),
   user_id: isEditing 
     ? z.string().optional() 
     : z.union([z.string().min(1), z.null()]).refine((val) => val !== undefined, {
@@ -71,6 +74,10 @@ const WorkoutForm = ({
   defaultValues,
   isEditing = false
 }: WorkoutFormProps) => {
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(defaultValues?.image_url || null);
+  const [uploading, setUploading] = useState(false);
+  
   const formSchema = createFormSchema(isEditing);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -81,6 +88,7 @@ const WorkoutForm = ({
       level: "all_levels",
       category_id: null,
       calories: null,
+      image_url: null,
       user_id: undefined,
       days_of_week: [],
     },
@@ -91,14 +99,78 @@ const WorkoutForm = ({
     if (defaultValues) {
       Object.entries(defaultValues).forEach(([key, value]) => {
         if (key === 'user_id' && !value) return; // Ignora user_id se for nulo
+        if (key === 'image_url' && value) {
+          setImagePreview(value as string);
+        }
         // @ts-ignore - configuração dinâmica de campo de formulário
         form.setValue(key, value);
       });
     }
   }, [defaultValues, form]);
 
-  const handleSubmit = (values: z.infer<typeof formSchema>) => {
-    onSubmit(values as WorkoutFormData);
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+    form.setValue('image_url', null);
+  };
+
+  const uploadImage = async (): Promise<string | null> => {
+    if (!imageFile) return null;
+
+    try {
+      setUploading(true);
+      const fileExt = imageFile.name.split('.').pop();
+      const fileName = `${Math.random()}.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      const { error: uploadError, data } = await supabase.storage
+        .from('workouts')
+        .upload(filePath, imageFile);
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('workouts')
+        .getPublicUrl(filePath);
+
+      return publicUrl;
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      toast.error("Erro ao fazer upload da imagem", {
+        description: "Tente novamente mais tarde.",
+      });
+      return null;
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleSubmit = async (values: z.infer<typeof formSchema>) => {
+    let imageUrl = values.image_url;
+
+    // Upload new image if selected
+    if (imageFile) {
+      const uploadedUrl = await uploadImage();
+      if (uploadedUrl) {
+        imageUrl = uploadedUrl;
+      }
+    }
+
+    onSubmit({ ...values, image_url: imageUrl } as WorkoutFormData);
   };
 
   return (
@@ -130,6 +202,58 @@ const WorkoutForm = ({
                   {...field} 
                   value={field.value || ""}
                 />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="image_url"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Imagem de Destaque</FormLabel>
+              <FormControl>
+                <div className="space-y-4">
+                  {imagePreview ? (
+                    <div className="relative w-full h-48 rounded-lg overflow-hidden">
+                      <img
+                        src={imagePreview}
+                        alt="Preview"
+                        className="w-full h-full object-cover"
+                      />
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="icon"
+                        className="absolute top-2 right-2"
+                        onClick={removeImage}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 text-center hover:border-muted-foreground/50 transition-colors">
+                      <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
+                      <p className="text-sm text-muted-foreground mb-2">
+                        Clique para fazer upload de uma imagem
+                      </p>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        className="hidden"
+                        id="workout-image"
+                      />
+                      <label htmlFor="workout-image">
+                        <Button type="button" variant="outline" asChild>
+                          <span>Selecionar Imagem</span>
+                        </Button>
+                      </label>
+                    </div>
+                  )}
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -331,11 +455,11 @@ const WorkoutForm = ({
           />
         )}
 
-        <Button type="submit" disabled={isLoading} className="w-full">
-          {isLoading ? (
+        <Button type="submit" disabled={isLoading || uploading} className="w-full">
+          {isLoading || uploading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              {isEditing ? 'Salvando...' : 'Criando...'}
+              {uploading ? 'Fazendo upload...' : isEditing ? 'Salvando...' : 'Criando...'}
             </>
           ) : (
             isEditing ? 'Salvar Alterações' : 'Criar Treino'
