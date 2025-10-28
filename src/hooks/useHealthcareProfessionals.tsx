@@ -194,6 +194,15 @@ export function useDeleteHealthcareProfessional() {
 
   return useMutation({
     mutationFn: async (id: string) => {
+      // First, remove references in appointments
+      const { error: appointmentsError } = await supabase
+        .from('appointments')
+        .update({ professional_id: null })
+        .eq('professional_id', id);
+
+      if (appointmentsError) throw appointmentsError;
+
+      // Then delete the professional
       const { error } = await supabase
         .from('healthcare_professionals')
         .delete()
@@ -204,6 +213,8 @@ export function useDeleteHealthcareProfessional() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-healthcare-professionals'] });
       queryClient.invalidateQueries({ queryKey: ['healthcare-professionals'] });
+      queryClient.invalidateQueries({ queryKey: ['appointments'] });
+      queryClient.invalidateQueries({ queryKey: ['appointments-with-professionals'] });
       toast.success('Profissional removido com sucesso!');
     },
     onError: (error: any) => {
