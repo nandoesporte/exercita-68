@@ -25,11 +25,19 @@ export function ProfessionalSelector({
     selectedSpecialty === 'all' ? undefined : selectedSpecialty
   );
 
-  const filteredProfessionals = professionals.filter(prof =>
-    prof.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    prof.specialty.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    prof.sub_specialty?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredProfessionals = professionals.filter(prof => {
+    const matchesSearch = prof.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      prof.specialty.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      prof.sub_specialty?.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    if (selectedSpecialty === 'all') return matchesSearch;
+    
+    // Filter by specialty or sub_specialty matching the selected filter
+    const matchesSpecialty = prof.specialty.toLowerCase() === selectedSpecialty.toLowerCase() ||
+      prof.sub_specialty?.toLowerCase().includes(selectedSpecialty.toLowerCase());
+    
+    return matchesSearch && matchesSpecialty;
+  });
 
   if (isLoading) {
     return (
@@ -42,13 +50,13 @@ export function ProfessionalSelector({
   }
 
   const specialtyIcons = [
-    { name: 'Cirurgia Vascular', icon: Heart, filter: 'médico' },
-    { name: 'Endocrinologia', icon: Stethoscope, filter: 'médico' },
-    { name: 'Ginecologia', icon: Baby, filter: 'médico' },
+    { name: 'Cirurgia Vascular', icon: Heart, filter: 'cirurgia vascular' },
+    { name: 'Endocrinologia', icon: Stethoscope, filter: 'endocrinologia' },
+    { name: 'Ginecologia', icon: Baby, filter: 'ginecologia' },
     { name: 'Fisioterapia', icon: Activity, filter: 'fisioterapeuta' },
     { name: 'Farmácia', icon: Pill, filter: 'farmacêutico' },
-    { name: 'Psiquiatria', icon: Brain, filter: 'psicólogo' },
-    { name: 'Cirurgia Plástica', icon: Scissors, filter: 'médico' },
+    { name: 'Psiquiatria', icon: Brain, filter: 'psicologia' },
+    { name: 'Cirurgia Plástica', icon: Scissors, filter: 'cirurgia plástica' },
     { name: 'Nutrição', icon: Apple, filter: 'nutricionista' },
     { name: 'Personal Trainer', icon: Dumbbell, filter: 'personal trainer' },
   ];
