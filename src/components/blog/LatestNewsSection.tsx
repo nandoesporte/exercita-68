@@ -19,7 +19,7 @@ const LatestNewsSection = () => {
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold flex items-center gap-2">
             <BookOpen className="h-5 w-5 text-primary" />
-            Últimas Notícias
+            ILIVI Conecta
           </h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -38,7 +38,7 @@ const LatestNewsSection = () => {
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold flex items-center gap-2">
           <BookOpen className="h-5 w-5 text-primary" />
-          Últimas Notícias
+          ILIVI Conecta
         </h2>
         <Link to="/blog" className="text-primary text-sm flex items-center gap-1 hover:underline">
           <span>Ver todas</span>
