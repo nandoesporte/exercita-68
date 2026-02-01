@@ -31,7 +31,7 @@ const MobileNavbar = () => {
   }
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-header-gradient backdrop-blur-xl border-t border-border/30 z-50 px-2 py-2 md:hidden animate-slide-up">
+    <nav className="fixed bottom-0 left-0 right-0 bg-fitness-dark/95 backdrop-blur-md border-t border-fitness-darkGray/50 z-50 px-2 py-1 md:hidden animate-slide-up">
       <div className="flex items-center justify-between max-w-md mx-auto">
         {navItems.map((item) => {
           // Special case for Treinos, Store, and Nutrição paths
@@ -51,26 +51,14 @@ const MobileNavbar = () => {
               key={item.path} 
               to={item.path}
               className={cn(
-                "flex flex-col items-center justify-center py-2 px-4 rounded-2xl transition-all duration-300 active:scale-95",
+                "flex flex-col items-center justify-center py-2 px-4 rounded-2xl transition-all duration-200 active:scale-95",
                 isActive 
-                  ? "text-turquoise nav-glow-active" 
-                  : "text-gray-300 hover:text-turquoise hover:bg-turquoise/5"
+                  ? "text-turquoise bg-turquoise/10 glow-turquoise" 
+                  : "text-gray-200 hover:text-turquoise hover:bg-turquoise/5"
               )}
             >
-              <item.icon 
-                size={22} 
-                strokeWidth={isActive ? 2.5 : 2}
-                className={cn(
-                  "mb-1 transition-all duration-300", 
-                  isActive ? "text-turquoise drop-shadow-[0_0_8px_hsl(var(--turquoise)/0.6)]" : "text-gray-400"
-                )} 
-              />
-              <span className={cn(
-                "text-xs font-medium mt-0.5 transition-all duration-300",
-                isActive ? "text-turquoise" : "text-gray-400"
-              )}>
-                {item.label}
-              </span>
+              <item.icon size={22} className={cn("mb-1", isActive ? "text-turquoise" : "text-gray-300")} />
+              <span className="text-sm font-medium mt-0.5">{item.label}</span>
             </Link>
           );
         })}

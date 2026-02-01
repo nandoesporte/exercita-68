@@ -2510,7 +2510,6 @@ export type Database = {
         Returns: Json
       }
       admin_create_user:
-        | { Args: { user_data: Json }; Returns: boolean }
         | {
             Args: {
               user_email: string
@@ -2519,6 +2518,7 @@ export type Database = {
             }
             Returns: Json
           }
+        | { Args: { user_data: Json }; Returns: boolean }
       admin_delete_pix_key: { Args: { p_pix_key_id: string }; Returns: Json }
       admin_delete_user: {
         Args: { target_user_id: string }

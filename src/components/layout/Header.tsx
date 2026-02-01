@@ -85,20 +85,20 @@ const Header: React.FC<HeaderProps> = ({
   // If auth is loading, show a simplified header to prevent errors
   if (authLoading) {
     return (
-      <header className="sticky top-0 z-40 w-full bg-header-gradient backdrop-blur-lg border-b border-border/30">
+      <header className="sticky top-0 z-40 w-full bg-fitness-dark/95 backdrop-blur-lg border-b border-fitness-darkGray/50">
         <div className="container flex h-16 items-center justify-between px-4">
           <div className="flex items-center gap-3">
             <ExercitaLogo width={40} height={40} />
-            <span className="font-extrabold text-xl text-white tracking-tight">ILIVI</span>
+            <span className="font-extrabold text-xl text-white">ILIVI</span>
           </div>
-          <div className="animate-pulse w-8 h-8 bg-secondary/50 rounded-full"></div>
+          <div className="animate-pulse w-8 h-8 bg-fitness-darkGray rounded-full"></div>
         </div>
       </header>
     );
   }
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-header-gradient backdrop-blur-lg border-b border-border/30">
+    <header className="sticky top-0 z-40 w-full bg-fitness-dark/95 backdrop-blur-lg border-b border-fitness-darkGray/50">
       <div className="container flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-2">
           {showBack && (
