@@ -86,52 +86,54 @@ const Index = () => {
   
   return (
     <div className="home-page">
-      {/* Profile Avatar Section */}
-      <section className="flex justify-center mb-4 pt-6">
-        <Link to="/profile">
-          <Avatar className="h-24 w-24 border-4 border-primary cursor-pointer hover:border-accent transition-all duration-300">
-            <AvatarImage 
-              src={displayProfile?.avatar_url ? `${displayProfile.avatar_url}?t=${avatarTimestamp}` : undefined} 
-              alt={`${displayProfile?.first_name || 'Usuário'}'s profile`} 
-              onError={(e) => {
-                console.error('Error loading profile image on index page:', e);
-                // Fallback to initials on error
-                (e.target as HTMLImageElement).style.display = 'none';
-              }}
-            />
-            <AvatarFallback className="bg-secondary text-secondary-foreground text-3xl">
-              {getInitials()}
-            </AvatarFallback>
-          </Avatar>
-        </Link>
-      </section>
-      
-      {/* Seção de Boas-vindas */}
-      <section className="text-center mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-primary mb-2">
-          {greeting}, {displayProfile?.first_name || 'Atleta'}!
-        </h1>
-        <p className="text-xl text-muted-foreground">
-          {hasAssignedWorkout 
-            ? 'Seus planos personalizados estão prontos' 
-            : 'Agende uma consulta para começar'}
-        </p>
-        
-        {/* Admin button - only visible for admin users on mobile */}
-        {isAdmin && (
-          <div className="mt-4 md:hidden">
-            <Button 
-              variant="outline" 
-              className="bg-secondary border-primary text-primary hover:bg-secondary/80"
-              asChild
-            >
-              <Link to="/admin">
-                <Settings className="mr-2 h-5 w-5" />
-                Área do Personal
-              </Link>
-            </Button>
+      {/* Profile Avatar Section with Elevated Card */}
+      <section className="flex justify-center mb-6 pt-8">
+        <div className="card-elevated p-6 flex flex-col items-center gap-4">
+          <Link to="/profile">
+            <Avatar className="h-24 w-24 border-4 border-primary cursor-pointer hover:border-accent transition-all duration-300 hover:scale-105 shadow-lg">
+              <AvatarImage 
+                src={displayProfile?.avatar_url ? `${displayProfile.avatar_url}?t=${avatarTimestamp}` : undefined} 
+                alt={`${displayProfile?.first_name || 'Usuário'}'s profile`} 
+                onError={(e) => {
+                  console.error('Error loading profile image on index page:', e);
+                  // Fallback to initials on error
+                  (e.target as HTMLImageElement).style.display = 'none';
+                }}
+              />
+              <AvatarFallback className="bg-secondary text-secondary-foreground text-3xl">
+                {getInitials()}
+              </AvatarFallback>
+            </Avatar>
+          </Link>
+          
+          {/* Welcome Message inside Card */}
+          <div className="text-center">
+            <h1 className="text-2xl md:text-3xl font-bold text-primary mb-1 tracking-tight">
+              {greeting}, {displayProfile?.first_name || 'Atleta'}!
+            </h1>
+            <p className="text-base text-muted-foreground">
+              {hasAssignedWorkout 
+                ? 'Seus planos personalizados estão prontos' 
+                : 'Agende uma consulta para começar'}
+            </p>
           </div>
-        )}
+          
+          {/* Admin button - only visible for admin users on mobile */}
+          {isAdmin && (
+            <div className="mt-2 md:hidden">
+              <Button 
+                variant="outline" 
+                className="btn-modern bg-secondary border-primary/50 text-primary hover:bg-secondary/80 rounded-xl px-5 py-2"
+                asChild
+              >
+                <Link to="/admin">
+                  <Settings className="mr-2 h-5 w-5" />
+                  Área do Personal
+                </Link>
+              </Button>
+            </div>
+          )}
+        </div>
       </section>
       
       {/* Consulta Online */}
@@ -141,7 +143,7 @@ const Index = () => {
           <Link to="/appointments" className="text-primary text-sm">Ver profissionais</Link>
         </div>
         
-        <Card className="bg-gradient-to-r from-secondary to-card border-none overflow-hidden">
+        <Card className="card-elevated bg-gradient-to-br from-secondary/80 to-card border-none overflow-hidden">
           <CardContent className="p-0">
             <div className="grid grid-cols-1 md:grid-cols-2">
               <div className="p-6 flex flex-col justify-center space-y-4">
@@ -164,10 +166,10 @@ const Index = () => {
                   
                   {/* Grade de ícones de especialidades */}
                   <div className="grid grid-cols-3 gap-3 py-2">
-                    <Card className="p-3 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer group border hover:border-turquoise">
+                    <Card className="p-3 rounded-xl hover:shadow-lg hover:shadow-turquoise/10 hover:scale-105 transition-all duration-300 cursor-pointer group border border-border/50 hover:border-turquoise/50 bg-card/80 backdrop-blur-sm">
                       <Link to="/appointments" className="flex flex-col items-center gap-2">
-                        <div className="w-16 h-16 md:w-18 md:h-18 rounded-full bg-turquoise/10 flex items-center justify-center group-hover:bg-turquoise/20 transition-colors">
-                          <Heart className="w-8 h-8 md:w-9 md:h-9 text-turquoise" />
+                        <div className="w-16 h-16 md:w-18 md:h-18 rounded-full bg-turquoise/10 flex items-center justify-center group-hover:bg-turquoise/20 transition-all duration-300 group-hover:scale-110">
+                          <Heart className="w-8 h-8 md:w-9 md:h-9 text-turquoise transition-transform duration-300" />
                         </div>
                         <span className="text-xs font-medium text-center leading-tight">Cirurgia Vascular</span>
                       </Link>
@@ -249,7 +251,7 @@ const Index = () => {
                 
                 <Button 
                   asChild 
-                  className="mt-4 bg-primary hover:bg-primary/90 text-primary-foreground font-medium"
+                  className="mt-4 btn-modern bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-xl py-3"
                 >
                   <Link to="/appointments" className="flex items-center gap-2">
                     <Calendar className="h-5 w-5" />
@@ -297,7 +299,7 @@ const Index = () => {
             
             {/* Botão Iniciar Treino */}
             <Button 
-              className="w-full mt-4 bg-primary hover:bg-primary/90 text-primary-foreground text-lg font-semibold h-12 rounded-xl"
+              className="w-full mt-4 btn-modern bg-primary hover:bg-primary/90 text-primary-foreground text-lg font-semibold h-12 rounded-xl"
               asChild
               disabled={isLoading || !recommendedWorkout}
             >
